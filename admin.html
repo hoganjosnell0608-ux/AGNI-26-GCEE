@@ -1,0 +1,2192 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AGNI 26 Organizer Command Center | Admin Panel</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@1,700;1,800;1,900&family=Cinzel:wght@600;700;900&family=Great+Vibes&family=JetBrains+Mono:wght@400;500;700&family=Orbitron:ital,wght@1,800;1,900&family=Outfit:wght@400;500;600;700;800;900&family=Russo+One&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- HTML5-QRCode Scanner Library -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+            display: ['Space Grotesk', 'sans-serif'],
+            racing: ['"Russo One"', '"Orbitron"', '"Chakra Petch"', 'sans-serif'],
+            certificate: ['Cinzel', 'serif'],
+            script: ['"Great Vibes"', 'cursive']
+          },
+          colors: {
+            brand: {
+              orange: '#ff5e14',
+              orangeDark: '#e04a05',
+              flame: '#ff3700',
+              gold: '#ffb020',
+              surface: '#111317',
+              surfaceDim: '#0c0e11',
+              surfaceLight: '#1b1e24',
+              border: '#2a2e37'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0c0e11;
+      color: #f1f3f7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .flame-glow {
+      box-shadow: 0 0 30px -5px rgba(255, 94, 20, 0.35);
+    }
+    .flame-glow-sm {
+      box-shadow: 0 0 15px 0px rgba(255, 94, 20, 0.25);
+    }
+    .gold-glow {
+      box-shadow: 0 0 25px -3px rgba(255, 176, 32, 0.35);
+    }
+    .agni-racing-badge {
+      font-family: 'Russo One', 'Orbitron', sans-serif;
+      font-style: italic;
+      letter-spacing: 0.05em;
+      transform: skewX(-5deg);
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #FFFFFF 0%, #FFB020 50%, #FF5E14 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 2px 8px rgba(255, 94, 20, 0.5));
+      display: inline-block;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0c0e11;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2a2e37;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #ff5e14;
+    }
+
+    /* Print styling specifically for certificates & student pass */
+    @media print {
+      @page {
+        size: landscape;
+        margin: 0;
+      }
+      body * {
+        visibility: hidden;
+      }
+      #printAreaContainer, #printAreaContainer * {
+        visibility: visible;
+      }
+      #printAreaContainer {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        background: white !important;
+        color: black !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-brand-surfaceDim text-zinc-100 flex flex-col font-sans selection:bg-brand-orange selection:text-white">
+
+  <!-- ORGANIZER AUTH PIN MODAL (Optional protective gate with instant bypass) -->
+  <div id="authGateModal" class="fixed inset-0 z-[300000] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 hidden">
+    <div class="max-w-md w-full bg-zinc-900 border-2 border-brand-orange/50 rounded-2xl p-6 sm:p-8 text-center flame-glow shadow-2xl relative">
+      <div class="w-16 h-16 rounded-2xl bg-brand-orange/20 border border-brand-orange/40 text-brand-orange flex items-center justify-center mx-auto mb-4">
+        <i class="w-8 h-8" data-lucide="shield-alert"></i>
+      </div>
+      <div class="agni-racing-badge text-2xl font-black mb-1">AGNI 26 COMMAND</div>
+      <h2 class="text-base font-bold text-white mb-2">Organizer & Gate Staff Portal</h2>
+      <p class="text-xs text-zinc-400 mb-6">Enter organizer access passcode to manage registrations, verify student QR passes, and issue certificates.</p>
+      
+      <form onsubmit="handleAuthSubmit(event)" class="space-y-4">
+        <div class="relative">
+          <input type="password" id="authPinInput" maxlength="10" placeholder="Enter Organizer PIN (Default: 2626)" 
+                 class="w-full bg-zinc-950 border border-zinc-700 focus:border-brand-orange rounded-xl px-4 py-3 text-center text-sm font-mono tracking-widest text-white outline-none" autofocus />
+        </div>
+        <div id="authErrorMsg" class="text-xs text-rose-400 font-medium hidden flex items-center justify-center gap-1">
+          <i class="w-3.5 h-3.5" data-lucide="alert-circle"></i> Invalid Passcode. Hint: 2626
+        </div>
+        <button type="submit" class="w-full py-3 rounded-xl bg-brand-orange hover:bg-brand-orangeDark text-white font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-brand-orange/30 flex items-center justify-center gap-2">
+          <i class="w-4 h-4" data-lucide="unlock"></i> Unlock Command Center
+        </button>
+      </form>
+
+      <div class="mt-6 pt-4 border-t border-zinc-800 flex items-center justify-between text-xs">
+        <button type="button" onclick="bypassAuth()" class="text-brand-gold hover:underline font-mono">
+          ⚡ One-Click Organizer Entry
+        </button>
+        <a href="index.html" class="text-zinc-500 hover:text-zinc-300">
+          Return to Symposium
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATIONS -->
+  <div id="adminToast" class="fixed top-5 right-5 z-[250000] hidden transition-all duration-300 transform translate-y-[-20px] opacity-0 flex items-center gap-3 px-4 py-3 rounded-xl bg-zinc-900 border border-brand-orange/60 text-white shadow-2xl text-xs backdrop-blur-md">
+    <div id="adminToastIcon" class="w-8 h-8 rounded-lg bg-brand-orange/20 text-brand-orange flex items-center justify-center shrink-0">
+      <i class="w-4 h-4" data-lucide="bell"></i>
+    </div>
+    <div>
+      <div class="font-bold text-white" id="adminToastTitle">Notification</div>
+      <div class="text-[11px] text-zinc-400" id="adminToastMsg">Status update</div>
+    </div>
+  </div>
+
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#0c0e11]/95 border-b border-brand-border/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3 flex items-center justify-between">
+      
+      <!-- Brand / Logo -->
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-3 group">
+          <div class="relative w-10 h-10 rounded-full overflow-hidden border border-brand-orange/80 p-0.5 flame-glow-sm bg-black shrink-0">
+            <img alt="AGNI 26" class="w-full h-full object-cover rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRMz7A39tVrg3ef9L0DPXHA23g6JIQMLd-UcCyNXUesGEqKZQOms-Jwev6vGRIN1IDeHWcDfjDYVscue1VhVi3DOcNF4sJh1yfRewF-ENVuXv8Er3QVk0wW60RWLPAfbUjy5CmcmS2UcGuzTkPJs5_VkhWUBKHC0pzxqUKl2L52SqKGyoupweCBa4DEq7qoCpKt2YxL70PtJDGdKhZxrAKcpGaVnaD7gLk-wwG-tXaJ2Ft0-jYMyuwfRszcN7RE34-Dw"/>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-lg font-black tracking-wider text-white agni-racing-badge">AGNI 26</span>
+              <span class="px-2 py-0.5 rounded bg-brand-orange/20 text-brand-orange border border-brand-orange/40 text-[10px] font-mono font-bold uppercase">Organizer Hub</span>
+            </div>
+            <p class="text-[11px] text-zinc-400 font-mono hidden sm:block">Department of Automobile Engineering · GCE Erode</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Quick Action Controls -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-400">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span id="liveClockDisplay">IST 10:30:00</span>
+        </div>
+
+        <button onclick="syncAndRefreshAllData()" class="p-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white transition-all text-xs flex items-center gap-1.5 font-medium" title="Sync & Reload Data">
+          <i class="w-4 h-4 text-brand-orange" data-lucide="refresh-cw"></i>
+          <span class="hidden sm:inline">Sync</span>
+        </button>
+
+        <a href="index.html" class="px-3.5 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white transition-all text-xs font-semibold flex items-center gap-1.5">
+          <i class="w-4 h-4 text-brand-gold" data-lucide="external-link"></i>
+          <span>View Symposium Site</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <div class="border-b border-zinc-800/80 bg-zinc-950/80 sticky top-18 z-30 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav class="flex space-x-1 sm:space-x-2 overflow-x-auto py-2.5 no-scrollbar" id="tabNavigation">
+        <button onclick="switchTab('dashboard')" id="tabBtn-dashboard" class="tab-btn active-tab px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-brand-orange text-white shrink-0">
+          <i class="w-4 h-4" data-lucide="layout-dashboard"></i>
+          <span>Dashboard</span>
+        </button>
+        <button onclick="switchTab('registrations')" id="tabBtn-registrations" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white shrink-0">
+          <i class="w-4 h-4" data-lucide="users"></i>
+          <span>Registrations (<span id="tabCountRegistrations">0</span>)</span>
+        </button>
+        <button onclick="switchTab('qrgate')" id="tabBtn-qrgate" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white shrink-0">
+          <i class="w-4 h-4" data-lucide="qr-code"></i>
+          <span>Gate QR & Verification</span>
+        </button>
+        <button onclick="switchTab('certificates')" id="tabBtn-certificates" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white shrink-0">
+          <i class="w-4 h-4" data-lucide="award"></i>
+          <span>Certificates Generator</span>
+        </button>
+        <button onclick="switchTab('events')" id="tabBtn-events" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white shrink-0">
+          <i class="w-4 h-4" data-lucide="calendar"></i>
+          <span>Event Details & Arenas</span>
+        </button>
+        <button onclick="switchTab('tools')" id="tabBtn-tools" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white shrink-0">
+          <i class="w-4 h-4" data-lucide="database"></i>
+          <span>Data & Tools</span>
+        </button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- MAIN VIEW CONTAINER -->
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+
+    <!-- ==================== TAB 1: DASHBOARD ==================== -->
+    <section id="view-dashboard" class="tab-content space-y-6">
+      
+      <!-- WELCOME BANNER -->
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-zinc-900 via-[#13161c] to-zinc-900 border border-brand-orange/30 relative overflow-hidden flame-glow-sm">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+          <div>
+            <div class="flex items-center gap-2 text-xs font-mono text-brand-orange font-bold uppercase tracking-widest mb-1">
+              <span class="w-2 h-2 rounded-full bg-brand-orange animate-ping"></span> Live Operations Center
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-black text-white font-display">Symposium Registration & Delegate Hub</h1>
+            <p class="text-xs sm:text-sm text-zinc-400 mt-1 max-w-2xl">
+              Track student entries, verify UPI payments, admit delegates via QR scans at the auditorium gate, and issue authenticated digital certificates.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="openManualRegistrationModal()" class="px-4 py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeDark text-white text-xs font-bold shadow-lg shadow-brand-orange/30 flex items-center gap-2">
+              <i class="w-4 h-4" data-lucide="user-plus"></i>
+              <span>+ Add Spot Registration</span>
+            </button>
+            <button onclick="switchTab('qrgate')" class="px-4 py-2.5 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black text-xs font-bold shadow-lg flex items-center gap-2">
+              <i class="w-4 h-4" data-lucide="scan"></i>
+              <span>Launch Gate Scanner</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- METRIC CARDS -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Card 1 -->
+        <div class="p-5 rounded-2xl bg-zinc-900/80 border border-zinc-800">
+          <div class="flex items-center justify-between text-zinc-400 mb-2">
+            <span class="text-xs font-mono font-medium uppercase">Total Registrations</span>
+            <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center">
+              <i class="w-4 h-4" data-lucide="users"></i>
+            </div>
+          </div>
+          <div class="text-3xl font-black font-mono text-white" id="statTotalRegistrations">0</div>
+          <div class="text-[11px] text-zinc-500 mt-1 flex items-center gap-1">
+            <span class="text-emerald-400 font-bold" id="statOnlineCount">0 Online</span> · <span id="statSpotCount">0 Spot</span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="p-5 rounded-2xl bg-zinc-900/80 border border-zinc-800">
+          <div class="flex items-center justify-between text-zinc-400 mb-2">
+            <span class="text-xs font-mono font-medium uppercase">Estimated Revenue</span>
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+              <i class="w-4 h-4" data-lucide="indian-rupee"></i>
+            </div>
+          </div>
+          <div class="text-3xl font-black font-mono text-emerald-400" id="statTotalRevenue">₹0</div>
+          <div class="text-[11px] text-zinc-500 mt-1">
+            Via verified UPI & Spot desk
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="p-5 rounded-2xl bg-zinc-900/80 border border-zinc-800">
+          <div class="flex items-center justify-between text-zinc-400 mb-2">
+            <span class="text-xs font-mono font-medium uppercase">Gate Checked-in</span>
+            <div class="w-8 h-8 rounded-lg bg-brand-orange/10 text-brand-orange flex items-center justify-center">
+              <i class="w-4 h-4" data-lucide="shield-check"></i>
+            </div>
+          </div>
+          <div class="text-3xl font-black font-mono text-brand-orange" id="statCheckedIn">0</div>
+          <div class="text-[11px] text-zinc-500 mt-1 flex items-center gap-1">
+            <span id="statCheckInRate">0%</span> of delegates admitted
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="p-5 rounded-2xl bg-zinc-900/80 border border-zinc-800">
+          <div class="flex items-center justify-between text-zinc-400 mb-2">
+            <span class="text-xs font-mono font-medium uppercase">Certificates Issued</span>
+            <div class="w-8 h-8 rounded-lg bg-brand-gold/10 text-brand-gold flex items-center justify-center">
+              <i class="w-4 h-4" data-lucide="award"></i>
+            </div>
+          </div>
+          <div class="text-3xl font-black font-mono text-brand-gold" id="statCertificatesIssued">0</div>
+          <div class="text-[11px] text-zinc-500 mt-1">
+            Eligible attendees & winners
+          </div>
+        </div>
+      </div>
+
+      <!-- EVENT PARTICIPATION TALLY & QUICK STATS -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left 2 Cols: Events Distribution -->
+        <div class="lg:col-span-2 p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800">
+          <div class="flex items-center justify-between mb-5">
+            <div>
+              <h3 class="text-base font-bold text-white font-display">Event Enrollment Breakdown</h3>
+              <p class="text-xs text-zinc-400">Live registrations tallied across the 6 symposium arenas</p>
+            </div>
+            <span class="text-xs font-mono px-2.5 py-1 rounded bg-zinc-800 text-zinc-300">06 Events</span>
+          </div>
+
+          <div class="space-y-4" id="eventProgressContainer">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Right Col: Quick Scanner Box & Feed -->
+        <div class="p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-3 text-brand-orange text-xs font-mono font-bold uppercase">
+              <i class="w-4 h-4" data-lucide="scan-line"></i> Rapid Gate Verification
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Admit Student by ID</h3>
+            <p class="text-xs text-zinc-400 mb-4">Type or scan pass barcode to verify and grant auditorium entry immediately.</p>
+            
+            <div class="space-y-2">
+              <input type="text" id="quickGateInput" placeholder="Enter AGNI-XXXXXX or phone..." 
+                     class="w-full bg-zinc-950 border border-zinc-700 focus:border-brand-orange rounded-xl px-3.5 py-2.5 text-xs text-white font-mono uppercase outline-none"
+                     onkeydown="if(event.key==='Enter') executeQuickCheckIn()" />
+              <button onclick="executeQuickCheckIn()" class="w-full py-2.5 rounded-xl bg-brand-orange hover:bg-brand-orangeDark text-white text-xs font-bold transition-all flex items-center justify-center gap-2">
+                <i class="w-4 h-4" data-lucide="check-circle-2"></i> Verify Pass & Admit
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-5 border-t border-zinc-800/80">
+            <div class="text-[11px] font-mono text-zinc-400 uppercase mb-2 font-bold">Recent Check-In Activity</div>
+            <div class="space-y-2 text-xs" id="dashboardRecentCheckinList">
+              <div class="text-zinc-500 italic text-center py-4">No gate entries recorded yet today.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ==================== TAB 2: REGISTRATIONS & STUDENT DETAILS ==================== -->
+    <section id="view-registrations" class="tab-content space-y-5 hidden">
+      
+      <!-- ACTION BAR & FILTERS -->
+      <div class="p-5 rounded-2xl bg-zinc-900/90 border border-zinc-800 space-y-4">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-bold text-white font-display">Student Registrations Master Roster</h2>
+            <p class="text-xs text-zinc-400">Search, filter, view proof screenshots, verify payments, and export delegate records.</p>
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="openManualRegistrationModal()" class="px-3.5 py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeDark text-white text-xs font-bold flex items-center gap-1.5 shadow-md">
+              <i class="w-4 h-4" data-lucide="user-plus"></i>
+              <span>+ Add Manual Entry</span>
+            </button>
+            <button onclick="exportRegistrationsToCSV()" class="px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold flex items-center gap-1.5 transition-all">
+              <i class="w-4 h-4 text-emerald-400" data-lucide="file-spreadsheet"></i>
+              <span>Export CSV</span>
+            </button>
+            <button onclick="exportRegistrationsToJSON()" class="px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold flex items-center gap-1.5 transition-all">
+              <i class="w-4 h-4 text-brand-gold" data-lucide="download"></i>
+              <span>Export JSON</span>
+            </button>
+            <button onclick="printStudentRoster()" class="px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold flex items-center gap-1.5 transition-all">
+              <i class="w-4 h-4 text-zinc-400" data-lucide="printer"></i>
+              <span>Print Roster</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-2">
+          
+          <!-- Search -->
+          <div class="relative lg:col-span-2">
+            <i class="w-4 h-4 text-zinc-500 absolute left-3.5 top-3" data-lucide="search"></i>
+            <input type="text" id="filterSearch" placeholder="Search by name, pass ID, phone, college..." 
+                   class="w-full bg-zinc-950 border border-zinc-800 focus:border-brand-orange rounded-xl pl-10 pr-4 py-2.5 text-xs text-white outline-none"
+                   oninput="renderRegistrationsTable()" />
+          </div>
+
+          <!-- Event Filter -->
+          <div>
+            <select id="filterEvent" onchange="renderRegistrationsTable()" class="w-full bg-zinc-950 border border-zinc-800 focus:border-brand-orange rounded-xl px-3 py-2.5 text-xs text-zinc-300 outline-none">
+              <option value="ALL">All Events</option>
+              <option value="ev-paper">Paper Presentation</option>
+              <option value="ev-expo">Project Expo</option>
+              <option value="ev-cad">CAD Hackathon</option>
+              <option value="ev-quiz">Auto Quiz</option>
+              <option value="ev-treasure">Treasure Hunt</option>
+              <option value="ev-squid">Squid Tech</option>
+            </select>
+          </div>
+
+          <!-- Payment Status Filter -->
+          <div>
+            <select id="filterPayment" onchange="renderRegistrationsTable()" class="w-full bg-zinc-950 border border-zinc-800 focus:border-brand-orange rounded-xl px-3 py-2.5 text-xs text-zinc-300 outline-none">
+              <option value="ALL">All Payment Statuses</option>
+              <option value="VERIFIED">Verified / Paid</option>
+              <option value="PENDING">Pending / Spot</option>
+            </select>
+          </div>
+
+          <!-- Gate Status Filter -->
+          <div>
+            <select id="filterGate" onchange="renderRegistrationsTable()" class="w-full bg-zinc-950 border border-zinc-800 focus:border-brand-orange rounded-xl px-3 py-2.5 text-xs text-zinc-300 outline-none">
+              <option value="ALL">All Gate Statuses</option>
+              <option value="CHECKED_IN">Checked-in (Admitted)</option>
+              <option value="NOT_CHECKED_IN">Not Yet Checked-in</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="flex items-center justify-between text-xs text-zinc-400 pt-1 font-mono">
+          <div>Showing <strong class="text-white" id="filterMatchCount">0</strong> of <span id="filterTotalCount">0</span> delegates</div>
+          <button onclick="clearRegistrationFilters()" class="text-brand-orange hover:underline text-[11px]">Reset Filters</button>
+        </div>
+
+      </div>
+
+      <!-- TABLE CONTAINER -->
+      <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl overflow-hidden shadow-xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead class="bg-zinc-950/80 text-zinc-400 font-mono uppercase text-[10px] tracking-wider border-b border-zinc-800">
+              <tr>
+                <th class="py-3.5 px-4">Pass ID</th>
+                <th class="py-3.5 px-4">Student & Contact</th>
+                <th class="py-3.5 px-4">College & Dept</th>
+                <th class="py-3.5 px-4">Events & Team</th>
+                <th class="py-3.5 px-4">Fee / UTR</th>
+                <th class="py-3.5 px-4">Gate Status</th>
+                <th class="py-3.5 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="registrationsTableBody" class="divide-y divide-zinc-800/60 font-sans">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================== TAB 3: GATE QR CHECK-IN & SCANNER ==================== -->
+    <section id="view-qrgate" class="tab-content space-y-6 hidden">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Camera Scanner & Manual Input -->
+        <div class="lg:col-span-5 space-y-5">
+          
+          <!-- Scanner Card -->
+          <div class="p-6 rounded-2xl bg-zinc-900/90 border border-brand-orange/40 flame-glow-sm">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-brand-orange animate-ping"></span>
+                <h3 class="text-base font-bold text-white font-display">Live Entrance QR Scanner</h3>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Camera Ready</span>
+            </div>
+
+            <!-- Video Container for HTML5-QRCode -->
+            <div id="qrReaderBox" class="w-full aspect-square bg-black rounded-xl overflow-hidden border border-zinc-700 relative flex flex-col items-center justify-center text-center p-4">
+              <div id="qrReaderPrompt" class="flex flex-col items-center gap-3">
+                <div class="w-14 h-14 rounded-2xl bg-zinc-900 border border-zinc-800 text-brand-orange flex items-center justify-center">
+                  <i class="w-7 h-7" data-lucide="camera"></i>
+                </div>
+                <div class="text-xs text-zinc-300 font-medium">Point device camera at attendee's ticket QR code</div>
+                <button onclick="startQrCamera()" class="px-4 py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeDark text-white text-xs font-bold flex items-center gap-2 shadow-lg">
+                  <i class="w-4 h-4" data-lucide="video"></i> Start Camera Scan
+                </button>
+              </div>
+              <div id="html5QrScannerRegion" class="w-full h-full hidden"></div>
+            </div>
+
+            <div class="mt-4 flex items-center justify-between">
+              <button id="stopCameraBtn" onclick="stopQrCamera()" class="text-xs text-rose-400 hover:text-rose-300 font-semibold hidden flex items-center gap-1">
+                <i class="w-3.5 h-3.5" data-lucide="video-off"></i> Stop Camera
+              </button>
+              <button onclick="playTestBeep()" class="text-xs text-zinc-500 hover:text-zinc-300 font-mono">
+                🔊 Audio Alert Test
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Manual / USB Barcode Scanner Input -->
+          <div class="p-5 rounded-2xl bg-zinc-900/90 border border-zinc-800">
+            <div class="text-xs font-mono font-bold text-brand-gold uppercase mb-2 flex items-center gap-1.5">
+              <i class="w-4 h-4" data-lucide="keyboard"></i> Handheld Scanner / Keyboard Input
+            </div>
+            <p class="text-xs text-zinc-400 mb-3">USB barcode scanners automatically send Enter. You can also paste raw scanned QR text or Pass ID here.</p>
+            
+            <div class="flex gap-2">
+              <input type="text" id="manualQrScanInput" placeholder="Scan or enter AGNI-XXXXXX..." 
+                     class="flex-1 bg-zinc-950 border border-zinc-700 focus:border-brand-orange rounded-xl px-4 py-3 text-xs font-mono uppercase text-white outline-none"
+                     onkeydown="if(event.key==='Enter') handleManualScanSubmit()" autofocus />
+              <button onclick="handleManualScanSubmit()" class="px-4 py-3 rounded-xl bg-brand-orange hover:bg-brand-orangeDark text-white font-bold text-xs shrink-0 flex items-center gap-1">
+                <i class="w-4 h-4" data-lucide="search"></i> Lookup
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Verification Result Card & Pass Inspector -->
+        <div class="lg:col-span-7 space-y-5">
+          
+          <!-- Scan Verdict Banner -->
+          <div id="gateVerdictCard" class="p-6 rounded-2xl border-2 transition-all border-zinc-800 bg-zinc-900/60 text-center py-12">
+            <div class="w-16 h-16 rounded-full bg-zinc-800/80 text-zinc-500 flex items-center justify-center mx-auto mb-3">
+              <i class="w-8 h-8" data-lucide="scan-face"></i>
+            </div>
+            <h3 class="text-lg font-bold text-zinc-300">Scanner Standing By</h3>
+            <p class="text-xs text-zinc-500 max-w-sm mx-auto mt-1">
+              Awaiting pass scan. Scanned attendee details, payment status, and duplicate check-in alerts will render here instantly.
+            </p>
+          </div>
+
+          <!-- Active Delegate Pass Details Box (Hidden initially) -->
+          <div id="delegatePassResultBox" class="p-6 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-5 hidden">
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-zinc-800 gap-3">
+              <div>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-brand-orange/20 text-brand-orange font-bold uppercase">Official Delegate Record</span>
+                <h2 class="text-2xl font-black text-white mt-1" id="resDelegateName">-</h2>
+                <p class="text-xs text-zinc-400 font-mono" id="resDelegateId">AGNI-XXXXXX</p>
+              </div>
+              <div class="text-left sm:text-right">
+                <div id="resGateStatusBadge" class="inline-block px-3 py-1 rounded-full text-xs font-bold font-mono">-</div>
+                <div class="text-[11px] text-zinc-500 font-mono mt-1" id="resCheckinTimestamp">-</div>
+              </div>
+            </div>
+
+            <!-- Detail Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div class="p-3.5 rounded-xl bg-zinc-950 border border-zinc-800">
+                <span class="text-zinc-500 uppercase font-mono text-[10px] block">College & Department</span>
+                <div class="text-white font-semibold mt-0.5" id="resDelegateCollege">-</div>
+                <div class="text-zinc-400 mt-0.5" id="resDelegateDept">-</div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-zinc-950 border border-zinc-800">
+                <span class="text-zinc-500 uppercase font-mono text-[10px] block">Contact Details</span>
+                <div class="text-white font-mono mt-0.5" id="resDelegatePhone">-</div>
+                <div class="text-zinc-400 mt-0.5" id="resDelegateEmail">-</div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-zinc-950 border border-zinc-800">
+                <span class="text-zinc-500 uppercase font-mono text-[10px] block">Registered Events</span>
+                <div class="text-brand-orange font-semibold mt-0.5" id="resDelegateEvents">-</div>
+                <div class="text-zinc-400 mt-0.5" id="resDelegateTeam">-</div>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-zinc-950 border border-zinc-800">
+                <span class="text-zinc-500 uppercase font-mono text-[10px] block">Payment & Fee Verification</span>
+                <div class="text-emerald-400 font-bold font-mono mt-0.5" id="resDelegateFee">-</div>
+                <div class="text-zinc-400 font-mono mt-0.5" id="resDelegateUtr">UTR: -</div>
+              </div>
+            </div>
+
+            <!-- Gate Action Buttons -->
+            <div class="pt-4 border-t border-zinc-800 flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-2">
+                <button id="btnGrantGateEntry" onclick="toggleDelegateCheckIn(currentInspectedRegId, true)" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg">
+                  <i class="w-4 h-4" data-lucide="check-circle-2"></i>
+                  <span>Permit Entry & Print Badge</span>
+                </button>
+                <button id="btnRevokeGateEntry" onclick="toggleDelegateCheckIn(currentInspectedRegId, false)" class="px-3.5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-rose-400 font-semibold text-xs flex items-center gap-1.5">
+                  <i class="w-4 h-4" data-lucide="rotate-ccw"></i>
+                  <span>Reset Check-in</span>
+                </button>
+              </div>
+
+              <button onclick="previewStudentPassModal(currentInspectedRegId)" class="text-xs text-brand-gold hover:underline flex items-center gap-1 font-mono">
+                <i class="w-3.5 h-3.5" data-lucide="eye"></i> View Full Pass & QR
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Live QR Code Generation Card for Any Student -->
+          <div class="p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="text-base font-bold text-white font-display">Student QR Code Generator & Lens Text</h3>
+                <p class="text-xs text-zinc-400">Generate high-contrast QR passes formatted for Google Lens and QR scanners.</p>
+              </div>
+              <span class="text-xs font-mono text-brand-orange font-bold">250×250 High Res</span>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center gap-6 p-4 rounded-xl bg-zinc-950 border border-zinc-800">
+              <div class="w-40 h-40 bg-white p-2 rounded-xl flex items-center justify-center shrink-0 shadow-lg">
+                <img id="liveQrPreviewImg" alt="Pass QR" class="w-full h-full object-contain" 
+                     src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=AGNI26%20VERIFIED%20PASS" />
+              </div>
+              <div class="flex-1 space-y-2 text-xs">
+                <div class="font-mono text-zinc-300 text-[11px] bg-zinc-900 p-3 rounded-lg border border-zinc-800 whitespace-pre-wrap" id="liveQrTextPreview">
+AGNI 26 EVENT PASS
+Pass ID: AGNI-SAMPLE
+Delegate: John Doe
+College: GCE Erode
+Dept: Automobile (Final Year)
+Status: VERIFIED ENTRY
+Date: 06 Oct 2026
+                </div>
+                <div class="flex gap-2 pt-1">
+                  <button onclick="copyQrText()" class="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-mono flex items-center gap-1">
+                    <i class="w-3.5 h-3.5" data-lucide="copy"></i> Copy Text
+                  </button>
+                  <a id="downloadQrLink" href="#" target="_blank" class="px-3 py-1.5 rounded-lg bg-brand-orange hover:bg-brand-orangeDark text-white text-xs font-semibold flex items-center gap-1">
+                    <i class="w-3.5 h-3.5" data-lucide="download"></i> Download QR
+                  </a>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ==================== TAB 4: CERTIFICATES GENERATOR ==================== -->
+    <section id="view-certificates" class="tab-content space-y-6 hidden">
+      
+      <!-- CONTROLS & GENERATOR FORM -->
+      <div class="p-6 rounded-2xl bg-zinc-900/90 border border-brand-gold/40 flame-glow-sm">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between pb-5 mb-5 border-b border-zinc-800 gap-4">
+          <div>
+            <div class="flex items-center gap-2 text-brand-gold text-xs font-mono font-bold uppercase tracking-wider mb-1">
+              <i class="w-4 h-4" data-lucide="award"></i> Official Accreditation System
+            </div>
+            <h2 class="text-2xl font-black text-white font-display">Symposium Certificate Generator</h2>
+            <p class="text-xs text-zinc-400">Generate high-definition printable Certificates of Participation and Merit for symposium delegates.</p>
+          </div>
+          
+          <div class="flex items-center gap-2">
+            <button onclick="printCurrentCertificate()" class="px-4 py-2.5 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-bold text-xs flex items-center gap-2 shadow-lg shadow-yellow-500/20">
+              <i class="w-4 h-4" data-lucide="printer"></i>
+              <span>Print This Certificate</span>
+            </button>
+            <button onclick="batchGenerateParticipationCertificates()" class="px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs flex items-center gap-2">
+              <i class="w-4 h-4 text-brand-orange" data-lucide="layers"></i>
+              <span>Batch All Checked-In</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+          
+          <!-- Select from Registered Students -->
+          <div class="md:col-span-2">
+            <label class="block text-zinc-400 font-mono text-[11px] mb-1.5 uppercase">Select Registered Student</label>
+            <select id="certStudentSelect" onchange="handleCertStudentSelectChange()" class="w-full bg-zinc-950 border border-zinc-700 focus:border-brand-gold rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
+              <option value="">-- Choose from roster or enter below --</option>
+            </select>
+          </div>
+
+          <!-- Certificate Type -->
+          <div>
+            <label class="block text-zinc-400 font-mono text-[11px] mb-1.5 uppercase">Certificate Type</label>
+            <select id="certTypeSelect" onchange="updateLiveCertificatePreview()" class="w-full bg-zinc-950 border border-zinc-700 focus:border-brand-gold rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
+              <option value="PARTICIPATION">Certificate of Participation</option>
+              <option value="FIRST_PRIZE">First Prize (Winner)</option>
+              <option value="SECOND_PRIZE">Second Prize (Runner Up)</option>
+              <option value="THIRD_PRIZE">Third Prize</option>
+              <option value="APPRECIATION">Certificate of Appreciation</option>
+            </select>
+          </div>
+
+          <!-- Event Name -->
+          <div>
+            <label class="block text-zinc-400 font-mono text-[11px] mb-1.5 uppercase">Event Arena</label>
+            <select id="certEventSelect" onchange="updateLiveCertificatePreview()" class="w-full bg-zinc-950 border border-zinc-700 focus:border-brand-gold rounded-xl px-3.5 py-2.5 text-xs text-white outline-none">
+              <option value="National Level Technical Symposium">All Symposium Arenas</option>
+              <option value="Paper Presentation">Paper Presentation</option>
+              <option value="Project Expo">Project Expo</option>
+              <option value="CAD Hackathon">CAD Hackathon</option>
+              <option value="Auto Quiz">Auto Quiz</option>
+              <option value="Treasure Hunt">Treasure Hunt</option>
+              <option value="Squid Tech">Squid Tech</option>
+            </select>
+          </div>
+
+        </div>
+
+        <!-- Custom Editable Fields -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs mt-3">
+          <div>
+            <label class="block text-zinc-400 font-mono text-[11px] mb-1 uppercase">Candidate Name</label>
+            <input type="text" id="certCandidateName" value="KUMARAN S" oninput="updateLiveCertificatePreview()" 
+                   class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white outline-none" />
+          </div>
+          <div>
+            <label class="block text-zinc-400 font-mono text-[11px] mb-1 uppercase">College / Institution</label>
+            <input type="text" id="certCollegeName" value="Government College of Engineering, Erode" oninput="updateLiveCertificatePreview()" 
+                   class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white outline-none" />
+          </div>
+          <div>
+            <label class="block text-zinc-400 font-mono text-[11px] mb-1 uppercase">Certificate Serial No.</label>
+            <input type="text" id="certSerialNo" value="AGNI26-CERT-0104" oninput="updateLiveCertificatePreview()" 
+                   class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white font-mono outline-none" />
+          </div>
+        </div>
+
+      </div>
+
+      <!-- LIVE CERTIFICATE PREVIEW CONTAINER -->
+      <div class="flex justify-center p-4 sm:p-8 bg-zinc-950 rounded-2xl border border-zinc-800 overflow-x-auto">
+        
+        <!-- THE CERTIFICATE (Scalable layout, perfectly printable in Landscape) -->
+        <div id="symposiumCertificatePaper" class="w-[900px] h-[636px] bg-[#fcfbf9] text-zinc-900 p-8 relative flex flex-col justify-between shadow-2xl border-[12px] border-[#181c24] rounded-sm select-none shrink-0" style="box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);">
+          
+          <!-- Ornate Inner Border -->
+          <div class="absolute inset-2 border-2 border-[#ffb020] pointer-events-none"></div>
+          <div class="absolute inset-3 border border-[#181c24]/30 pointer-events-none"></div>
+
+          <!-- Watermark Background Emblem -->
+          <div class="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none">
+            <img class="w-96 h-96 object-contain grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRMz7A39tVrg3ef9L0DPXHA23g6JIQMLd-UcCyNXUesGEqKZQOms-Jwev6vGRIN1IDeHWcDfjDYVscue1VhVi3DOcNF4sJh1yfRewF-ENVuXv8Er3QVk0wW60RWLPAfbUjy5CmcmS2UcGuzTkPJs5_VkhWUBKHC0pzxqUKl2L52SqKGyoupweCBa4DEq7qoCpKt2YxL70PtJDGdKhZxrAKcpGaVnaD7gLk-wwG-tXaJ2Ft0-jYMyuwfRszcN7RE34-Dw" />
+          </div>
+
+          <!-- HEADER: College Info & Crest -->
+          <div class="relative z-10 flex items-center justify-between border-b-2 border-[#181c24]/20 pb-3">
+            <div class="w-20 h-20 rounded-full border border-[#ff5e14] p-0.5 bg-white shrink-0">
+              <img class="w-full h-full object-cover rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRMz7A39tVrg3ef9L0DPXHA23g6JIQMLd-UcCyNXUesGEqKZQOms-Jwev6vGRIN1IDeHWcDfjDYVscue1VhVi3DOcNF4sJh1yfRewF-ENVuXv8Er3QVk0wW60RWLPAfbUjy5CmcmS2UcGuzTkPJs5_VkhWUBKHC0pzxqUKl2L52SqKGyoupweCBa4DEq7qoCpKt2YxL70PtJDGdKhZxrAKcpGaVnaD7gLk-wwG-tXaJ2Ft0-jYMyuwfRszcN7RE34-Dw" />
+            </div>
+
+            <div class="text-center flex-1 px-4">
+              <div class="text-[11px] font-mono tracking-widest uppercase font-bold text-zinc-600">GOVERNMENT COLLEGE OF ENGINEERING, ERODE</div>
+              <div class="text-[10px] text-zinc-500 font-sans">(Formerly Institute of Road and Transport Technology - IRTT) · Chithode, Erode - 638316</div>
+              <div class="text-xs font-bold text-[#e04a05] uppercase tracking-wider mt-0.5 font-display">DEPARTMENT OF AUTOMOBILE ENGINEERING</div>
+              <div class="text-sm font-black tracking-widest text-zinc-900 mt-1 uppercase font-racing">
+                AGNI 26 · NATIONAL LEVEL TECHNICAL SYMPOSIUM
+              </div>
+            </div>
+
+            <div class="w-20 h-20 flex flex-col items-center justify-center p-1 bg-white border border-zinc-300 rounded shrink-0">
+              <img id="certVerificationQr" class="w-16 h-16 object-contain" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=AGNI26-VERIFIED-CERTIFICATE" />
+              <div class="text-[8px] font-mono text-zinc-600 mt-0.5 font-bold">SCAN TO VERIFY</div>
+            </div>
+          </div>
+
+          <!-- CERTIFICATE TITLE -->
+          <div class="text-center relative z-10 my-2">
+            <h1 id="previewCertHeading" class="text-3xl font-black font-certificate tracking-wider text-[#181c24] uppercase">
+              CERTIFICATE OF PARTICIPATION
+            </h1>
+            <div class="w-28 h-1 bg-gradient-to-r from-transparent via-[#ff5e14] to-transparent mx-auto mt-1"></div>
+          </div>
+
+          <!-- MAIN BODY TEXT -->
+          <div class="text-center relative z-10 px-8 space-y-3">
+            <p class="text-xs font-serif text-zinc-600 italic">This is proudly and formally conferred to</p>
+            
+            <div id="previewCertName" class="text-3xl font-black tracking-wide text-[#b83800] font-display border-b border-zinc-300 pb-1 max-w-xl mx-auto uppercase">
+              KUMARAN S
+            </div>
+
+            <p class="text-xs text-zinc-700 leading-relaxed font-serif max-w-2xl mx-auto">
+              of <strong id="previewCertCollege" class="text-zinc-900 font-semibold font-sans">Government College of Engineering, Erode</strong> 
+              for active and meritorious participation in <strong id="previewCertEvent" class="text-zinc-900 font-semibold font-sans">Paper Presentation</strong> 
+              during <span class="font-bold text-[#181c24]">AGNI 26</span> National Level Technical Symposium organized by the Department of Automobile Engineering, GCE Erode on <span class="font-semibold">06 October 2026</span>.
+            </p>
+          </div>
+
+          <!-- GOLD SEAL & SIGNATURES -->
+          <div class="relative z-10 pt-4 border-t border-zinc-300/80 flex items-end justify-between px-6">
+            
+            <!-- Left Signature -->
+            <div class="text-center w-44">
+              <div class="h-10 flex items-center justify-center">
+                <span class="font-script text-2xl text-blue-900">Dr. N. Vadivel</span>
+              </div>
+              <div class="border-t border-zinc-400 pt-1 text-[10px] font-bold text-zinc-800 uppercase font-sans">Dr. N. VADIVEL</div>
+              <div class="text-[9px] text-zinc-500 font-sans">Staff Coordinator</div>
+            </div>
+
+            <!-- Center Gold Foil Stamp -->
+            <div class="flex flex-col items-center">
+              <div class="w-16 h-16 rounded-full border-2 border-[#ffb020] bg-gradient-to-b from-[#fff6d6] to-[#ffd778] p-1 shadow-md flex items-center justify-center text-center">
+                <div class="w-full h-full rounded-full border border-dashed border-[#b37a00] flex flex-col items-center justify-center">
+                  <i class="w-4 h-4 text-[#b37a00]" data-lucide="shield-check"></i>
+                  <span class="text-[7px] font-black tracking-tighter text-[#6e4b00] uppercase">OFFICIAL SEAL</span>
+                </div>
+              </div>
+              <div class="text-[9px] font-mono text-zinc-600 mt-1" id="previewCertSerial">AGNI26-CERT-0104</div>
+            </div>
+
+            <!-- Right Signature -->
+            <div class="text-center w-44">
+              <div class="h-10 flex items-center justify-center">
+                <span class="font-script text-2xl text-blue-900">Dr. R. Senthilraja</span>
+              </div>
+              <div class="border-t border-zinc-400 pt-1 text-[10px] font-bold text-zinc-800 uppercase font-sans">Dr. R. SENTHILRAJA</div>
+              <div class="text-[9px] text-zinc-500 font-sans">Head of Department (Auto)</div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ==================== TAB 5: EVENT DETAILS & ARENAS ==================== -->
+    <section id="view-events" class="tab-content space-y-6 hidden">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-zinc-800 gap-3">
+        <div>
+          <h2 class="text-xl font-bold text-white font-display">Symposium Events & Arena Matrix</h2>
+          <p class="text-xs text-zinc-400">Manage event criteria, coordinators, problem statements, and view participants per arena.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="px-3 py-1 rounded-full bg-brand-orange/20 text-brand-orange border border-brand-orange/40 text-xs font-mono font-bold">
+            6 Arenas · ₹10,000+ Prize Pool
+          </span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="adminEventCardsGrid">
+        <!-- Event Cards dynamically rendered below -->
+      </div>
+
+    </section>
+
+    <!-- ==================== TAB 6: DATA & TOOLS ==================== -->
+    <section id="view-tools" class="tab-content space-y-6 hidden">
+      
+      <div class="p-6 rounded-2xl bg-zinc-900/90 border border-zinc-800 space-y-6">
+        <div>
+          <h2 class="text-xl font-bold text-white font-display">Data Management & Organizer Utilities</h2>
+          <p class="text-xs text-zinc-400">Seed realistic sample participants, back up all symposium registrations to disk, or reset data store.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          
+          <!-- Tool 1: Seed Demo -->
+          <div class="p-5 rounded-xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between">
+            <div>
+              <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-3">
+                <i class="w-5 h-5" data-lucide="sparkles"></i>
+              </div>
+              <h3 class="text-sm font-bold text-white">Seed Demo Delegates</h3>
+              <p class="text-xs text-zinc-400 mt-1">Pre-loads 6 realistic sample registrations from Anna Univ, CIT, PSG Tech, and GCE Erode to test check-ins and certificates immediately.</p>
+            </div>
+            <button onclick="seedDemoRegistrations()" class="mt-4 w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2">
+              <i class="w-4 h-4" data-lucide="plus-circle"></i> Load Sample Data
+            </button>
+          </div>
+
+          <!-- Tool 2: Backup & Restore -->
+          <div class="p-5 rounded-xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between">
+            <div>
+              <div class="w-10 h-10 rounded-lg bg-brand-gold/10 text-brand-gold flex items-center justify-center mb-3">
+                <i class="w-5 h-5" data-lucide="database"></i>
+              </div>
+              <h3 class="text-sm font-bold text-white">Backup / Restore JSON</h3>
+              <p class="text-xs text-zinc-400 mt-1">Export full registration database as JSON file for offline recordkeeping or import previously saved registrations.</p>
+            </div>
+            <div class="mt-4 flex gap-2">
+              <button onclick="exportRegistrationsToJSON()" class="flex-1 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs flex items-center justify-center gap-1">
+                <i class="w-4 h-4" data-lucide="download"></i> Backup
+              </button>
+              <label class="flex-1 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs flex items-center justify-center gap-1 cursor-pointer">
+                <i class="w-4 h-4" data-lucide="upload"></i> Restore
+                <input type="file" accept=".json" class="hidden" onchange="importRegistrationsFromJSON(event)" />
+              </label>
+            </div>
+          </div>
+
+          <!-- Tool 3: Clear All Data -->
+          <div class="p-5 rounded-xl bg-zinc-950 border border-rose-500/30 flex flex-col justify-between">
+            <div>
+              <div class="w-10 h-10 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center mb-3">
+                <i class="w-5 h-5" data-lucide="trash-2"></i>
+              </div>
+              <h3 class="text-sm font-bold text-white">Reset Database</h3>
+              <p class="text-xs text-zinc-400 mt-1">Clears all registrations stored in `agni26_registered_participants`. Use with caution before the official symposium begins.</p>
+            </div>
+            <button onclick="clearAllRegistrationsConfirmed()" class="mt-4 w-full py-2.5 rounded-xl bg-rose-950 hover:bg-rose-900 border border-rose-600 text-rose-300 font-bold text-xs flex items-center justify-center gap-2">
+              <i class="w-4 h-4" data-lucide="alert-octagon"></i> Clear All Data
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- 1. MANUAL ON-SPOT REGISTRATION MODAL -->
+  <div id="manualRegModal" class="fixed inset-0 z-[200000] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-zinc-900 border border-zinc-700 rounded-2xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto shadow-2xl">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-zinc-800">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i class="w-4 h-4 text-brand-orange" data-lucide="user-plus"></i> Add On-Spot Registration
+        </h3>
+        <button onclick="closeManualRegModal()" class="text-zinc-400 hover:text-white">
+          <i class="w-5 h-5" data-lucide="x"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleManualRegSubmit(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block text-zinc-400 mb-1">Student Full Name *</label>
+          <input type="text" id="manualName" required placeholder="e.g. S. Karthik" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-brand-orange" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-zinc-400 mb-1">Mobile Phone *</label>
+            <input type="tel" id="manualPhone" required placeholder="10 digits" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-brand-orange" />
+          </div>
+          <div>
+            <label class="block text-zinc-400 mb-1">Email Address</label>
+            <input type="email" id="manualEmail" placeholder="student@gmail.com" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-brand-orange" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-zinc-400 mb-1">College Name *</label>
+            <input type="text" id="manualCollege" required placeholder="College name" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-brand-orange" />
+          </div>
+          <div>
+            <label class="block text-zinc-400 mb-1">Department & Year</label>
+            <input type="text" id="manualDept" placeholder="Automobile / 3rd Year" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-brand-orange" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-zinc-400 mb-1">Select Events (Hold Ctrl/Cmd for multiple) *</label>
+          <select id="manualEvents" multiple class="w-full bg-zinc-950 border border-zinc-700 rounded-xl p-2 text-white outline-none focus:border-brand-orange h-24">
+            <option value="Paper Presentation" selected>Paper Presentation (Technical)</option>
+            <option value="Project Expo">Project Expo (Technical)</option>
+            <option value="CAD Hackathon">CAD Hackathon (Technical)</option>
+            <option value="Auto Quiz">Auto Quiz (Non-Technical)</option>
+            <option value="Treasure Hunt">Treasure Hunt (Non-Technical)</option>
+            <option value="Squid Tech">Squid Tech (Non-Technical)</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-zinc-400 mb-1">Total Fee Collected (₹)</label>
+            <input type="number" id="manualAmount" value="250" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-white font-mono outline-none" />
+          </div>
+          <div>
+            <label class="block text-zinc-400 mb-1">Payment Method / UTR</label>
+            <input type="text" id="manualUtr" placeholder="Cash on Spot or 12-digit UTR" value="Cash On Spot" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-white font-mono outline-none" />
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 pt-2">
+          <input type="checkbox" id="manualAutoAdmit" checked class="rounded bg-zinc-950 border-zinc-700 text-brand-orange focus:ring-0" />
+          <label for="manualAutoAdmit" class="text-zinc-300">Auto check-in & grant gate entry immediately</label>
+        </div>
+
+        <div class="pt-3 border-t border-zinc-800 flex justify-end gap-2">
+          <button type="button" onclick="closeManualRegModal()" class="px-4 py-2 rounded-xl bg-zinc-800 text-zinc-300 hover:bg-zinc-700">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-brand-orange hover:bg-brand-orangeDark text-white font-bold">Save Registration</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. PAYMENT PROOF SCREENSHOT VIEWER MODAL -->
+  <div id="proofModal" class="fixed inset-0 z-[200000] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-zinc-900 border border-zinc-700 rounded-2xl w-full max-w-md p-5 text-center relative shadow-2xl">
+      <button onclick="closeProofModal()" class="absolute right-4 top-4 text-zinc-400 hover:text-white">
+        <i class="w-5 h-5" data-lucide="x"></i>
+      </button>
+      <h3 class="text-sm font-bold text-white mb-1">UPI Payment Screenshot</h3>
+      <p class="text-xs text-zinc-400 font-mono mb-4" id="proofModalUtr">UTR: -</p>
+      
+      <div class="w-full max-h-[60vh] overflow-y-auto bg-black rounded-xl p-2 border border-zinc-800 flex items-center justify-center">
+        <img id="proofModalImg" src="" alt="Payment Proof" class="max-w-full max-h-[55vh] object-contain rounded-lg" />
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. STUDENT PASS & QR CODE MODAL -->
+  <div id="passModal" class="fixed inset-0 z-[200000] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-zinc-900 border border-brand-orange/40 rounded-2xl w-full max-w-sm p-6 text-center relative shadow-2xl flame-glow-sm">
+      <button onclick="closePassModal()" class="absolute right-4 top-4 text-zinc-400 hover:text-white">
+        <i class="w-5 h-5" data-lucide="x"></i>
+      </button>
+
+      <div class="agni-racing-badge text-xl mb-1">AGNI 26</div>
+      <div class="text-[10px] font-mono text-zinc-400 uppercase tracking-wider mb-4">Official Delegate Gate Pass</div>
+
+      <div class="w-48 h-48 bg-white p-3 rounded-2xl mx-auto mb-4 shadow-xl flex items-center justify-center">
+        <img id="modalPassQrImg" src="" alt="Pass QR" class="w-full h-full object-contain" />
+      </div>
+
+      <div class="text-lg font-black text-white" id="modalPassName">-</div>
+      <div class="text-xs text-brand-orange font-mono font-bold" id="modalPassId">AGNI-XXXXXX</div>
+      <div class="text-xs text-zinc-300 mt-1" id="modalPassCollege">-</div>
+      <div class="text-xs text-zinc-500 mt-0.5" id="modalPassDept">-</div>
+
+      <div class="mt-4 pt-3 border-t border-zinc-800 flex items-center justify-between text-xs">
+        <span class="font-mono text-emerald-400 font-bold" id="modalPassFee">Fee: -</span>
+        <button onclick="window.print()" class="px-3 py-1.5 rounded-lg bg-brand-orange text-white font-bold flex items-center gap-1 text-[11px]">
+          <i class="w-3.5 h-3.5" data-lucide="printer"></i> Print Pass
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTAINER FOR SINGLE PAGE CLEAN CERTIFICATE PRINTING -->
+  <div id="printAreaContainer" class="hidden"></div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    const STORAGE_KEY = 'agni26_registered_participants';
+    const ORGANIZER_PIN = '2626';
+    let cachedParticipants = [];
+    let currentInspectedRegId = null;
+    let html5QrScanner = null;
+    let isCameraActive = false;
+
+    // EVENT CATALOG
+    const SYMPOSIUM_EVENTS = [
+      { id: 'ev-paper', name: 'Paper Presentation', type: 'Technical', fee: '₹200 (Online) / ₹250 (Spot)', venue: 'Seminar Hall 1', time: '10:00 AM – 12:30 PM', prize: '₹2,500', team: '1–4 Members' },
+      { id: 'ev-expo', name: 'Project Expo', type: 'Technical', fee: '₹200 (Online) / ₹250 (Spot)', venue: 'Automobile Bay 2', time: '10:00 AM – 12:30 PM', prize: '₹3,000', team: '1–4 Members' },
+      { id: 'ev-cad', name: 'CAD Hackathon', type: 'Technical', fee: '₹200 (Online) / ₹250 (Spot)', venue: 'CAD / CAM Laboratory', time: '10:00 AM – 12:30 PM', prize: '₹1,500', team: 'Solo' },
+      { id: 'ev-quiz', name: 'Auto Quiz', type: 'Non-Technical', fee: '₹150 (Online) / ₹200 (Spot)', venue: 'Main Auditorium', time: '01:30 PM – 02:30 PM', prize: '₹1,200', team: 'Solo' },
+      { id: 'ev-treasure', name: 'Treasure Hunt', type: 'Non-Technical', fee: '₹150 (Online) / ₹200 (Spot)', venue: 'Campus Wide Grounds', time: '01:30 PM – 02:30 PM', prize: '₹1,200', team: 'Solo' },
+      { id: 'ev-squid', name: 'Squid Tech', type: 'Non-Technical', fee: '₹150 (Online) / ₹200 (Spot)', venue: 'Automobile Workshop Bay', time: '01:30 PM – 02:30 PM', prize: '₹1,200', team: 'Solo' }
+    ];
+
+    // ==================== AUTH / GATEKEEPER ====================
+    function checkAuthGate() {
+      const authed = sessionStorage.getItem('agni26_admin_authed');
+      if (authed === 'true') {
+        document.getElementById('authGateModal').classList.add('hidden');
+      } else {
+        document.getElementById('authGateModal').classList.remove('hidden');
+      }
+    }
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const pin = (document.getElementById('authPinInput').value || '').trim();
+      if (pin === ORGANIZER_PIN || pin === 'admin') {
+        sessionStorage.setItem('agni26_admin_authed', 'true');
+        document.getElementById('authGateModal').classList.add('hidden');
+        showToast('Access Granted', 'Welcome to AGNI 26 Organizer Command Center.');
+      } else {
+        document.getElementById('authErrorMsg').classList.remove('hidden');
+      }
+    }
+
+    function bypassAuth() {
+      sessionStorage.setItem('agni26_admin_authed', 'true');
+      document.getElementById('authGateModal').classList.add('hidden');
+      showToast('Organizer Access', 'Quick authentication verified.');
+    }
+
+    // ==================== STORAGE & DATA ACCESS ====================
+    function loadParticipants() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          cachedParticipants = JSON.parse(raw);
+        } else {
+          cachedParticipants = [];
+        }
+      } catch (err) {
+        console.error('Failed to read localStorage:', err);
+        cachedParticipants = [];
+      }
+      return cachedParticipants;
+    }
+
+    function saveAllParticipants(list) {
+      cachedParticipants = list;
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      } catch (e) {
+        console.warn('Storage error:', e);
+      }
+    }
+
+    function syncAndRefreshAllData() {
+      loadParticipants();
+      renderDashboard();
+      renderRegistrationsTable();
+      renderEventsGrid();
+      populateCertStudentDropdown();
+      showToast('Synchronized', 'All delegate and registration data updated.');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // ==================== TAB NAVIGATION ====================
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.className = 'tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white shrink-0';
+      });
+      const activeBtn = document.getElementById('tabBtn-' + tabId);
+      if (activeBtn) {
+        activeBtn.className = 'tab-btn active-tab px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 bg-brand-orange text-white shrink-0 shadow-lg shadow-brand-orange/30';
+      }
+
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      const activeView = document.getElementById('view-' + tabId);
+      if (activeView) activeView.classList.remove('hidden');
+
+      if (tabId === 'dashboard') renderDashboard();
+      if (tabId === 'registrations') renderRegistrationsTable();
+      if (tabId === 'qrgate') {
+        const inp = document.getElementById('manualQrScanInput');
+        if (inp) inp.focus();
+      }
+      if (tabId === 'certificates') updateLiveCertificatePreview();
+      if (tabId === 'events') renderEventsGrid();
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // ==================== DASHBOARD METRICS ====================
+    function renderDashboard() {
+      const list = loadParticipants();
+      const total = list.length;
+      document.getElementById('statTotalRegistrations').innerText = total;
+      document.getElementById('tabCountRegistrations').innerText = total;
+
+      let revenue = 0;
+      let spotCount = 0;
+      let checkedInCount = 0;
+
+      // Event tallies
+      const eventCounts = {
+        'ev-paper': 0,
+        'ev-expo': 0,
+        'ev-cad': 0,
+        'ev-quiz': 0,
+        'ev-treasure': 0,
+        'ev-squid': 0
+      };
+
+      list.forEach(p => {
+        // Revenue estimation
+        const amt = parseInt(p.totalAmount || p.amount || 200, 10);
+        if (!isNaN(amt)) revenue += amt;
+
+        if (p.isSpot || (p.utr && p.utr.toLowerCase().includes('spot'))) {
+          spotCount++;
+        }
+
+        if (p.gatePermittedAt || p.status === 'Checked-in' || p.status === 'Approved') {
+          checkedInCount++;
+        }
+
+        // Tally events
+        const events = Array.isArray(p.events) ? p.events : [p.events || ''];
+        events.forEach(ev => {
+          const str = String(ev).toLowerCase();
+          if (str.includes('paper')) eventCounts['ev-paper']++;
+          if (str.includes('expo') || str.includes('project')) eventCounts['ev-expo']++;
+          if (str.includes('cad')) eventCounts['ev-cad']++;
+          if (str.includes('quiz')) eventCounts['ev-quiz']++;
+          if (str.includes('treasure')) eventCounts['ev-treasure']++;
+          if (str.includes('squid')) eventCounts['ev-squid']++;
+        });
+      });
+
+      document.getElementById('statOnlineCount').innerText = (total - spotCount) + ' Online';
+      document.getElementById('statSpotCount').innerText = spotCount + ' Spot';
+      document.getElementById('statTotalRevenue').innerText = '₹' + revenue.toLocaleString('en-IN');
+      document.getElementById('statCheckedIn').innerText = checkedInCount;
+      const rate = total > 0 ? Math.round((checkedInCount / total) * 100) : 0;
+      document.getElementById('statCheckInRate').innerText = rate + '%';
+      document.getElementById('statCertificatesIssued').innerText = checkedInCount;
+
+      // Render Progress Bars
+      const progContainer = document.getElementById('eventProgressContainer');
+      if (progContainer) {
+        progContainer.innerHTML = SYMPOSIUM_EVENTS.map(ev => {
+          const c = eventCounts[ev.id] || 0;
+          const pct = Math.min(100, Math.round((c / 40) * 100));
+          return `
+            <div>
+              <div class="flex justify-between items-center text-xs mb-1">
+                <span class="font-medium text-zinc-200">${ev.name} <span class="text-[10px] text-zinc-500">(${ev.type})</span></span>
+                <span class="font-mono text-brand-orange font-bold">${c} Delegates</span>
+              </div>
+              <div class="w-full bg-zinc-950 rounded-full h-2 border border-zinc-800 overflow-hidden">
+                <div class="bg-gradient-to-r from-brand-orange to-brand-gold h-2 rounded-full transition-all duration-500" style="width: ${Math.max(5, pct)}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Recent check-in feed
+      const recentList = document.getElementById('dashboardRecentCheckinList');
+      const admitted = list.filter(p => p.gatePermittedAt).slice(0, 5);
+      if (admitted.length === 0) {
+        recentList.innerHTML = '<div class="text-zinc-500 italic text-center py-3">No delegates checked in yet.</div>';
+      } else {
+        recentList.innerHTML = admitted.map(p => `
+          <div class="p-2.5 rounded-xl bg-zinc-950 border border-zinc-800 flex items-center justify-between">
+            <div>
+              <div class="font-bold text-white">${escapeHtml(p.name)}</div>
+              <div class="text-[10px] text-zinc-400 font-mono">${escapeHtml(p.college || 'GCE Erode')} · ${p.regId}</div>
+            </div>
+            <span class="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 text-[10px] font-mono border border-emerald-500/30">
+              ${p.gatePermittedAt.split('(')[0] || 'Admitted'}
+            </span>
+          </div>
+        `).join('');
+      }
+    }
+
+    // ==================== REGISTRATIONS TABLE & FILTERS ====================
+    function renderRegistrationsTable() {
+      const list = loadParticipants();
+      const q = (document.getElementById('filterSearch')?.value || '').toLowerCase().trim();
+      const evFilter = document.getElementById('filterEvent')?.value || 'ALL';
+      const payFilter = document.getElementById('filterPayment')?.value || 'ALL';
+      const gateFilter = document.getElementById('filterGate')?.value || 'ALL';
+
+      let filtered = list.filter(p => {
+        // Text search
+        if (q) {
+          const match = (p.name && p.name.toLowerCase().includes(q)) ||
+                        (p.regId && p.regId.toLowerCase().includes(q)) ||
+                        (p.phone && p.phone.includes(q)) ||
+                        (p.email && p.email.toLowerCase().includes(q)) ||
+                        (p.college && p.college.toLowerCase().includes(q)) ||
+                        (p.utr && p.utr.toLowerCase().includes(q));
+          if (!match) return false;
+        }
+
+        // Event filter
+        if (evFilter !== 'ALL') {
+          const evStr = Array.isArray(p.events) ? p.events.join(' ').toLowerCase() : String(p.events || '').toLowerCase();
+          if (evFilter === 'ev-paper' && !evStr.includes('paper')) return false;
+          if (evFilter === 'ev-expo' && !evStr.includes('expo') && !evStr.includes('project')) return false;
+          if (evFilter === 'ev-cad' && !evStr.includes('cad')) return false;
+          if (evFilter === 'ev-quiz' && !evStr.includes('quiz')) return false;
+          if (evFilter === 'ev-treasure' && !evStr.includes('treasure')) return false;
+          if (evFilter === 'ev-squid' && !evStr.includes('squid')) return false;
+        }
+
+        // Payment status filter
+        if (payFilter === 'VERIFIED') {
+          if (!p.utr || p.utr.length < 5) return false;
+        } else if (payFilter === 'PENDING') {
+          if (p.utr && p.utr.length >= 10 && !p.utr.toLowerCase().includes('spot')) return false;
+        }
+
+        // Gate check-in filter
+        if (gateFilter === 'CHECKED_IN' && !p.gatePermittedAt) return false;
+        if (gateFilter === 'NOT_CHECKED_IN' && p.gatePermittedAt) return false;
+
+        return true;
+      });
+
+      document.getElementById('filterMatchCount').innerText = filtered.length;
+      document.getElementById('filterTotalCount').innerText = list.length;
+
+      const tbody = document.getElementById('registrationsTableBody');
+      if (!tbody) return;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="py-8 text-center text-zinc-500">
+              <i class="w-8 h-8 mx-auto mb-2 text-zinc-600" data-lucide="inbox"></i>
+              No delegate records match the current filter criteria.
+            </td>
+          </tr>
+        `;
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(p => {
+        const eventsFormatted = Array.isArray(p.events) ? p.events.join(', ') : (p.events || 'Symposium Pass');
+        const isAdmitted = !!p.gatePermittedAt;
+        const hasProof = !!p.screenshotBase64;
+
+        return `
+          <tr class="hover:bg-zinc-800/40 transition-colors">
+            <!-- Reg ID -->
+            <td class="py-3 px-4 font-mono font-bold text-brand-orange whitespace-nowrap">
+              ${p.regId || 'AGNI-000000'}
+              <div class="text-[10px] text-zinc-500 font-normal">${p.timestamp ? p.timestamp.split(',')[0] : '06/10/2026'}</div>
+            </td>
+
+            <!-- Student Name -->
+            <td class="py-3 px-4">
+              <div class="font-bold text-white">${escapeHtml(p.name || 'Delegate')}</div>
+              <div class="text-[11px] text-zinc-400 font-mono">${p.phone || '-'}</div>
+              <div class="text-[10px] text-zinc-500">${escapeHtml(p.email || '')}</div>
+            </td>
+
+            <!-- College & Dept -->
+            <td class="py-3 px-4">
+              <div class="text-zinc-200">${escapeHtml(p.college || 'GCE Erode')}</div>
+              <div class="text-[11px] text-zinc-400 font-mono">${escapeHtml(p.dept || 'Automobile')} · ${p.year || 'Delegate'}</div>
+            </td>
+
+            <!-- Events & Team -->
+            <td class="py-3 px-4 max-w-xs">
+              <div class="text-zinc-200 line-clamp-1">${escapeHtml(eventsFormatted)}</div>
+              ${p.teamCount && p.teamCount > 1 ? `<span class="text-[10px] text-brand-gold font-mono">Team of ${p.teamCount}</span>` : `<span class="text-[10px] text-zinc-500">Solo</span>`}
+            </td>
+
+            <!-- Fee & Payment -->
+            <td class="py-3 px-4 whitespace-nowrap">
+              <div class="font-mono font-bold text-emerald-400">₹${p.totalAmount || p.amount || 200}</div>
+              <div class="text-[10px] font-mono text-zinc-400 flex items-center gap-1 mt-0.5">
+                <span>UTR: ${p.utr ? p.utr.substring(0, 10) + '...' : 'Spot'}</span>
+                ${hasProof ? `<button onclick="viewPaymentProofModal('${p.regId}')" class="text-brand-gold hover:underline text-[10px] font-bold" title="View Screenshot">Proof</button>` : ''}
+              </div>
+            </td>
+
+            <!-- Gate Check-in Badge -->
+            <td class="py-3 px-4 whitespace-nowrap">
+              ${isAdmitted ? `
+                <span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold border border-emerald-500/40 inline-flex items-center gap-1">
+                  <i class="w-3 h-3" data-lucide="check"></i> Admitted
+                </span>
+                <div class="text-[9px] text-zinc-500 mt-0.5">${p.gatePermittedAt.split('(')[0]}</div>
+              ` : `
+                <span class="px-2.5 py-1 rounded-full bg-zinc-800 text-zinc-400 text-[10px] font-mono border border-zinc-700 inline-flex items-center gap-1">
+                  Pending Gate
+                </span>
+              `}
+            </td>
+
+            <!-- Actions -->
+            <td class="py-3 px-4 text-right whitespace-nowrap">
+              <div class="inline-flex items-center gap-1.5">
+                <!-- Check-in Toggle -->
+                <button onclick="toggleDelegateCheckIn('${p.regId}', ${!isAdmitted})" class="p-1.5 rounded-lg ${isAdmitted ? 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300' : 'bg-emerald-600 hover:bg-emerald-500 text-white'} transition-all" title="${isAdmitted ? 'Revoke Check-in' : 'Grant Entry'}">
+                  <i class="w-3.5 h-3.5" data-lucide="${isAdmitted ? 'rotate-ccw' : 'check'}"></i>
+                </button>
+
+                <!-- Pass QR -->
+                <button onclick="previewStudentPassModal('${p.regId}')" class="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-brand-gold transition-all" title="View Pass & QR">
+                  <i class="w-3.5 h-3.5" data-lucide="qr-code"></i>
+                </button>
+
+                <!-- Certificate -->
+                <button onclick="loadStudentIntoCertGenerator('${p.regId}')" class="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-brand-orange transition-all" title="Generate Certificate">
+                  <i class="w-3.5 h-3.5" data-lucide="award"></i>
+                </button>
+
+                <!-- Delete -->
+                <button onclick="deleteRegistrationRecord('${p.regId}')" class="p-1.5 rounded-lg bg-zinc-800 hover:bg-rose-950 text-zinc-500 hover:text-rose-400 transition-all" title="Delete record">
+                  <i class="w-3.5 h-3.5" data-lucide="trash-2"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function clearRegistrationFilters() {
+      document.getElementById('filterSearch').value = '';
+      document.getElementById('filterEvent').value = 'ALL';
+      document.getElementById('filterPayment').value = 'ALL';
+      document.getElementById('filterGate').value = 'ALL';
+      renderRegistrationsTable();
+    }
+
+    // ==================== GATE SCANNER & QR VERIFICATION ====================
+    function startQrCamera() {
+      const region = document.getElementById('html5QrScannerRegion');
+      const promptBox = document.getElementById('qrReaderPrompt');
+      const stopBtn = document.getElementById('stopCameraBtn');
+
+      promptBox.classList.add('hidden');
+      region.classList.remove('hidden');
+      stopBtn.classList.remove('hidden');
+
+      if (!html5QrScanner) {
+        html5QrScanner = new Html5Qrcode('html5QrScannerRegion');
+      }
+
+      html5QrScanner.start(
+        { facingMode: 'environment' },
+        { fps: 10, qrbox: { width: 220, height: 220 } },
+        (decodedText) => {
+          // Success callback
+          handleQrScanResult(decodedText);
+        },
+        (error) => {
+          // ignore scan errors per frame
+        }
+      ).catch(err => {
+        console.error('Camera access denied or error:', err);
+        showToast('Camera Error', 'Could not open camera. Please use keyboard/manual search.');
+        stopQrCamera();
+      });
+      isCameraActive = true;
+    }
+
+    function stopQrCamera() {
+      if (html5QrScanner && isCameraActive) {
+        html5QrScanner.stop().then(() => {
+          document.getElementById('html5QrScannerRegion').classList.add('hidden');
+          document.getElementById('qrReaderPrompt').classList.remove('hidden');
+          document.getElementById('stopCameraBtn').classList.add('hidden');
+          isCameraActive = false;
+        }).catch(err => console.error(err));
+      }
+    }
+
+    function handleManualScanSubmit() {
+      const inp = document.getElementById('manualQrScanInput');
+      const text = (inp ? inp.value : '').trim();
+      if (!text) return;
+      handleQrScanResult(text);
+      if (inp) inp.value = '';
+    }
+
+    function executeQuickCheckIn() {
+      const inp = document.getElementById('quickGateInput');
+      const text = (inp ? inp.value : '').trim();
+      if (!text) return;
+      handleQrScanResult(text);
+      if (inp) inp.value = '';
+    }
+
+    function handleQrScanResult(rawScanned) {
+      playTestBeep();
+      const list = loadParticipants();
+
+      // Normalize string: check if raw text or pass ID
+      let targetId = rawScanned.trim();
+      if (rawScanned.includes('Pass ID:')) {
+        const match = rawScanned.match(/Pass ID:\s*([A-Za-z0-9_-]+)/);
+        if (match && match[1]) targetId = match[1].trim();
+      }
+
+      // Find record by regId, phone, or email
+      const found = list.find(p => 
+        (p.regId && p.regId.toUpperCase() === targetId.toUpperCase()) ||
+        (p.phone && p.phone === targetId) ||
+        (p.email && p.email.toLowerCase() === targetId.toLowerCase())
+      );
+
+      const verdictCard = document.getElementById('gateVerdictCard');
+      const detailBox = document.getElementById('delegatePassResultBox');
+
+      if (!found) {
+        // INVALID PASS
+        verdictCard.className = 'p-6 rounded-2xl border-2 border-rose-500/80 bg-rose-950/40 text-center py-8 shadow-xl';
+        verdictCard.innerHTML = `
+          <div class="w-16 h-16 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center mx-auto mb-3">
+            <i class="w-8 h-8" data-lucide="alert-triangle"></i>
+          </div>
+          <h3 class="text-xl font-black text-rose-400 uppercase tracking-wide font-display">INVALID PASS · NOT FOUND</h3>
+          <p class="text-xs text-zinc-300 mt-1 max-w-sm mx-auto">
+            No symposium registration record matches <strong>"${escapeHtml(targetId)}"</strong>. Please redirect delegate to the On-Spot desk.
+          </p>
+        `;
+        detailBox.classList.add('hidden');
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      currentInspectedRegId = found.regId;
+
+      // Check if duplicate entry
+      if (found.gatePermittedAt) {
+        // ALREADY CHECKED IN
+        verdictCard.className = 'p-6 rounded-2xl border-2 border-amber-500 bg-amber-950/40 text-center py-6 shadow-xl';
+        verdictCard.innerHTML = `
+          <div class="w-16 h-16 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto mb-2">
+            <i class="w-8 h-8" data-lucide="shield-alert"></i>
+          </div>
+          <h3 class="text-xl font-black text-amber-400 uppercase tracking-wide font-display">DUPLICATE ENTRY DETECTED</h3>
+          <p class="text-xs text-zinc-300 mt-0.5">
+            This pass was already presented & admitted at <strong>${found.gatePermittedAt}</strong>.
+          </p>
+        `;
+      } else {
+        // VERIFIED & PERMITTED
+        found.gatePermittedAt = new Date().toLocaleTimeString() + ' (' + new Date().toLocaleDateString() + ')';
+        found.status = 'Approved';
+        saveAllParticipants(list);
+        renderDashboard();
+        renderRegistrationsTable();
+
+        verdictCard.className = 'p-6 rounded-2xl border-2 border-emerald-500 bg-emerald-950/40 text-center py-6 shadow-xl';
+        verdictCard.innerHTML = `
+          <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto mb-2">
+            <i class="w-8 h-8" data-lucide="check-circle-2"></i>
+          </div>
+          <h3 class="text-2xl font-black text-emerald-400 uppercase tracking-wide font-display">ENTRY GRANTED · ADMITTED</h3>
+          <p class="text-xs text-zinc-300 mt-0.5">
+            Delegate verified! Lunch coupon & delegate badge authorized.
+          </p>
+        `;
+      }
+
+      // Populate Detail Inspector
+      detailBox.classList.remove('hidden');
+      document.getElementById('resDelegateName').innerText = found.name;
+      document.getElementById('resDelegateId').innerText = found.regId;
+      document.getElementById('resDelegateCollege').innerText = found.college || 'GCE Erode';
+      document.getElementById('resDelegateDept').innerText = (found.dept || 'Automobile') + ' · ' + (found.year || 'Delegate');
+      document.getElementById('resDelegatePhone').innerText = found.phone || '-';
+      document.getElementById('resDelegateEmail').innerText = found.email || '-';
+      document.getElementById('resDelegateEvents').innerText = Array.isArray(found.events) ? found.events.join(', ') : (found.events || 'Symposium Events');
+      document.getElementById('resDelegateTeam').innerText = found.teamCount && found.teamCount > 1 ? `Team of ${found.teamCount}` : 'Solo Delegate';
+      document.getElementById('resDelegateFee').innerText = '₹' + (found.totalAmount || found.amount || 200) + ' (Verified)';
+      document.getElementById('resDelegateUtr').innerText = 'UTR: ' + (found.utr || 'Cash On Spot');
+
+      const statusBadge = document.getElementById('resGateStatusBadge');
+      if (found.gatePermittedAt) {
+        statusBadge.className = 'inline-block px-3 py-1 rounded-full text-xs font-bold font-mono bg-emerald-500/20 text-emerald-400 border border-emerald-500/40';
+        statusBadge.innerText = 'ADMITTED (CHECKED IN)';
+        document.getElementById('resCheckinTimestamp').innerText = 'Admitted: ' + found.gatePermittedAt;
+      } else {
+        statusBadge.className = 'inline-block px-3 py-1 rounded-full text-xs font-bold font-mono bg-zinc-800 text-zinc-400 border border-zinc-700';
+        statusBadge.innerText = 'NOT ADMITTED';
+        document.getElementById('resCheckinTimestamp').innerText = 'Awaiting gate admission';
+      }
+
+      // Update Live QR Preview Box with this student's card
+      updateLiveQrPreviewForStudent(found);
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function toggleDelegateCheckIn(regId, admit) {
+      if (!regId) return;
+      const list = loadParticipants();
+      const p = list.find(item => item.regId === regId);
+      if (!p) return;
+
+      if (admit) {
+        p.gatePermittedAt = new Date().toLocaleTimeString() + ' (' + new Date().toLocaleDateString() + ')';
+        p.status = 'Approved';
+        showToast('Entry Permitted', `${p.name} has been admitted at the gate.`);
+      } else {
+        p.gatePermittedAt = null;
+        p.status = 'Pending';
+        showToast('Check-in Reset', `${p.name} check-in status cleared.`);
+      }
+
+      saveAllParticipants(list);
+      renderDashboard();
+      renderRegistrationsTable();
+      handleQrScanResult(p.regId);
+    }
+
+    function updateLiveQrPreviewForStudent(p) {
+      const qrImg = document.getElementById('liveQrPreviewImg');
+      const textPreview = document.getElementById('liveQrTextPreview');
+      const downloadLink = document.getElementById('downloadQrLink');
+
+      const cardText = 
+`AGNI 26 EVENT PASS
+Pass ID: ${p.regId}
+Delegate: ${p.name || 'Participant'}
+College: ${p.college || 'GCE Erode'}
+Dept: ${p.dept || 'Automobile'} (${p.year || 'Delegate'})
+Status: VERIFIED ENTRY
+Date: 06 Oct 2026 | GCE Erode`;
+
+      const encoded = encodeURIComponent(cardText);
+      const url = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encoded;
+
+      if (qrImg) qrImg.src = url;
+      if (textPreview) textPreview.innerText = cardText;
+      if (downloadLink) downloadLink.href = url;
+    }
+
+    function copyQrText() {
+      const text = document.getElementById('liveQrTextPreview')?.innerText;
+      if (text) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('Copied to Clipboard', 'QR text payload copied.');
+        });
+      }
+    }
+
+    function playTestBeep() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.15);
+      } catch (e) {}
+    }
+
+    // ==================== CERTIFICATES GENERATION ====================
+    function populateCertStudentDropdown() {
+      const select = document.getElementById('certStudentSelect');
+      if (!select) return;
+      const list = loadParticipants();
+      select.innerHTML = '<option value="">-- Choose from roster or enter below --</option>' + 
+        list.map(p => `
+          <option value="${p.regId}">
+            ${p.name} (${p.college || 'GCE Erode'}) - ${p.regId}
+          </option>
+        `).join('');
+    }
+
+    function handleCertStudentSelectChange() {
+      const regId = document.getElementById('certStudentSelect').value;
+      if (!regId) return;
+      loadStudentIntoCertGenerator(regId);
+    }
+
+    function loadStudentIntoCertGenerator(regId) {
+      const list = loadParticipants();
+      const p = list.find(item => item.regId === regId);
+      if (!p) return;
+
+      document.getElementById('certCandidateName').value = p.name || '';
+      document.getElementById('certCollegeName').value = p.college || 'Government College of Engineering, Erode';
+      document.getElementById('certSerialNo').value = 'AGNI26-CERT-' + p.regId.replace(/[^0-9]/g, '');
+
+      // Check events
+      const events = Array.isArray(p.events) ? p.events : [p.events || ''];
+      const eventSelect = document.getElementById('certEventSelect');
+      if (events.length > 0 && eventSelect) {
+        const first = events[0];
+        if (first.toLowerCase().includes('paper')) eventSelect.value = 'Paper Presentation';
+        else if (first.toLowerCase().includes('expo')) eventSelect.value = 'Project Expo';
+        else if (first.toLowerCase().includes('cad')) eventSelect.value = 'CAD Hackathon';
+        else if (first.toLowerCase().includes('quiz')) eventSelect.value = 'Auto Quiz';
+        else if (first.toLowerCase().includes('treasure')) eventSelect.value = 'Treasure Hunt';
+        else if (first.toLowerCase().includes('squid')) eventSelect.value = 'Squid Tech';
+      }
+
+      switchTab('certificates');
+      updateLiveCertificatePreview();
+      showToast('Loaded Candidate', `Certificate customized for ${p.name}.`);
+    }
+
+    function updateLiveCertificatePreview() {
+      const name = (document.getElementById('certCandidateName')?.value || 'DELEGATE NAME').toUpperCase();
+      const college = document.getElementById('certCollegeName')?.value || 'Government College of Engineering, Erode';
+      const eventName = document.getElementById('certEventSelect')?.value || 'Technical Symposium';
+      const certType = document.getElementById('certTypeSelect')?.value || 'PARTICIPATION';
+      const serial = document.getElementById('certSerialNo')?.value || 'AGNI26-CERT-0001';
+
+      document.getElementById('previewCertName').innerText = name;
+      document.getElementById('previewCertCollege').innerText = college;
+      document.getElementById('previewCertEvent').innerText = eventName;
+      document.getElementById('previewCertSerial').innerText = serial;
+
+      const headingEl = document.getElementById('previewCertHeading');
+      if (certType === 'FIRST_PRIZE') {
+        headingEl.innerText = 'CERTIFICATE OF MERIT · 1ST PRIZE';
+        headingEl.className = 'text-3xl font-black font-certificate tracking-wider text-[#b83800] uppercase';
+      } else if (certType === 'SECOND_PRIZE') {
+        headingEl.innerText = 'CERTIFICATE OF MERIT · 2ND PRIZE';
+        headingEl.className = 'text-3xl font-black font-certificate tracking-wider text-[#181c24] uppercase';
+      } else if (certType === 'THIRD_PRIZE') {
+        headingEl.innerText = 'CERTIFICATE OF MERIT · 3RD PRIZE';
+        headingEl.className = 'text-3xl font-black font-certificate tracking-wider text-[#181c24] uppercase';
+      } else if (certType === 'APPRECIATION') {
+        headingEl.innerText = 'CERTIFICATE OF APPRECIATION';
+        headingEl.className = 'text-3xl font-black font-certificate tracking-wider text-[#b8860b] uppercase';
+      } else {
+        headingEl.innerText = 'CERTIFICATE OF PARTICIPATION';
+        headingEl.className = 'text-3xl font-black font-certificate tracking-wider text-[#181c24] uppercase';
+      }
+
+      // Update certificate verification QR
+      const qrImg = document.getElementById('certVerificationQr');
+      if (qrImg) {
+        const qrPayload = `AGNI 26 AUTHENTICATED CERTIFICATE\nSerial: ${serial}\nConferred to: ${name}\nInstitution: ${college}\nEvent: ${eventName}\nIssued: 06 Oct 2026 | GCE Erode`;
+        qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(qrPayload);
+      }
+    }
+
+    function printCurrentCertificate() {
+      const certNode = document.getElementById('symposiumCertificatePaper');
+      if (!certNode) return;
+      const printContainer = document.getElementById('printAreaContainer');
+      printContainer.innerHTML = '';
+      const clone = certNode.cloneNode(true);
+      clone.style.margin = '0 auto';
+      clone.style.boxShadow = 'none';
+      printContainer.appendChild(clone);
+      window.print();
+    }
+
+    function batchGenerateParticipationCertificates() {
+      const list = loadParticipants().filter(p => p.gatePermittedAt || p.status === 'Approved');
+      if (list.length === 0) {
+        alert('No checked-in delegates found to batch print. Check in attendees first or seed demo data.');
+        return;
+      }
+
+      if (!confirm(`Prepare batch certificates for ${list.length} admitted delegates?`)) return;
+
+      const printContainer = document.getElementById('printAreaContainer');
+      printContainer.innerHTML = '';
+
+      list.forEach((p, idx) => {
+        const serial = 'AGNI26-CERT-' + String(idx + 1).padStart(4, '0');
+        const certWrapper = document.createElement('div');
+        certWrapper.style.pageBreakAfter = 'always';
+        certWrapper.style.width = '100vw';
+        certWrapper.style.height = '100vh';
+        certWrapper.style.display = 'flex';
+        certWrapper.style.alignItems = 'center';
+        certWrapper.style.justifyContent = 'center';
+
+        const certClone = document.getElementById('symposiumCertificatePaper').cloneNode(true);
+        certClone.querySelector('#previewCertName').innerText = (p.name || 'Delegate').toUpperCase();
+        certClone.querySelector('#previewCertCollege').innerText = p.college || 'GCE Erode';
+        certClone.querySelector('#previewCertEvent').innerText = Array.isArray(p.events) ? p.events[0] : (p.events || 'National Level Technical Symposium');
+        certClone.querySelector('#previewCertSerial').innerText = serial;
+
+        certWrapper.appendChild(certClone);
+        printContainer.appendChild(certWrapper);
+      });
+
+      showToast('Batch Ready', `${list.length} certificates prepared. Opening print dialog...`);
+      setTimeout(() => window.print(), 600);
+    }
+
+    // ==================== EVENT DETAILS GRID ====================
+    function renderEventsGrid() {
+      const container = document.getElementById('adminEventCardsGrid');
+      if (!container) return;
+
+      const list = loadParticipants();
+
+      container.innerHTML = SYMPOSIUM_EVENTS.map(ev => {
+        // Count participants for this event
+        const enrolled = list.filter(p => {
+          const s = Array.isArray(p.events) ? p.events.join(' ').toLowerCase() : String(p.events || '').toLowerCase();
+          return s.includes(ev.name.toLowerCase().split(' ')[0]);
+        });
+
+        return `
+          <div class="p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-brand-orange/40 transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-[10px] font-mono px-2.5 py-1 rounded bg-brand-orange/15 text-brand-orange border border-brand-orange/30 font-bold uppercase">${ev.type}</span>
+                <span class="text-xs font-mono font-bold text-brand-gold">Prize: ${ev.prize}</span>
+              </div>
+              <h3 class="text-lg font-bold text-white font-display">${ev.name}</h3>
+              <p class="text-xs text-zinc-400 mt-1">${ev.venue} · ${ev.time}</p>
+              
+              <div class="mt-4 pt-3 border-t border-zinc-800/80 space-y-1.5 text-xs font-mono">
+                <div class="flex justify-between text-zinc-300">
+                  <span>Entry Fee:</span>
+                  <span class="font-bold text-white">${ev.fee}</span>
+                </div>
+                <div class="flex justify-between text-zinc-300">
+                  <span>Team Size:</span>
+                  <span class="font-bold text-white">${ev.team}</span>
+                </div>
+                <div class="flex justify-between text-zinc-300">
+                  <span>Enrolled Delegates:</span>
+                  <span class="font-bold text-brand-orange">${enrolled.length} participants</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-5 pt-3 border-t border-zinc-800 flex items-center justify-between">
+              <button onclick="filterBySpecificEvent('${ev.id}')" class="text-xs text-brand-gold hover:underline font-semibold flex items-center gap-1">
+                <i class="w-3.5 h-3.5" data-lucide="users"></i> View Students (${enrolled.length})
+              </button>
+              <button onclick="loadEventIntoCert('${ev.name}')" class="text-xs text-brand-orange hover:underline font-semibold flex items-center gap-1">
+                <i class="w-3.5 h-3.5" data-lucide="award"></i> Issue Certificates
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function filterBySpecificEvent(eventId) {
+      switchTab('registrations');
+      const select = document.getElementById('filterEvent');
+      if (select) {
+        select.value = eventId;
+        renderRegistrationsTable();
+      }
+    }
+
+    function loadEventIntoCert(eventName) {
+      switchTab('certificates');
+      const select = document.getElementById('certEventSelect');
+      if (select) {
+        select.value = eventName;
+        updateLiveCertificatePreview();
+      }
+    }
+
+    // ==================== MANUAL ON-SPOT REGISTRATION ====================
+    function openManualRegistrationModal() {
+      document.getElementById('manualRegModal').classList.remove('hidden');
+    }
+    function closeManualRegModal() {
+      document.getElementById('manualRegModal').classList.add('hidden');
+    }
+
+    function handleManualRegSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('manualName').value.trim();
+      const phone = document.getElementById('manualPhone').value.trim();
+      const email = document.getElementById('manualEmail').value.trim();
+      const college = document.getElementById('manualCollege').value.trim();
+      const dept = document.getElementById('manualDept').value.trim() || 'Automobile';
+      const amount = document.getElementById('manualAmount').value.trim() || '250';
+      const utr = document.getElementById('manualUtr').value.trim() || 'Cash On Spot';
+      const autoAdmit = document.getElementById('manualAutoAdmit').checked;
+
+      // Collect selected events
+      const eventSelect = document.getElementById('manualEvents');
+      const selectedEvents = Array.from(eventSelect.selectedOptions).map(o => o.value);
+      if (selectedEvents.length === 0) selectedEvents.push('Technical Event');
+
+      const regId = 'AGNI-' + Math.floor(100000 + Math.random() * 900000);
+
+      const record = {
+        regId: regId,
+        name: name,
+        phone: phone,
+        email: email,
+        college: college,
+        dept: dept,
+        year: 'Delegate',
+        events: selectedEvents,
+        totalAmount: amount,
+        utr: utr,
+        isSpot: true,
+        timestamp: new Date().toLocaleString(),
+        gatePermittedAt: autoAdmit ? (new Date().toLocaleTimeString() + ' (' + new Date().toLocaleDateString() + ')') : null,
+        status: autoAdmit ? 'Approved' : 'Pending'
+      };
+
+      const list = loadParticipants();
+      list.unshift(record);
+      saveAllParticipants(list);
+
+      closeManualRegModal();
+      syncAndRefreshAllData();
+      showToast('Spot Registration Saved', `Pass ${regId} issued for ${name}.`);
+
+      // Inspect pass immediately
+      handleQrScanResult(regId);
+    }
+
+    // ==================== PROOF & PASS MODALS ====================
+    function viewPaymentProofModal(regId) {
+      const list = loadParticipants();
+      const p = list.find(item => item.regId === regId);
+      if (!p || !p.screenshotBase64) {
+        alert('No screenshot receipt attached for this registration.');
+        return;
+      }
+      document.getElementById('proofModalUtr').innerText = 'UTR / Transaction: ' + (p.utr || 'N/A');
+      document.getElementById('proofModalImg').src = p.screenshotBase64;
+      document.getElementById('proofModal').classList.remove('hidden');
+    }
+    function closeProofModal() {
+      document.getElementById('proofModal').classList.add('hidden');
+    }
+
+    function previewStudentPassModal(regId) {
+      const list = loadParticipants();
+      const p = list.find(item => item.regId === regId);
+      if (!p) return;
+
+      document.getElementById('modalPassName').innerText = p.name;
+      document.getElementById('modalPassId').innerText = p.regId;
+      document.getElementById('modalPassCollege').innerText = p.college || 'GCE Erode';
+      document.getElementById('modalPassDept').innerText = (p.dept || 'Automobile') + ' · ' + (p.year || 'Delegate');
+      document.getElementById('modalPassFee').innerText = 'Fee: ₹' + (p.totalAmount || p.amount || 200);
+
+      const scanData = `AGNI 26 EVENT PASS\nPass ID: ${p.regId}\nDelegate: ${p.name}\nCollege: ${p.college || 'GCE Erode'}\nDept: ${p.dept || 'Automobile'}\nDate: 06 Oct 2026`;
+      document.getElementById('modalPassQrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(scanData);
+
+      document.getElementById('passModal').classList.remove('hidden');
+    }
+    function closePassModal() {
+      document.getElementById('passModal').classList.add('hidden');
+    }
+
+    function deleteRegistrationRecord(regId) {
+      if (!confirm(`Are you sure you want to remove pass ${regId} from the database?`)) return;
+      let list = loadParticipants();
+      list = list.filter(p => p.regId !== regId);
+      saveAllParticipants(list);
+      syncAndRefreshAllData();
+      showToast('Record Deleted', `Registration ${regId} deleted.`);
+    }
+
+    // ==================== EXPORT & BACKUP TOOLS ====================
+    function exportRegistrationsToCSV() {
+      const list = loadParticipants();
+      if (list.length === 0) {
+        alert('No registrations to export.');
+        return;
+      }
+
+      let csv = 'Reg ID,Student Name,College,Department,Phone,Email,Events,Team Size,Amount,UTR,Gate Status,Timestamp\n';
+      list.forEach(p => {
+        const eventsStr = Array.isArray(p.events) ? p.events.join('; ') : (p.events || '');
+        const gate = p.gatePermittedAt ? 'Admitted (' + p.gatePermittedAt + ')' : 'Pending';
+        csv += `"${p.regId || ''}","${p.name || ''}","${p.college || ''}","${p.dept || ''}","${p.phone || ''}","${p.email || ''}","${eventsStr}","${p.teamCount || 1}","${p.totalAmount || p.amount || ''}","${p.utr || ''}","${gate}","${p.timestamp || ''}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `AGNI26_Registrations_Export_${Date.now()}.csv`;
+      link.click();
+      showToast('CSV Exported', 'Downloaded full registration spreadsheet.');
+    }
+
+    function exportRegistrationsToJSON() {
+      const list = loadParticipants();
+      const blob = new Blob([JSON.stringify(list, null, 2)], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `AGNI26_Backup_${Date.now()}.json`;
+      link.click();
+      showToast('JSON Exported', 'Full symposium backup downloaded.');
+    }
+
+    function importRegistrationsFromJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (Array.isArray(parsed)) {
+            saveAllParticipants(parsed);
+            syncAndRefreshAllData();
+            showToast('Restore Complete', `Imported ${parsed.length} delegate records.`);
+          } else {
+            alert('Invalid JSON structure. Expected an array of registration records.');
+          }
+        } catch (err) {
+          alert('Failed to parse JSON file.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function printStudentRoster() {
+      switchTab('registrations');
+      setTimeout(() => window.print(), 300);
+    }
+
+    function seedDemoRegistrations() {
+      const demoData = [
+        {
+          regId: 'AGNI-842190',
+          name: 'Arun Kumar V',
+          phone: '9842156780',
+          email: 'arunkumar.auto@annauniv.edu',
+          college: 'Anna University, Chennai',
+          dept: 'Automobile Engineering',
+          year: 'Final Year',
+          events: ['Paper Presentation', 'CAD Hackathon'],
+          totalAmount: '350',
+          utr: '427189012345',
+          timestamp: '22/09/2026, 14:22:10',
+          gatePermittedAt: '08:42:15 AM (06/10/2026)',
+          status: 'Approved'
+        },
+        {
+          regId: 'AGNI-619204',
+          name: 'Deepika S',
+          phone: '9443218765',
+          email: 'deepika.mech@psgtech.ac.in',
+          college: 'PSG College of Technology, Coimbatore',
+          dept: 'Mechanical Engineering',
+          year: 'Pre-Final Year',
+          events: ['Project Expo'],
+          teamCount: 3,
+          totalAmount: '500',
+          utr: '519283746102',
+          timestamp: '22/09/2026, 16:05:40',
+          gatePermittedAt: '08:55:30 AM (06/10/2026)',
+          status: 'Approved'
+        },
+        {
+          regId: 'AGNI-390142',
+          name: 'Praveen Raj M',
+          phone: '8610492817',
+          email: 'praveen.gcee@gmail.com',
+          college: 'Government College of Engineering, Erode',
+          dept: 'Automobile Engineering',
+          year: 'Final Year',
+          events: ['Auto Quiz', 'Treasure Hunt'],
+          totalAmount: '300',
+          utr: '601928374152',
+          timestamp: '23/09/2026, 09:12:00',
+          gatePermittedAt: null,
+          status: 'Pending'
+        },
+        {
+          regId: 'AGNI-771239',
+          name: 'Kavitha R',
+          phone: '9789123456',
+          email: 'kavitha.cit@cit.edu.in',
+          college: 'Coimbatore Institute of Technology',
+          dept: 'Automobile Engineering',
+          year: 'Final Year',
+          events: ['Paper Presentation', 'Project Expo', 'Squid Tech'],
+          totalAmount: '550',
+          utr: '719283019283',
+          timestamp: '23/09/2026, 10:00:22',
+          gatePermittedAt: null,
+          status: 'Pending'
+        },
+        {
+          regId: 'AGNI-154920',
+          name: 'Manojkumar S',
+          phone: '9943209876',
+          email: 'manoj.kumar@kct.ac.in',
+          college: 'Kumaraguru College of Technology',
+          dept: 'Mechatronics Engineering',
+          year: '3rd Year',
+          events: ['CAD Hackathon', 'Auto Quiz'],
+          totalAmount: '350',
+          utr: 'Cash on Spot',
+          isSpot: true,
+          timestamp: '23/09/2026, 10:15:30',
+          gatePermittedAt: '09:05:12 AM (06/10/2026)',
+          status: 'Approved'
+        },
+        {
+          regId: 'AGNI-982310',
+          name: 'Siddharth D',
+          phone: '8610682174',
+          email: 'siddharth.gcee@gmail.com',
+          college: 'Government College of Engineering, Erode',
+          dept: 'Automobile Engineering',
+          year: 'Pre Final Year',
+          events: ['Squid Tech', 'Treasure Hunt'],
+          totalAmount: '300',
+          utr: '819203948172',
+          timestamp: '23/09/2026, 10:25:00',
+          gatePermittedAt: null,
+          status: 'Pending'
+        }
+      ];
+
+      saveAllParticipants(demoData);
+      syncAndRefreshAllData();
+      showToast('Sample Data Loaded', '6 realistic symposium delegates seeded into database.');
+    }
+
+    function clearAllRegistrationsConfirmed() {
+      if (confirm('CAUTION: Are you sure you want to permanently delete ALL symposium registration records? This cannot be undone!')) {
+        saveAllParticipants([]);
+        syncAndRefreshAllData();
+        showToast('Database Cleared', 'All delegate records removed.');
+      }
+    }
+
+    // ==================== UI UTILITIES ====================
+    function showToast(title, msg) {
+      const toast = document.getElementById('adminToast');
+      const titleEl = document.getElementById('adminToastTitle');
+      const msgEl = document.getElementById('adminToastMsg');
+      if (!toast) return;
+      titleEl.innerText = title;
+      msgEl.innerText = msg;
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-[-20px]', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+      }, 20);
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-[-20px]', 'opacity-0');
+        setTimeout(() => toast.classList.add('hidden'), 300);
+      }, 3500);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function updateLiveClock() {
+      const el = document.getElementById('liveClockDisplay');
+      if (el) {
+        const d = new Date();
+        el.innerText = 'IST ' + d.toLocaleTimeString();
+      }
+    }
+
+    // ==================== INITIALIZATION ====================
+    window.addEventListener('DOMContentLoaded', () => {
+      checkAuthGate();
+      syncAndRefreshAllData();
+      updateLiveCertificatePreview();
+      setInterval(updateLiveClock, 1000);
+      updateLiveClock();
+
+      // If initial list is empty, seed demo data for instant out-of-the-box readiness
+      const existing = loadParticipants();
+      if (!existing || existing.length === 0) {
+        seedDemoRegistrations();
+      }
+
+      if (window.lucide) lucide.createIcons();
+    });
+  </script>
+
+</body>
+</html>
