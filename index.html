@@ -1873,7 +1873,8 @@ function calculateTotals() {
       sendToGoogleAppsScriptReliably(payload);
 
       document.getElementById('successRegId').innerText = regId;
-      document.getElementById('successRegName').innerText = name;
+        if(typeof generateQR === 'function') generateQR(regId);
+        document.getElementById('successRegName').innerText = name;
       document.getElementById('successRegCollege').innerText = college;
       document.getElementById('successRegDept').innerText = `${dept} · ${year}`;
       document.getElementById('successRegUtr').innerText = utr;
@@ -2751,7 +2752,8 @@ window.handleLookupSubmit = function(e) {
 
       // Populate Confirmation Modal
       document.getElementById('successRegId').innerText = regId;
-      document.getElementById('successRegName').innerText = name;
+        if(typeof generateQR === 'function') generateQR(regId);
+        document.getElementById('successRegName').innerText = name;
       document.getElementById('successRegCollege').innerText = college;
       document.getElementById('successRegDept').innerText = `${deptVal} · ${year}`;
       document.getElementById('successRegUtr').innerText = utr;
@@ -4036,4 +4038,40 @@ Develop a small software prototype that demonstrates how an automotive electroni
   };
 </script>
 
+
+<script>
+// --- AGNI 26 QR Generator ---
+function generateQR(registrationId) {
+    const qrData = window.location.origin + '/verify.html?id=' + encodeURIComponent(registrationId);
+    const container = document.getElementById("qrContainer");
+    if (container) {
+        container.innerHTML = "";
+        new QRCode(container, {
+            text: qrData,
+            width: 250,
+            height: 250,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+    }
+}
+
+function downloadQR() {
+    const container = document.getElementById("qrContainer");
+    if (!container) return;
+    const canvas = container.querySelector("canvas");
+    if (canvas) {
+        const url = canvas.toDataURL("image/png");
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "AGNI26_QR_Pass.png";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    } else {
+        alert("Please wait for QR code to generate.");
+    }
+}
+</script>
 </body></html>
