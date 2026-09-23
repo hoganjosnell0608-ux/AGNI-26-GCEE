@@ -12,6 +12,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@1,700;1,800;1,900&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Orbitron:ital,wght@1,800;1,900&amp;family=Outfit:wght@400;500;600;700;800;900&amp;family=Russo+One&amp;family=Space+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <!-- Lucide Icons -->
 <script src="https://unpkg.com/lucide@latest"></script>
+<!-- Firebase App, Realtime Database & Cloud Firestore SDKs (Compat v10) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
 <script>
   tailwind.config = {
     darkMode: 'class',
@@ -152,7 +157,7 @@
 </div>
 <div>
 <div class="font-bold text-white" id="toastTitle">Registration Synchronized!</div>
-<div class="text-[11px] text-zinc-400" id="toastMessage">Logged to Google Sheet and saved locally.</div>
+<div class="text-[11px] text-zinc-400" id="toastMessage">Stored securely in Firebase Cloud Database.</div>
 </div>
 </div>
 <!-- NAVIGATION -->
@@ -1290,7 +1295,7 @@ const nonTechEvents = EVENTS_DATA.filter(e => e.type === 'non-technical');
   // In-memory fallback if browser storage is blocked
   let memoryFallbackParticipants = [];
 
-  const EVENTS_DATA = [
+  let EVENTS_DATA = [
     { 
       id: 'ev-paper', 
       title: 'Paper Presentation', 
@@ -1455,6 +1460,14 @@ const nonTechEvents = EVENTS_DATA.filter(e => e.type === 'non-technical');
         } catch (err) {}
       }
     }
+
+    // Save directly to Firebase Cloud Firestore
+    if (window.AgniFirebase) {
+      window.AgniFirebase.saveRegistration(record).catch(err => {
+        console.warn('Firebase async background save notice:', err);
+      });
+    }
+
     return list;
   }
 
@@ -1474,6 +1487,11 @@ const nonTechEvents = EVENTS_DATA.filter(e => e.type === 'non-technical');
     lastDispatchedPassCode = payload.code;
     isDispatchInProgress = true;
 
+    // Directly store in Firebase Cloud Firestore
+    if (window.AgniFirebase) {
+      window.AgniFirebase.saveRegistration(payload).catch(e => console.warn('Firebase store error:', e));
+    }
+
     try {
       const jsonString = JSON.stringify(payload);
       const formParams = new URLSearchParams();
@@ -1486,7 +1504,7 @@ const nonTechEvents = EVENTS_DATA.filter(e => e.type === 'non-technical');
 
       const urlEncodedBody = formParams.toString();
 
-      // 2. Only ONE single fetch request (no sendBeacon) to write once into Google Sheets
+      // Background sync request
       fetch(SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
@@ -1495,7 +1513,7 @@ const nonTechEvents = EVENTS_DATA.filter(e => e.type === 'non-technical');
         },
         body: urlEncodedBody
       }).catch(err => {
-        console.warn('Fetch notice:', err);
+        console.warn('Background sync notice:', err);
       }).finally(() => {
         // Reset lock after 6 seconds
         setTimeout(() => {
@@ -1825,10 +1843,10 @@ function calculateTotals() {
         status: 'Pending Verification'
       };
 
-      // 1. Guaranteed offline and instant save in storage
+      // 1. Guaranteed offline and instant save in storage & Firebase Cloud
       saveParticipant(participantRecord);
 
-      // 2. Dispatch payload to Google Apps Script cleanly without any iframe redirect
+      // 2. Dispatch payload cleanly
       const payload = {
         code: regId,
         regId: regId,
@@ -1849,6 +1867,9 @@ function calculateTotals() {
       };
 
       // 3. Ultra-reliable non-blocking background dispatch
+      if (window.AgniFirebase) {
+        window.AgniFirebase.saveRegistration(participantRecord);
+      }
       sendToGoogleAppsScriptReliably(payload);
 
       document.getElementById('successRegId').innerText = regId;
@@ -1860,7 +1881,7 @@ function calculateTotals() {
       document.getElementById('successModal').classList.remove('hidden');
       if (window.lucide) lucide.createIcons();
 
-      showToast('Registration Confirmed!', `Code: ${regId} · Synced with Desk & Sheet.`);
+      showToast('Registration Confirmed!', `Code: ${regId} · Stored in Firebase Database.`);
     };
 
     if (fileInput && fileInput.files && fileInput.files.length > 0) {
@@ -1952,7 +1973,7 @@ function calculateTotals() {
     </div>
 <div style="text-align: center; margin: 16px 0;">
   <img 
-    src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&ecc=M&margin=1&data=AGNI%2026%20Pass%20ID:%20${regId}%0AName:%20${encodeURIComponent(name)}%0ACollege:%20${encodeURIComponent(college)}" 
+    src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&ecc=M&margin=1&data=AGNI%2026%20EVENT%20PASS%0APass%20ID:%20${regId}%0ADelegate:%20${encodeURIComponent(name)}%0ACollege:%20${encodeURIComponent(college)}%0AEvents:%20${encodeURIComponent(Array.from(selectedEventIds).map(id => EVENTS_DATA.find(e => e.id === id)?.title).join(', '))}" 
     alt="QR Code" 
     style="width: 160px; height: 160px; border-radius: 12px; border: 2px solid #ff5e14; background: #fff; padding: 6px;"
   />
@@ -2010,7 +2031,13 @@ function calculateTotals() {
   }
 
   // INITIALIZATION
-  window.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener('DOMContentLoaded', async () => {
+    if (window.AgniFirebase && typeof window.AgniFirebase.fetchEvents === 'function') {
+      const remoteEvents = await window.AgniFirebase.fetchEvents();
+      if (remoteEvents && remoteEvents.length > 0) {
+        EVENTS_DATA = remoteEvents;
+      }
+    }
     renderEvents();
     updateCountdown();
     setInterval(updateCountdown, 1000);
@@ -2200,12 +2227,69 @@ if (window.lucide) {
     isPaymentVerified = false;
     if (window.lucide) lucide.createIcons();
   };
-</script><script id="agni-finalized-features-script">function openParticipantLookupModal() { const m = document.getElementById('participantPortalModal'); if (m) m.classList.remove('hidden'); const err = document.getElementById('lookupErrorNotice'); if (err) err.classList.add('hidden'); if (window.lucide) lucide.createIcons(); } function closeParticipantLookupModal() { const m = document.getElementById('participantPortalModal'); if (m) m.classList.add('hidden'); } function handleLookupSubmit(e) { e.preventDefault(); const idVal = (document.getElementById('lookupIdentifier').value || '').trim().toLowerCase(); const list = getStoredParticipants(); const found = list.find(p => (p.email && p.email.toLowerCase() === idVal) || (p.phone && p.phone.trim() === idVal) || (p.regId && p.regId.toLowerCase() === idVal)); const err = document.getElementById('lookupErrorNotice'); if (!found) { err.innerText = 'No registered pass found for "' + idVal + '". Please check your spelling or register.'; err.classList.remove('hidden'); return; } closeParticipantLookupModal(); document.getElementById('successRegId').innerText = found.regId; document.getElementById('successRegName').innerText = found.name; document.getElementById('successRegCollege').innerText = found.college; document.getElementById('successRegDept').innerText = (found.dept || '') + ' · ' + (found.year || ''); document.getElementById('successRegUtr').innerText = found.utr; const qrImg = document.getElementById('confirmationPassQrImg'); if (qrImg) { qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(found.regId); } document.getElementById('successModal').classList.remove('hidden'); if (window.lucide) lucide.createIcons(); showToast('Pass Loaded', 'Showing official pass for ' + found.name); } window.handleProofUploadChange = function() { const fileInput = document.getElementById('regProofFile'); const utrInput = document.getElementById('regUtr'); if (fileInput && fileInput.files && fileInput.files.length > 0) { showToast('Screenshot Attached', 'Please enter your 12-digit Transaction ID manually.'); if (utrInput && !utrInput.value) utrInput.focus(); } }; window.verifyPaymentTransaction = function() { const utrInput = document.getElementById('regUtr'); const feedback = document.getElementById('utrStatusFeedback'); const val = utrInput ? utrInput.value.trim() : ''; if (!val || val.length !== 12 || !/^\d{12}$/.test(val)) { if (feedback) { feedback.className = 'text-[11px] text-rose-400 font-semibold mt-1.5 flex items-center gap-1'; feedback.innerHTML = '<i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> Transaction ID must be strictly exactly 12 numeric digits.'; } if (utrInput) utrInput.focus(); if (window.lucide) lucide.createIcons(); return; } const verifyBtn = document.getElementById('verifyUtrBtn'); if (verifyBtn) { verifyBtn.innerHTML = '<div class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div><span>Verifying...</span>'; } setTimeout(() => { if (verifyBtn) { verifyBtn.className = 'px-3.5 py-2 rounded-lg bg-emerald-600 text-white text-xs font-bold flex items-center gap-1.5 shrink-0'; verifyBtn.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5"></i><span>Verified</span>'; } if (feedback) { feedback.className = 'text-[11px] text-emerald-400 font-bold mt-1.5 flex items-center gap-1'; feedback.innerHTML = '<i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Transaction ID ' + val + ' recorded & validated.'; } transitionQrToSuccessTick(); unlockRegistrationButton(); showToast('Transaction ID Verified!', 'Registration button unlocked.'); if (window.lucide) lucide.createIcons(); }, 500); }; const prevSubmit = window.handleRegistrationSubmit; window.handleRegistrationSubmit = async function(e) { if (e && e.preventDefault) e.preventDefault(); const regId = 'AGNI-' + Math.floor(100000 + Math.random() * 900000); const origProceed = window.proceedWithData; const qrImg = document.getElementById('confirmationPassQrImg'); if (qrImg) { qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(regId); } if (typeof prevSubmit === 'function') { return prevSubmit(e); } }; function switchAdminTab(tab) { const listBtn = document.getElementById('adminTabListBtn'); const gateBtn = document.getElementById('adminTabGateBtn'); const gateSection = document.getElementById('adminGateScannerSection'); if (tab === 'gate') { gateBtn.className = 'px-4 py-2 rounded-xl bg-brand-orange text-white text-xs font-bold transition-all flex items-center gap-1.5'; listBtn.className = 'px-4 py-2 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-brand-orange text-zinc-300 text-xs font-bold transition-all'; gateSection.classList.remove('hidden'); document.getElementById('gateScanInput').focus(); } else { listBtn.className = 'px-4 py-2 rounded-xl bg-brand-orange text-white text-xs font-bold transition-all'; gateBtn.className = 'px-4 py-2 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-brand-orange text-zinc-300 text-xs font-bold transition-all flex items-center gap-1.5'; gateSection.classList.add('hidden'); } if (window.lucide) lucide.createIcons(); } function handleGateCheckIn() { const inp = document.getElementById('gateScanInput'); const query = (inp ? inp.value.trim() : '').toUpperCase(); const resultBox = document.getElementById('gateScanResultBox'); if (!query) return; const list = getStoredParticipants(); const p = list.find(item => item.regId && item.regId.toUpperCase() === query); if (!p) { resultBox.className = 'p-4 rounded-xl border border-rose-500/50 bg-rose-950/20 text-left'; resultBox.innerHTML = '<div class="text-rose-400 font-bold text-sm flex items-center gap-2"><i data-lucide="alert-triangle" class="w-5 h-5"></i><span>INVALID PASS — REGISTRATION NOT FOUND</span></div><p class="text-xs text-zinc-400 mt-1">No entry record matching ' + query + ' exists in the symposium database.</p>'; resultBox.classList.remove('hidden'); if (window.lucide) lucide.createIcons(); return; } if (p.gatePermittedAt) { resultBox.className = 'p-4 rounded-xl border-2 border-rose-500 bg-rose-950/40 text-left'; resultBox.innerHTML = '<div class="text-rose-400 font-black text-sm md:text-base flex items-center gap-2"><i data-lucide="shield-alert" class="w-6 h-6 shrink-0"></i><span>⚠️ ALREADY PERMITTED — DUPLICATE ENTRY BLOCKED!</span></div><div class="text-xs text-zinc-300 mt-2 font-mono"><strong>Delegate:</strong> ' + p.name + ' (' + p.college + ')<br><strong>Initial Check-in Timestamp:</strong> ' + p.gatePermittedAt + '<br><span class="text-rose-400 font-bold">Security Alert: This pass has already been presented at the gate.</span></div>'; } else { p.gatePermittedAt = new Date().toLocaleTimeString() + ' (' + new Date().toLocaleDateString() + ')'; p.status = 'Approved'; saveParticipant(p); renderAdminTable(); resultBox.className = 'p-4 rounded-xl border-2 border-emerald-500 bg-emerald-950/40 text-left'; resultBox.innerHTML = '<div class="text-emerald-400 font-black text-sm md:text-base flex items-center gap-2"><i data-lucide="check-circle-2" class="w-6 h-6 shrink-0"></i><span>✓ PERMITTED — ENTRY GRANTED</span></div><div class="text-xs text-zinc-300 mt-2 font-mono"><strong>Delegate:</strong> ' + p.name + '<br><strong>College:</strong> ' + p.college + '<br><strong>Dept/Year:</strong> ' + p.dept + ' · ' + p.year + '<br><strong>Events:</strong> ' + (Array.isArray(p.events) ? p.events.join(', ') : p.events) + '<br><strong>Checked-in At:</strong> ' + p.gatePermittedAt + '</div>'; } resultBox.classList.remove('hidden'); if (inp) inp.value = ''; if (window.lucide) lucide.createIcons(); } if (window.lucide) lucide.createIcons();</script><script id="canvas-qr-and-dept-enhancement">
+</script><script id="agni-finalized-features-script">function openParticipantLookupModal() { const m = document.getElementById('participantPortalModal'); if (m) m.classList.remove('hidden'); const err = document.getElementById('lookupErrorNotice'); if (err) err.classList.add('hidden'); if (window.lucide) lucide.createIcons(); } function closeParticipantLookupModal() { const m = document.getElementById('participantPortalModal'); if (m) m.classList.add('hidden'); } async function handleLookupSubmit(e) {
+  e.preventDefault();
+  const idVal = (document.getElementById('lookupIdentifier').value || '').trim();
+  const idLower = idVal.toLowerCase();
+  const list = getStoredParticipants();
+  let found = list.find(p => (p.email && p.email.toLowerCase() === idLower) || (p.phone && p.phone.trim() === idVal) || (p.regId && p.regId.toLowerCase() === idLower));
+  const err = document.getElementById('lookupErrorNotice');
+  if (!found && window.AgniFirebase) {
+    if (err) {
+      err.innerText = 'Searching Firebase Cloud Database...';
+      err.className = 'p-3 rounded-xl bg-brand-orange/20 border border-brand-orange/50 text-brand-orange text-xs text-center';
+      err.classList.remove('hidden');
+    }
+    try {
+      found = await window.AgniFirebase.lookupRegistration(idVal);
+      if (found) {
+        saveParticipant(found);
+      }
+    } catch (e) {
+      console.warn('Firebase pass lookup notice:', e);
+    }
+  }
+  if (!found) {
+    if (err) {
+      err.className = 'p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs text-center';
+      err.innerText = 'No registered pass found for "' + idVal + '". Please check your spelling or register.';
+      err.classList.remove('hidden');
+    }
+    return;
+  }
+  closeParticipantLookupModal();
+  document.getElementById('successRegId').innerText = found.regId;
+  document.getElementById('successRegName').innerText = found.name;
+  document.getElementById('successRegCollege').innerText = found.college;
+  document.getElementById('successRegDept').innerText = (found.dept || '') + ' · ' + (found.year || '');
+  document.getElementById('successRegUtr').innerText = found.utr;
+  const qrImg = document.getElementById('confirmationPassQrImg');
+  if (qrImg) {
+    qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(found.regId);
+  }
+  document.getElementById('successModal').classList.remove('hidden');
+  if (window.lucide) lucide.createIcons();
+  showToast('Pass Loaded', 'Showing official pass for ' + found.name);
+} window.handleProofUploadChange = function() { const fileInput = document.getElementById('regProofFile'); const utrInput = document.getElementById('regUtr'); if (fileInput && fileInput.files && fileInput.files.length > 0) { showToast('Screenshot Attached', 'Please enter your 12-digit Transaction ID manually.'); if (utrInput && !utrInput.value) utrInput.focus(); } }; window.verifyPaymentTransaction = function() { const utrInput = document.getElementById('regUtr'); const feedback = document.getElementById('utrStatusFeedback'); const val = utrInput ? utrInput.value.trim() : ''; if (!val || val.length !== 12 || !/^\d{12}$/.test(val)) { if (feedback) { feedback.className = 'text-[11px] text-rose-400 font-semibold mt-1.5 flex items-center gap-1'; feedback.innerHTML = '<i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> Transaction ID must be strictly exactly 12 numeric digits.'; } if (utrInput) utrInput.focus(); if (window.lucide) lucide.createIcons(); return; } const verifyBtn = document.getElementById('verifyUtrBtn'); if (verifyBtn) { verifyBtn.innerHTML = '<div class="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div><span>Verifying...</span>'; } setTimeout(() => { if (verifyBtn) { verifyBtn.className = 'px-3.5 py-2 rounded-lg bg-emerald-600 text-white text-xs font-bold flex items-center gap-1.5 shrink-0'; verifyBtn.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5"></i><span>Verified</span>'; } if (feedback) { feedback.className = 'text-[11px] text-emerald-400 font-bold mt-1.5 flex items-center gap-1'; feedback.innerHTML = '<i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Transaction ID ' + val + ' recorded & validated.'; } transitionQrToSuccessTick(); unlockRegistrationButton(); showToast('Transaction ID Verified!', 'Registration button unlocked.'); if (window.lucide) lucide.createIcons(); }, 500); }; const prevSubmit = window.handleRegistrationSubmit; window.handleRegistrationSubmit = async function(e) { if (e && e.preventDefault) e.preventDefault(); const regId = 'AGNI-' + Math.floor(100000 + Math.random() * 900000); const origProceed = window.proceedWithData; const qrImg = document.getElementById('confirmationPassQrImg'); if (qrImg) { qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(regId); } if (typeof prevSubmit === 'function') { return prevSubmit(e); } }; function switchAdminTab(tab) { const listBtn = document.getElementById('adminTabListBtn'); const gateBtn = document.getElementById('adminTabGateBtn'); const gateSection = document.getElementById('adminGateScannerSection'); if (tab === 'gate') { gateBtn.className = 'px-4 py-2 rounded-xl bg-brand-orange text-white text-xs font-bold transition-all flex items-center gap-1.5'; listBtn.className = 'px-4 py-2 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-brand-orange text-zinc-300 text-xs font-bold transition-all'; gateSection.classList.remove('hidden'); document.getElementById('gateScanInput').focus(); } else { listBtn.className = 'px-4 py-2 rounded-xl bg-brand-orange text-white text-xs font-bold transition-all'; gateBtn.className = 'px-4 py-2 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-brand-orange text-zinc-300 text-xs font-bold transition-all flex items-center gap-1.5'; gateSection.classList.add('hidden'); } if (window.lucide) lucide.createIcons(); } function handleGateCheckIn() { const inp = document.getElementById('gateScanInput'); const query = (inp ? inp.value.trim() : '').toUpperCase(); const resultBox = document.getElementById('gateScanResultBox'); if (!query) return; const list = getStoredParticipants(); const p = list.find(item => item.regId && item.regId.toUpperCase() === query); if (!p) { resultBox.className = 'p-4 rounded-xl border border-rose-500/50 bg-rose-950/20 text-left'; resultBox.innerHTML = '<div class="text-rose-400 font-bold text-sm flex items-center gap-2"><i data-lucide="alert-triangle" class="w-5 h-5"></i><span>INVALID PASS — REGISTRATION NOT FOUND</span></div><p class="text-xs text-zinc-400 mt-1">No entry record matching ' + query + ' exists in the symposium database.</p>'; resultBox.classList.remove('hidden'); if (window.lucide) lucide.createIcons(); return; } if (p.gatePermittedAt) { resultBox.className = 'p-4 rounded-xl border-2 border-rose-500 bg-rose-950/40 text-left'; resultBox.innerHTML = '<div class="text-rose-400 font-black text-sm md:text-base flex items-center gap-2"><i data-lucide="shield-alert" class="w-6 h-6 shrink-0"></i><span>⚠️ ALREADY PERMITTED — DUPLICATE ENTRY BLOCKED!</span></div><div class="text-xs text-zinc-300 mt-2 font-mono"><strong>Delegate:</strong> ' + p.name + ' (' + p.college + ')<br><strong>Initial Check-in Timestamp:</strong> ' + p.gatePermittedAt + '<br><span class="text-rose-400 font-bold">Security Alert: This pass has already been presented at the gate.</span></div>'; } else { p.gatePermittedAt = new Date().toLocaleTimeString() + ' (' + new Date().toLocaleDateString() + ')'; p.status = 'Approved'; saveParticipant(p); renderAdminTable(); resultBox.className = 'p-4 rounded-xl border-2 border-emerald-500 bg-emerald-950/40 text-left'; resultBox.innerHTML = '<div class="text-emerald-400 font-black text-sm md:text-base flex items-center gap-2"><i data-lucide="check-circle-2" class="w-6 h-6 shrink-0"></i><span>✓ PERMITTED — ENTRY GRANTED</span></div><div class="text-xs text-zinc-300 mt-2 font-mono"><strong>Delegate:</strong> ' + p.name + '<br><strong>College:</strong> ' + p.college + '<br><strong>Dept/Year:</strong> ' + p.dept + ' · ' + p.year + '<br><strong>Events:</strong> ' + (Array.isArray(p.events) ? p.events.join(', ') : p.events) + '<br><strong>Checked-in At:</strong> ' + p.gatePermittedAt + '</div>'; } resultBox.classList.remove('hidden'); if (inp) inp.value = ''; if (window.lucide) lucide.createIcons(); } if (window.lucide) lucide.createIcons();</script><script id="canvas-qr-and-dept-enhancement">
 // Universal Google Lens & Mobile Scanner Compatible QR Generator
 function updateGoogleLensScannableQr(regId, name, college, dept, year) {
   const qrImg = document.getElementById('passQrImage');
   const displayCode = document.getElementById('passCodeDisplay');
   if (displayCode) displayCode.innerText = regId;
+
+  // Grab extra details from DOM if available
+  const phone = document.getElementById('regWhatsapp')?.value || 'N/A';
+  let utr = document.getElementById('successRegUtr')?.innerText;
+  if (!utr || utr === '') utr = document.getElementById('regUtr')?.value || 'Spot/N/A';
+  
+  // Try to get events from success screen or global state
+  let eventsStr = 'N/A';
+  if (typeof selectedEventIds !== 'undefined' && selectedEventIds.size > 0) {
+    const selected = EVENTS_DATA.filter(ev => selectedEventIds.has(ev.id)).map(e => e.title || e.name);
+    eventsStr = selected.join(', ');
+  } else {
+    eventsStr = document.getElementById('successSelectedEvents')?.innerText || 'N/A';
+  }
 
   // Format readable text card that Google Lens parses instantly
   const scanDataText = 
@@ -2214,6 +2298,9 @@ Pass ID: ${regId}
 Delegate: ${name || 'Participant'}
 College: ${college || 'GCE Erode'}
 Dept/Year: ${dept || 'Automobile'} (${year || 'Delegate'})
+Contact: ${phone}
+Events: ${eventsStr}
+Payment UTR: ${utr}
 Status: VERIFIED ENTRY
 Date: 06 Oct 2026 | GCE Erode`;
 
@@ -2676,6 +2763,9 @@ window.handleLookupSubmit = function(e) {
         qrImageFormula: `=IMAGE("${qrUrl}")`
       };
 
+      if (window.AgniFirebase) {
+        window.AgniFirebase.saveRegistration(record);
+      }
       sendToGoogleAppsScriptReliably(payload);
 
       if (submitBtn) submitBtn.disabled = false;
