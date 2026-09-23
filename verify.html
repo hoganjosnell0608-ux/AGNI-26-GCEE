@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pass Verification | AGNI 26</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet" />
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Satoshi', 'sans-serif'],
+            display: ['Clash Display', 'sans-serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+          },
+          colors: {
+            brand: { orange: '#ff5e14', orangeDark: '#cc4a0e', gold: '#f59e0b' }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    body { background-color: #09090b; color: #f4f4f5; min-height: 100vh; }
+    .glass-card { background: rgba(24, 24, 27, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 94, 20, 0.15); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); }
+    .glow-text { text-shadow: 0 0 15px rgba(255, 94, 20, 0.5); }
+  </style>
+
+  <!-- Firebase Core SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+</head>
+<body class="flex flex-col items-center justify-center p-4">
+
+  <div id="loadingState" class="text-center py-20 flex flex-col items-center justify-center w-full max-w-md">
+    <div class="w-12 h-12 border-4 border-brand-orange/30 border-t-brand-orange rounded-full animate-spin mb-4"></div>
+    <h2 class="font-display font-bold text-xl text-white">Verifying Pass...</h2>
+    <p class="text-zinc-400 text-sm mt-2">Connecting to AGNI 26 Secure Database</p>
+  </div>
+
+  <div id="errorState" class="hidden text-center py-10 w-full max-w-md">
+    <div class="w-20 h-20 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-rose-500/30">
+      <i data-lucide="x-circle" class="w-10 h-10 text-rose-500"></i>
+    </div>
+    <h2 class="font-display font-bold text-2xl text-white mb-2">Invalid Pass</h2>
+    <p id="errorText" class="text-zinc-400 text-sm">The requested pass could not be found or has been revoked.</p>
+    <a href="index.html" class="inline-block mt-6 px-6 py-3 rounded-xl bg-zinc-800 text-white font-bold hover:bg-zinc-700 transition-colors">Return to Home</a>
+  </div>
+
+  <div id="passState" class="hidden w-full max-w-md">
+    <!-- Header -->
+    <div class="text-center mb-6">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold mb-3">
+        <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> OFFICIAL PASS VERIFIED
+      </div>
+      <h1 class="font-display font-bold text-3xl text-white tracking-tight glow-text">AGNI 26</h1>
+      <p class="text-zinc-400 text-sm font-medium mt-1">National Level Technical Symposium</p>
+    </div>
+
+    <!-- Ticket Card -->
+    <div class="glass-card rounded-2xl overflow-hidden relative">
+      <!-- Decor -->
+      <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-gold to-brand-orange"></div>
+      
+      <div class="p-6">
+        <div class="flex items-start justify-between border-b border-zinc-800/80 pb-5 mb-5">
+          <div>
+            <p class="text-[10px] text-zinc-500 font-mono uppercase tracking-wider mb-1">Delegate Name</p>
+            <h2 id="passName" class="text-2xl font-bold text-white leading-tight">--</h2>
+            <p id="passCollege" class="text-zinc-400 text-sm mt-1">--</p>
+          </div>
+          <div class="text-right shrink-0">
+            <p class="text-[10px] text-zinc-500 font-mono uppercase tracking-wider mb-1">Pass ID</p>
+            <p id="passId" class="text-brand-orange font-mono font-bold text-lg bg-brand-orange/10 px-2 py-0.5 rounded border border-brand-orange/20">--</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-5">
+          <div>
+            <p class="text-[10px] text-zinc-500 font-mono uppercase tracking-wider mb-1">Department</p>
+            <p id="passDept" class="text-zinc-200 font-medium text-sm">--</p>
+          </div>
+          <div>
+            <p class="text-[10px] text-zinc-500 font-mono uppercase tracking-wider mb-1">Year</p>
+            <p id="passYear" class="text-zinc-200 font-medium text-sm">--</p>
+          </div>
+          <div>
+            <p class="text-[10px] text-zinc-500 font-mono uppercase tracking-wider mb-1">Contact</p>
+            <p id="passPhone" class="text-zinc-200 font-medium text-sm">--</p>
+          </div>
+          <div>
+            <p class="text-[10px] text-zinc-500 font-mono uppercase tracking-wider mb-1">Fee & UTR</p>
+            <p id="passPayment" class="text-brand-gold font-bold text-sm">--</p>
+          </div>
+        </div>
+
+        <div class="bg-zinc-950/50 rounded-xl p-4 border border-zinc-800/80">
+          <p class="text-[10px] text-zinc-500 font-mono uppercase tracking-wider mb-2">Registered Events</p>
+          <div id="passEvents" class="flex flex-wrap gap-2">
+            <!-- Badges injected here -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- Footer notch area -->
+      <div class="bg-zinc-950 px-6 py-4 border-t border-zinc-800/80 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="calendar" class="w-4 h-4 text-zinc-500"></i>
+          <span class="text-xs text-zinc-400 font-medium">06 Oct 2026</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <i data-lucide="map-pin" class="w-4 h-4 text-zinc-500"></i>
+          <span class="text-xs text-zinc-400 font-medium">GCE Erode</span>
+        </div>
+      </div>
+    </div>
+    
+    <p class="text-center text-[10px] text-zinc-600 font-mono uppercase mt-6">
+      SECURE DIGITAL VERIFICATION SYSTEM
+    </p>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    function showError(msg) {
+      document.getElementById('loadingState').classList.add('hidden');
+      document.getElementById('passState').classList.add('hidden');
+      document.getElementById('errorState').classList.remove('hidden');
+      if (msg) document.getElementById('errorText').innerText = msg;
+    }
+
+    async function initVerification() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const regId = urlParams.get('id');
+
+      if (!regId) {
+        showError('No Pass ID provided in the URL.');
+        return;
+      }
+
+      // Wait for Firebase to initialize
+      let retries = 0;
+      while ((!window.AgniFirebase || !window.AgniFirebase.isReady()) && retries < 20) {
+        await new Promise(r => setTimeout(r, 100));
+        retries++;
+      }
+
+      if (!window.AgniFirebase || !window.AgniFirebase.isReady()) {
+        showError('System offline. Please check your internet connection.');
+        return;
+      }
+
+      try {
+        const participant = await window.AgniFirebase.lookupRegistration(regId);
+        
+        if (!participant) {
+          showError('No registration found for ID: ' + regId);
+          return;
+        }
+
+        // Populate Data
+        document.getElementById('passName').innerText = participant.name || 'Delegate';
+        document.getElementById('passId').innerText = participant.regId;
+        document.getElementById('passCollege').innerText = participant.college || 'N/A';
+        document.getElementById('passDept').innerText = participant.dept || participant.department || 'N/A';
+        document.getElementById('passYear').innerText = participant.year || 'Delegate';
+        document.getElementById('passPhone').innerText = participant.phone || participant.whatsapp || 'N/A';
+        
+        const fee = participant.totalAmount || participant.amount || 200;
+        const utr = participant.utr || participant.transactionId || 'Spot';
+        document.getElementById('passPayment').innerText = `₹${fee} (${utr})`;
+
+        // Render Events
+        const eventsContainer = document.getElementById('passEvents');
+        let eventsList = Array.isArray(participant.events) ? participant.events : (participant.events ? [participant.events] : []);
+        
+        if (eventsList.length === 0) {
+          eventsContainer.innerHTML = `<span class="text-xs text-zinc-400 italic">No events selected</span>`;
+        } else {
+          eventsContainer.innerHTML = eventsList.map(ev => 
+            `<span class="px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-200 text-xs font-semibold border border-zinc-700">${ev}</span>`
+          ).join('');
+        }
+
+        // Show pass
+        document.getElementById('loadingState').classList.add('hidden');
+        document.getElementById('passState').classList.remove('hidden');
+
+      } catch (err) {
+        console.error(err);
+        showError('An error occurred while verifying the pass.');
+      }
+    }
+
+    // Start
+    initVerification();
+  </script>
+</body>
+</html>

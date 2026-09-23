@@ -1973,12 +1973,12 @@ function calculateTotals() {
     </div>
 <div style="text-align: center; margin: 16px 0;">
   <img 
-    src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&ecc=M&margin=1&data=AGNI%2026%20EVENT%20PASS%0APass%20ID:%20${regId}%0ADelegate:%20${encodeURIComponent(name)}%0ACollege:%20${encodeURIComponent(college)}%0AEvents:%20${encodeURIComponent(Array.from(selectedEventIds).map(id => EVENTS_DATA.find(e => e.id === id)?.title).join(', '))}" 
+    src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&ecc=M&margin=1&data=${encodeURIComponent(window.location.origin + '/verify.html?id=' + regId)}" 
     alt="QR Code" 
     style="width: 160px; height: 160px; border-radius: 12px; border: 2px solid #ff5e14; background: #fff; padding: 6px;"
   />
   <div style="color: #ff5e14; font-family: monospace; font-size: 16px; font-weight: bold; margin-top: 6px;">${regId}</div>
-  <div style="font-size: 10px; color: #888; font-family: monospace;">Scan with Google Lens to verify</div>
+  <div style="font-size: 10px; color: #888; font-family: monospace;">Scan to verify digital pass</div>
 </div>
     <div class="notice">
       Present this digital or printed pass at the main campus reception on 06 Oct 2026.
@@ -2277,35 +2277,11 @@ function updateGoogleLensScannableQr(regId, name, college, dept, year) {
   const displayCode = document.getElementById('passCodeDisplay');
   if (displayCode) displayCode.innerText = regId;
 
-  // Grab extra details from DOM if available
-  const phone = document.getElementById('regWhatsapp')?.value || 'N/A';
-  let utr = document.getElementById('successRegUtr')?.innerText;
-  if (!utr || utr === '') utr = document.getElementById('regUtr')?.value || 'Spot/N/A';
-  
-  // Try to get events from success screen or global state
-  let eventsStr = 'N/A';
-  if (typeof selectedEventIds !== 'undefined' && selectedEventIds.size > 0) {
-    const selected = EVENTS_DATA.filter(ev => selectedEventIds.has(ev.id)).map(e => e.title || e.name);
-    eventsStr = selected.join(', ');
-  } else {
-    eventsStr = document.getElementById('successSelectedEvents')?.innerText || 'N/A';
-  }
-
-  // Format readable text card that Google Lens parses instantly
-  const scanDataText = 
-`AGNI 26 EVENT PASS
-Pass ID: ${regId}
-Delegate: ${name || 'Participant'}
-College: ${college || 'GCE Erode'}
-Dept/Year: ${dept || 'Automobile'} (${year || 'Delegate'})
-Contact: ${phone}
-Events: ${eventsStr}
-Payment UTR: ${utr}
-Status: VERIFIED ENTRY
-Date: 06 Oct 2026 | GCE Erode`;
+  // Format a simple Verification URL
+  const verifyUrl = window.location.origin + '/verify.html?id=' + encodeURIComponent(regId);
 
   if (qrImg) {
-    const encodedData = encodeURIComponent(scanDataText);
+    const encodedData = encodeURIComponent(verifyUrl);
     qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodedData;
     qrImg.style.display = 'block';
   }

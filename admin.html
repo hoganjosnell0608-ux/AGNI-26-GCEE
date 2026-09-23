@@ -1577,7 +1577,10 @@ Date: 06 Oct 2026
 
       // Normalize string: check if raw text or pass ID
       let targetId = rawScanned.trim();
-      if (rawScanned.includes('Pass ID:')) {
+      if (rawScanned.includes('verify.html?id=')) {
+        const match = rawScanned.match(/verify\.html\?id=([A-Za-z0-9_-]+)/);
+        if (match && match[1]) targetId = match[1].trim();
+      } else if (rawScanned.includes('Pass ID:')) {
         const match = rawScanned.match(/Pass ID:\s*([A-Za-z0-9_-]+)/);
         if (match && match[1]) targetId = match[1].trim();
       }
@@ -2100,9 +2103,8 @@ Date: 06 Oct 2026 | GCE Erode`;
       document.getElementById('modalPassDept').innerText = (p.dept || 'Automobile') + ' · ' + (p.year || 'Delegate');
       document.getElementById('modalPassFee').innerText = 'Fee: ₹' + (p.totalAmount || p.amount || 200);
 
-      const eventsStr = Array.isArray(p.events) ? p.events.join(', ') : (p.events || 'N/A');
-      const scanData = `AGNI 26 EVENT PASS\nPass ID: ${p.regId}\nDelegate: ${p.name}\nCollege: ${p.college || 'GCE Erode'}\nDept: ${p.dept || 'Automobile'}\nContact: ${p.phone || 'N/A'}\nEvents: ${eventsStr}\nPayment: ₹${p.totalAmount || p.amount || 200} (UTR: ${p.utr || 'Spot'})\nDate: 06 Oct 2026`;
-      document.getElementById('modalPassQrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(scanData);
+      const verifyUrl = window.location.origin + window.location.pathname.replace(/admin\.html.*$/, '') + 'verify.html?id=' + encodeURIComponent(p.regId);
+      document.getElementById('modalPassQrImg').src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(verifyUrl);
 
       document.getElementById('passModal').classList.remove('hidden');
     }
