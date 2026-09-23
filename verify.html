@@ -30,6 +30,14 @@
     body { background-color: #09090b; color: #f4f4f5; min-height: 100vh; }
     .glass-card { background: rgba(24, 24, 27, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 94, 20, 0.15); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); }
     .glow-text { text-shadow: 0 0 15px rgba(255, 94, 20, 0.5); }
+  
+    @media print {
+      body { background: white !important; color: black !important; padding: 0 !important; }
+      .glass-card { box-shadow: none !important; border: 2px solid #000 !important; background: transparent !important; }
+      button, a, .print-hide { display: none !important; }
+      * { color: black !important; text-shadow: none !important; border-color: #ddd !important; }
+      #passPayment, #passId { background: transparent !important; border: none !important; }
+    }
   </style>
 
   <!-- Firebase Core SDKs -->

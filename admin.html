@@ -1725,8 +1725,9 @@ Dept: ${p.dept || 'Automobile'} (${p.year || 'Delegate'})
 Status: VERIFIED ENTRY
 Date: 06 Oct 2026 | GCE Erode`;
 
-      const encoded = encodeURIComponent(cardText);
-      const url = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encoded;
+      // Use verify URL for QR code, but keep cardText for the visual text preview
+        const encoded = encodeURIComponent(window.location.origin + '/verify.html?id=' + p.regId);
+        const url = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encoded;
 
       if (qrImg) qrImg.src = url;
       if (textPreview) textPreview.innerText = cardText;

@@ -188,7 +188,14 @@
 <div class="flex items-center gap-1.5 sm:gap-3 shrink-0 flex-nowrap">
   
   <!-- Register Button: Compact padding on mobile -->
-  <button class="relative shrink-0 flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2 rounded-lg bg-gradient-to-r from-brand-orange to-brand-orangeDark text-white text-xs font-bold shadow-lg shadow-brand-orange/20" onclick="handleOpenCheckout()">
+  
+    <!-- View Pass Button -->
+    <button class="relative shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-500 hover:bg-zinc-800 text-xs font-bold transition-all" onclick="openStudentPassLookup()">
+      <i class="w-4 h-4" data-lucide="scan"></i>
+      <span>View Pass</span>
+    </button>
+    
+    <button class="relative shrink-0 flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2 rounded-lg bg-gradient-to-r from-brand-orange to-brand-orangeDark text-white text-xs font-bold shadow-lg shadow-brand-orange/20" onclick="handleOpenCheckout()">
     <i class="w-4 h-4" data-lucide="ticket"></i>
     <span>Register now</span>
     <span class="w-5 h-5 rounded-full bg-black/60 text-white flex items-center justify-center text-[10px] font-mono border border-white/20" id="navCartCount">0</span>
@@ -1256,12 +1263,20 @@ const nonTechEvents = EVENTS_DATA.filter(e => e.type === 'non-technical');
 </script>
 <!-- SUCCESS CONFIRMATION MODAL (SINGLE CLEAN PRINT PASS) -->
 <div class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md overflow-hidden" id="successModal">
-<div class="relative w-full max-w-lg max-h-[88vh] flex flex-col bg-[#111317] border border-emerald-500/50 rounded-2xl shadow-2xl overflow-hidden text-center flame-glow-sm" id="ticketPrintArea"><div class="shrink-0 flex items-center justify-between py-2.5 px-4 sm:px-6 border-b border-zinc-800/80 bg-[#14161b]"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span><span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-mono font-bold uppercase tracking-wider border border-emerald-500/30">Registration Confirmed</span></div><button class="print-hide text-zinc-400 hover:text-white p-1 rounded-lg bg-zinc-900 border border-zinc-800 transition-colors" onclick="closeSuccessModal()"><i class="w-4 h-4" data-lucide="x"></i></button></div><div class="overflow-y-auto flex-1 min-h-0 py-3 px-4 sm:px-6 space-y-3"><div class="w-10 h-10 mx-auto rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center"><i class="w-6 h-6" data-lucide="check-circle-2"></i></div><div><h3 class="text-xl sm:text-2xl font-black text-white font-display">AGNI 26 EVENT PASS</h3><p class="text-xs text-zinc-400">Department of Automobile Engineering · GCE Erode</p></div><div class="p-3.5 rounded-xl bg-zinc-950 border border-zinc-800 text-left space-y-2.5"><div class="flex items-center justify-between border-b border-zinc-800/80 pb-2"><div class="flex items-center gap-2"><i class="w-4 h-4 text-brand-orange" data-lucide="shield-check"></i><span class="text-xs font-mono text-zinc-400 uppercase font-bold">Confirmation Code</span></div><span class="text-base font-black font-mono text-brand-orange tracking-wider" id="successRegId">REG-2026-X79</span></div><div class="grid grid-cols-2 gap-2 text-xs font-mono"><div><span class="text-zinc-500 block text-[10px] uppercase">Delegate</span><span class="text-white font-bold text-sm truncate block" id="successRegName">Participant</span></div><div><span class="text-zinc-500 block text-[10px] uppercase">Institution</span><span class="text-zinc-300 truncate block" id="successRegCollege">GCE Erode</span></div><div class="col-span-2"><span class="text-zinc-500 block text-[10px] uppercase">Department &amp; Year</span><span class="text-zinc-300 block" id="successRegDept">Automobile</span></div><div><span class="text-zinc-500 block text-[10px] uppercase">UTR Reference</span><span class="text-zinc-300 font-bold block" id="successRegUtr">423456789012</span></div><div><span class="text-zinc-500 block text-[10px] uppercase">Status</span><span class="text-emerald-400 font-bold block">Verified Receipt</span></div></div><div class="p-2.5 rounded-lg bg-zinc-900 border border-zinc-800 hidden text-left font-mono text-xs" id="successPassTeammatesBox"><span class="text-zinc-500 block text-[10px] uppercase font-bold text-brand-orange mb-1">Accompanying Teammates</span><div class="text-zinc-300 space-y-1 text-[11px]" id="successPassTeammatesList">None</div></div><div class="my-3 flex flex-col items-center justify-center"><div class="w-48 h-48 sm:w-56 sm:h-56 bg-white p-2.5 rounded-2xl border-2 border-brand-orange shadow-2xl flex items-center justify-center mx-auto" id="passQrWrapper"><img 
+<div class="relative w-full max-w-lg max-h-[88vh] flex flex-col bg-[#111317] border border-emerald-500/50 rounded-2xl shadow-2xl overflow-hidden text-center flame-glow-sm" 
+
+
+<div class="relative w-full max-w-lg max-h-[88vh] flex flex-col bg-[#111317] border border-emerald-500/50 rounded-2xl shadow-2xl overflow-hidden text-center flame-glow-sm" id="ticketPrintArea"><div class="shrink-0 flex items-center justify-between py-2.5 px-4 sm:px-6 border-b border-zinc-800/80 bg-[#14161b]"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span><span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-mono font-bold uppercase tracking-wider border border-emerald-500/30">Registration Confirmed</span></div><button class="print-hide text-zinc-400 hover:text-white p-1 rounded-lg bg-zinc-900 border border-zinc-800 transition-colors" onclick="closeSuccessModal()"><i class="w-4 h-4" data-lucide="x"></i></button></div><div class="overflow-y-auto flex-1 min-h-0 py-3 px-4 sm:px-6 space-y-3"><div class="w-10 h-10 mx-auto rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center"><i class="w-6 h-6" data-lucide="check-circle-2"></i></div><div><h3 class="text-xl sm:text-2xl font-black text-white font-display">AGNI 26 EVENT PASS</h3><p class="text-xs text-zinc-400">Department of Automobile Engineering · GCE Erode</p></div><div class="p-3.5 rounded-xl bg-zinc-950 border border-zinc-800 text-left space-y-2.5"><div class="flex items-center justify-between border-b border-zinc-800/80 pb-2"><div class="flex items-center gap-2"><i class="w-4 h-4 text-brand-orange" data-lucide="shield-check"></i><span class="text-xs font-mono text-zinc-400 uppercase font-bold">Confirmation Code</span></div><span class="text-base font-black font-mono text-brand-orange tracking-wider" id="successRegId">REG-2026-X79</span></div><div class="grid grid-cols-2 gap-2 text-xs font-mono"><div><span class="text-zinc-500 block text-[10px] uppercase">Delegate</span><span class="text-white font-bold text-sm truncate block" id="successRegName">Participant</span></div><div><span class="text-zinc-500 block text-[10px] uppercase">Institution</span><span class="text-zinc-300 truncate block" id="successRegCollege">GCE Erode</span></div><div class="col-span-2"><span class="text-zinc-500 block text-[10px] uppercase">Department &amp; Year</span><span class="text-zinc-300 block" id="successRegDept">Automobile</span></div><div><span class="text-zinc-500 block text-[10px] uppercase">UTR Reference</span><span class="text-zinc-300 font-bold block" id="successRegUtr">423456789012</span></div><div><span class="text-zinc-500 block text-[10px] uppercase">Status</span><span class="text-emerald-400 font-bold block">Verified Receipt</span></div><div class="col-span-2 mt-1"><span class="text-zinc-500 block text-[10px] uppercase">Registered Events</span><span class="text-brand-orange font-bold block text-[11px]" id="successRegEvents">None</span></div></div><div class="p-2.5 rounded-lg bg-zinc-900 border border-zinc-800 hidden text-left font-mono text-xs" id="successPassTeammatesBox"><span class="text-zinc-500 block text-[10px] uppercase font-bold text-brand-orange mb-1">Accompanying Teammates</span><div class="text-zinc-300 space-y-1 text-[11px]" id="successPassTeammatesList">None</div></div><div class="my-3 flex flex-col items-center justify-center"><div class="w-48 h-48 sm:w-56 sm:h-56 bg-white p-2.5 rounded-2xl border-2 border-brand-orange shadow-2xl flex items-center justify-center mx-auto" id="passQrWrapper"><img 
   id="passQrImage" 
   class="w-full h-full object-contain mx-auto block" 
   alt="Official Google Lens Scannable Pass QR"
-  src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&ecc=M&margin=1&data=AGNI%2026%20Pass%20ID:%20${regId}%0AName:%20${encodeURIComponent(name)}%0ACollege:%20${encodeURIComponent(college)}" 
-/></div><div class="text-xl sm:text-2xl font-black font-mono tracking-widest text-brand-orange mt-2" id="passCodeDisplay">AGNI-000000</div><p class="text-[11px] text-zinc-400 font-mono mt-0.5">Official Gate Verification QR Pass</p></div></div></div><div class="shrink-0 p-3 sm:px-6 border-t border-zinc-800 bg-[#14161b] print-hide flex flex-wrap items-center justify-center gap-2"><button class="py-2 px-3 sm:px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 font-bold text-xs flex items-center justify-center gap-1.5 transition-all" onclick="printPass()"><i class="w-4 h-4 text-brand-orange" data-lucide="printer"></i><span>Print Pass</span></button><button class="py-2 px-3 sm:px-4 rounded-xl bg-brand-orange hover:bg-brand-orangeDark text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md transition-all" onclick="downloadTicketDocument()"><i class="w-4 h-4" data-lucide="download"></i><span>Download Pass</span></button><button class="py-2 px-3 sm:px-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-xs flex items-center justify-center gap-1.5 transition-all" onclick="returnToHomeAndCloseModal('successModal')"><i class="w-4 h-4" data-lucide="home"></i><span>Home</span></button></div></div>
+  src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&ecc=M&margin=1&data=${encodeURIComponent(window.location.origin + '/verify.html?id=' + regId)}" 
+/></div><div class="text-xl sm:text-2xl font-black font-mono tracking-widest text-brand-orange mt-2" id="passCodeDisplay">AGNI-000000</div>
+<div class="mt-3 p-3 w-full rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs font-bold text-left leading-relaxed">
+  <i data-lucide="info" class="inline w-3.5 h-3.5 mr-1 mb-0.5"></i>
+  <strong>Important Note:</strong> Please <strong>Save as PDF</strong> or take a screenshot of this pass. Ensure your screen brightness is turned up when presenting this QR code at the main security gate for entry.
+</div>
+</div></div></div><div class="shrink-0 p-3 sm:px-6 border-t border-zinc-800 bg-[#14161b] print-hide flex flex-wrap items-center justify-center gap-2"><button class="py-2 px-3 sm:px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 font-bold text-xs flex items-center justify-center gap-1.5 transition-all" onclick="printPass()"><i class="w-4 h-4 text-brand-orange" data-lucide="printer"></i><span>Print Pass</span></button><button class="py-2 px-3 sm:px-4 rounded-xl bg-brand-orange hover:bg-brand-orangeDark text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md transition-all" onclick="window.print()"><i class="w-4 h-4" data-lucide="download"></i><span>Save as PDF / Print</span></button><button class="py-2 px-3 sm:px-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-xs flex items-center justify-center gap-1.5 transition-all" onclick="returnToHomeAndCloseModal('successModal')"><i class="w-4 h-4" data-lucide="home"></i><span>Home</span></button></div></div>
 </div>
 <!-- SCREENSHOT PROOF MODAL -->
 <div class="fixed inset-0 z-[100000] hidden flex items-center justify-center p-4 bg-black/90 backdrop-blur-md" id="proofViewerModal">
@@ -1878,6 +1893,7 @@ function calculateTotals() {
       document.getElementById('successRegCollege').innerText = college;
       document.getElementById('successRegDept').innerText = `${dept} · ${year}`;
       document.getElementById('successRegUtr').innerText = utr;
+          const eventsEl = document.getElementById('successRegEvents'); if(eventsEl) { const selected = Array.from(document.querySelectorAll('.event-checkbox:checked')).map(cb => cb.value); eventsEl.innerText = selected.length > 0 ? selected.join(', ') : 'Symposium Entry Only'; }
 
       document.getElementById('successModal').classList.remove('hidden');
       if (window.lucide) lucide.createIcons();
@@ -2264,6 +2280,7 @@ if (window.lucide) {
   document.getElementById('successRegCollege').innerText = found.college;
   document.getElementById('successRegDept').innerText = (found.dept || '') + ' · ' + (found.year || '');
   document.getElementById('successRegUtr').innerText = found.utr;
+          const eventsEl = document.getElementById('successRegEvents'); if(eventsEl) eventsEl.innerText = Array.isArray(found.events) ? found.events.join(', ') : (found.events || 'N/A');
   const qrImg = document.getElementById('confirmationPassQrImg');
   if (qrImg) {
     qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(window.location.origin + '/verify.html?id=' + found.regId);
@@ -2291,22 +2308,41 @@ function updateGoogleLensScannableQr(regId, name, college, dept, year) {
 // Hook into Registration Form Submission
 const originalFinalizeRegistration = window.finalizeRegistrationWizard;
 window.finalizeRegistrationWizard = async function() {
-  const name = (document.getElementById('regName')?.value || '').trim();
-  const college = (document.getElementById('regCollege')?.value || '').trim();
-  const deptEl = document.getElementById('regDepartment');
-  const dept = deptEl?.value === 'Others' ? (document.getElementById('regDeptOther')?.value.trim() || 'Others') : (deptEl?.value || '');
-  const year = document.getElementById('regYear')?.value || '';
+    const name = (document.getElementById('regName')?.value || '').trim();
+    const college = (document.getElementById('regCollege')?.value || '').trim();
+    const deptEl = document.getElementById('regDepartment');
+    const dept = deptEl?.value === 'Others' ? (document.getElementById('regDeptOther')?.value.trim() || 'Others') : (deptEl?.value || '');
+    const year = document.getElementById('regYear')?.value || '';
+  
+    // Intercept UI
+    
 
-  if (typeof originalFinalizeRegistration === 'function') {
-    await originalFinalizeRegistration();
-  }
+    if (typeof originalFinalizeRegistration === 'function') {
+      await originalFinalizeRegistration();
+    }
+  
+    setTimeout(() => {
+      const regCodeEl = document.getElementById('successRegId');
+      const regId = regCodeEl ? regCodeEl.innerText.trim() : ('AGNI-' + Math.floor(100000 + Math.random() * 900000));
+      updateGoogleLensScannableQr(regId, name, college, dept, year);
+    }, 120);
 
-  setTimeout(() => {
-    const regCodeEl = document.getElementById('successRegId');
-    const regId = regCodeEl ? regCodeEl.innerText.trim() : ('AGNI-' + Math.floor(100000 + Math.random() * 900000));
-    updateGoogleLensScannableQr(regId, name, college, dept, year);
-  }, 120);
-};
+    // Wait exactly 10 seconds before revealing the final pass
+    let timeLeft = 10;
+    const countdownEl = document.getElementById('securePassCountdown');
+    if (countdownEl) countdownEl.innerText = timeLeft;
+    
+    const interval = setInterval(() => {
+        timeLeft--;
+        if (countdownEl) countdownEl.innerText = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(interval);
+            const regCodeEl = document.getElementById('successRegId');
+            const finalRegId = regCodeEl ? regCodeEl.innerText.trim() : ('AGNI-' + Math.floor(100000 + Math.random() * 900000));
+            window.location.href = 'verify.html?id=' + encodeURIComponent(finalRegId);
+        }
+    }, 1000);
+  };
 
 // Hook into "My Pass" / Lookup Modal
 const originalLookupSubmit = window.handleLookupSubmit;
@@ -2757,6 +2793,7 @@ window.handleLookupSubmit = function(e) {
       document.getElementById('successRegCollege').innerText = college;
       document.getElementById('successRegDept').innerText = `${deptVal} · ${year}`;
       document.getElementById('successRegUtr').innerText = utr;
+          const eventsEl = document.getElementById('successRegEvents'); if(eventsEl) { const selected = Array.from(document.querySelectorAll('.event-checkbox:checked')).map(cb => cb.value); eventsEl.innerText = selected.length > 0 ? selected.join(', ') : 'Symposium Entry Only'; }
 
       // Teammates in confirmation pass
       const teamBox = document.getElementById('successPassTeammatesBox');
@@ -4074,4 +4111,101 @@ function downloadQR() {
     }
 }
 </script>
+
+<!-- Student Pass Lookup Modal -->
+<dialog id="studentPassLookupModal" class="bg-transparent m-auto p-4 w-full max-w-md backdrop:bg-black/90 backdrop:backdrop-blur-sm shadow-2xl">
+  <div class="bg-[#14161b] rounded-2xl border border-brand-orange/30 p-6 text-center">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-xl font-black text-white font-display">View Verified Pass</h3>
+      <button onclick="closeStudentPassLookup()" class="text-zinc-400 hover:text-white transition-colors">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <p class="text-sm text-zinc-400 mb-6 text-left">Enter your AGNI-XXXXXX Pass ID or your 12-digit UTR Transaction ID to view your verified gate pass.</p>
+    
+    <div class="space-y-4">
+      <div class="text-left">
+        <label class="block text-xs font-bold text-zinc-400 mb-1.5">Pass ID or UTR Number</label>
+        <input type="text" id="studentLookupInput" placeholder="e.g. AGNI-123456 or 123456789012" class="w-full bg-zinc-950 border border-zinc-800 focus:border-brand-orange text-white text-sm rounded-xl px-4 py-3 outline-none transition-colors" />
+        <div id="lookupErrorFeedback" class="hidden text-xs font-bold text-rose-500 mt-2 text-left"></div>
+      </div>
+      
+      <button onclick="executeStudentPassLookup()" id="executeLookupBtn" class="w-full py-3 rounded-xl bg-brand-orange text-white font-bold shadow-lg shadow-brand-orange/20 flex items-center justify-center gap-2 transition-all">
+        <i data-lucide="search" class="w-4 h-4"></i> Find My Pass
+      </button>
+    </div>
+  </div>
+</dialog>
+
+
+<script>
+function openStudentPassLookup() {
+    const modal = document.getElementById('studentPassLookupModal');
+    if (modal) {
+        document.getElementById('studentLookupInput').value = '';
+        document.getElementById('lookupErrorFeedback').classList.add('hidden');
+        modal.showModal();
+        setTimeout(() => document.getElementById('studentLookupInput').focus(), 100);
+        if (window.lucide) lucide.createIcons();
+    }
+}
+function closeStudentPassLookup() {
+    const modal = document.getElementById('studentPassLookupModal');
+    if (modal) modal.close();
+}
+async function executeStudentPassLookup() {
+    const input = document.getElementById('studentLookupInput').value.trim();
+    const errorBox = document.getElementById('lookupErrorFeedback');
+    const btn = document.getElementById('executeLookupBtn');
+    
+    if (!input) {
+        errorBox.innerText = 'Please enter a valid Pass ID or UTR number.';
+        errorBox.classList.remove('hidden');
+        return;
+    }
+    
+    btn.innerHTML = '<div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Searching...';
+    
+    try {
+        if (!window.AgniFirebase || !window.AgniFirebase.isReady()) {
+            throw new Error('Database offline. Please try again.');
+        }
+        
+        let found = null;
+        // Search Firebase real-time
+        found = await window.AgniFirebase.lookupRegistration(input);
+        
+        if (found) {
+            closeStudentPassLookup();
+            // Populate Success Modal
+            document.getElementById('successRegId').innerText = found.regId;
+            document.getElementById('successRegName').innerText = found.name;
+            document.getElementById('successRegCollege').innerText = found.college;
+            document.getElementById('successRegDept').innerText = (found.dept || '') + ' - ' + (found.year || '');
+            const utrEl = document.getElementById('successRegUtr');
+            if (utrEl) utrEl.innerText = found.utr || 'N/A';
+            
+            // Set QR Image to verify.html link
+            const qrImg = document.getElementById('passQrImage');
+            if (qrImg) {
+                qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(window.location.origin + '/verify.html?id=' + found.regId);
+            }
+            
+            // Redirect directly to verify.html for View Pass
+            window.location.href = 'verify.html?id=' + encodeURIComponent(found.regId);
+        } else {
+            errorBox.innerText = 'Registration not found. Please verify your ID.';
+            errorBox.classList.remove('hidden');
+        }
+    } catch (err) {
+        console.error(err);
+        errorBox.innerText = 'Error connecting to database. Please check your connection.';
+        errorBox.classList.remove('hidden');
+    } finally {
+        btn.innerHTML = '<i data-lucide="search" class="w-4 h-4"></i> Find My Pass';
+        if (window.lucide) lucide.createIcons();
+    }
+}
+</script>
+
 </body></html>
