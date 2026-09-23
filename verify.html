@@ -110,7 +110,14 @@
           </div>
         </div>
 
-        <div class="bg-zinc-950/50 rounded-xl p-4 border border-zinc-800/80">
+        <div class="bg-zinc-950/50 rounded-xl p-4 border border-zinc-800/80 mb-5 flex flex-col items-center">
+            <p class="text-[10px] text-zinc-500 font-mono uppercase tracking-wider mb-2">Scan for Entry</p>
+            <div class="w-40 h-40 bg-white p-2 rounded-xl shadow-lg" id="passQrWrapper">
+              <img id="passQrImage" class="w-full h-full object-contain" alt="QR Pass" src="" />
+            </div>
+          </div>
+          
+          <div class="bg-zinc-950/50 rounded-xl p-4 border border-zinc-800/80">
           <p class="text-[10px] text-zinc-500 font-mono uppercase tracking-wider mb-2">Registered Events</p>
           <div id="passEvents" class="flex flex-wrap gap-2">
             <!-- Badges injected here -->
@@ -133,8 +140,16 @@
     
     <p class="text-center text-[10px] text-zinc-600 font-mono uppercase mt-6">
       SECURE DIGITAL VERIFICATION SYSTEM
-    </p>
-  </div>
+      </p>
+      <div class="mt-6 flex gap-3 justify-center print-hide">
+        <button onclick="window.print()" class="px-5 py-2.5 rounded-xl bg-zinc-800 text-white font-bold hover:bg-zinc-700 transition-colors flex items-center gap-2 text-sm shadow-lg border border-zinc-700">
+          <i data-lucide="download" class="w-4 h-4"></i> Download Pass
+        </button>
+        <a href="index.html" class="px-5 py-2.5 rounded-xl bg-brand-orange text-white font-bold hover:bg-brand-orangeDark transition-colors flex items-center gap-2 text-sm shadow-lg shadow-brand-orange/20">
+          <i data-lucide="home" class="w-4 h-4"></i> Home
+        </a>
+      </div>
+    </div>
 
   <script>
     lucide.createIcons();
@@ -200,6 +215,13 @@
         }
 
         // Show pass
+        // Generate QR code for this specific pass
+        const verifyUrl = window.location.origin + '/verify.html?id=' + encodeURIComponent(regId);
+        const qrEl = document.getElementById('passQrImage');
+        if (qrEl) {
+            qrEl.src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(verifyUrl);
+        }
+        
         document.getElementById('loadingState').classList.add('hidden');
         document.getElementById('passState').classList.remove('hidden');
 

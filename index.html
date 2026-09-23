@@ -2337,9 +2337,12 @@ window.finalizeRegistrationWizard = async function() {
         if (countdownEl) countdownEl.innerText = timeLeft;
         if (timeLeft <= 0) {
             clearInterval(interval);
-            const regCodeEl = document.getElementById('successRegId');
-            const finalRegId = regCodeEl ? regCodeEl.innerText.trim() : ('AGNI-' + Math.floor(100000 + Math.random() * 900000));
-            window.location.href = 'verify.html?id=' + encodeURIComponent(finalRegId);
+            const printArea = document.getElementById('ticketPrintArea');
+            const loadArea = document.getElementById('ticketLoadingArea');
+            if (printArea && loadArea) {
+                loadArea.classList.add('hidden');
+                printArea.classList.remove('hidden');
+            }
         }
     }, 1000);
   };
