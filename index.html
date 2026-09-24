@@ -175,7 +175,7 @@
 <span class="text-xs text-zinc-400 hidden sm:inline">Department of Automobile Engineering</span>
 </div>
 </a>
-<nav class="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-300">
+<nav class="hidden items-center gap-6 text-sm font-medium text-zinc-300">
 <a class="hover:text-brand-orange transition-colors" href="#home">Home</a>
 <a class="hover:text-brand-orange transition-colors" href="#about">About</a>
 <a class="hover:text-brand-orange transition-colors" href="#events">Events &amp; Fees</a>
@@ -202,12 +202,12 @@
   </button>
   
   <!-- Hamburger Button: shrink-0 guarantees it stays on-screen -->
-  <button class="md:hidden shrink-0 p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white" onclick="toggleMobileMenu()">
+  <button class="shrink-0 p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white" onclick="toggleMobileMenu()">
     <i class="w-5 h-5" data-lucide="menu"></i>
   </button>
 </div>
 </div>
-<div class="hidden md:hidden border-t border-zinc-800 bg-[#0c0e11] px-4 py-4 space-y-3 text-sm" id="mobileMenuDropdown">
+<div class="hidden border-t border-zinc-800 bg-[#0c0e11] px-4 py-4 space-y-3 text-sm" id="mobileMenuDropdown">
 <a class="block py-1.5 text-zinc-300 hover:text-brand-orange" href="#home" onclick="toggleMobileMenu()">Home</a>
 <a class="block py-1.5 text-zinc-300 hover:text-brand-orange" href="#about" onclick="toggleMobileMenu()">About Symposium</a>
 <a class="block py-1.5 text-zinc-300 hover:text-brand-orange" href="#events" onclick="toggleMobileMenu()">Events &amp; Fees</a>
@@ -1895,10 +1895,18 @@ function calculateTotals() {
       document.getElementById('successRegUtr').innerText = utr;
           const eventsEl = document.getElementById('successRegEvents'); if(eventsEl) { const selected = Array.from(document.querySelectorAll('.event-checkbox:checked')).map(cb => cb.value); eventsEl.innerText = selected.length > 0 ? selected.join(', ') : 'Symposium Entry Only'; }
 
-      document.getElementById('successModal').classList.remove('hidden');
-      if (window.lucide) lucide.createIcons();
+      if (submitBtnText) submitBtnText.innerText = 'Verifying Registration...';
+      
+      setTimeout(() => {
+        if (submitBtnText) submitBtnText.innerText = 'Complete Checkout';
+        if (submitBtn) submitBtn.disabled = false;
+        if (spinner) spinner.classList.add('hidden');
+        
+        document.getElementById('successModal').classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+        showToast('Registration Confirmed!', `Code: ${regId} · Stored in Firebase Database.`);
+      }, 10000);
 
-      showToast('Registration Confirmed!', `Code: ${regId} · Stored in Firebase Database.`);
     };
 
     if (fileInput && fileInput.files && fileInput.files.length > 0) {
