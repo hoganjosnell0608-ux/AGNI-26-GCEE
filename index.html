@@ -183,6 +183,7 @@
 <a class="hover:text-brand-orange transition-colors" href="#committee">Committee</a>
 <a class="hover:text-brand-orange transition-colors" href="#venue">Venue</a>
 <a class="hover:text-brand-orange transition-colors" href="#contact">Contact</a>
+<a class="hover:text-brand-orange transition-colors cursor-pointer" onclick="openParticipantLookupModal()">View Pass</a>
 <a class="hover:text-brand-orange transition-colors flex items-center gap-1.5 text-xs font-semibold text-brand-gold bg-zinc-900/90 px-3 py-1.5 rounded-lg border border-brand-gold/30 hover:border-brand-gold" href="admin.html"><i class="w-3.5 h-3.5" data-lucide="shield"></i><span>Admin</span></a>
 </nav>
 <div class="flex items-center gap-1.5 sm:gap-3 shrink-0 flex-nowrap">
@@ -190,11 +191,11 @@
   <!-- Register Button: Compact padding on mobile -->
   
     <!-- View Pass Button -->
-    <button class="relative shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-500 hover:bg-zinc-800 text-xs font-bold transition-all" onclick="openStudentPassLookup()">
+    <!-- <button class="relative shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-500 hover:bg-zinc-800 text-xs font-bold transition-all" onclick="openStudentPassLookup()">
       <i class="w-4 h-4" data-lucide="scan"></i>
       <span>View Pass</span>
     </button>
-    
+     -->
     <button class="relative shrink-0 flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2 rounded-lg bg-gradient-to-r from-brand-orange to-brand-orangeDark text-white text-xs font-bold shadow-lg shadow-brand-orange/20" onclick="handleOpenCheckout()">
     <i class="w-4 h-4" data-lucide="ticket"></i>
     <span>Register now</span>
@@ -215,6 +216,7 @@
 <a class="block py-1.5 text-zinc-300 hover:text-brand-orange" href="#committee" onclick="toggleMobileMenu()">Committee</a>
 <a class="block py-1.5 text-zinc-300 hover:text-brand-orange" href="#venue" onclick="toggleMobileMenu()">Venue</a>
 <a class="block py-1.5 text-zinc-300 hover:text-brand-orange" href="#contact" onclick="toggleMobileMenu()">Contact</a>
+<a class="block py-1.5 text-zinc-300 hover:text-brand-orange cursor-pointer" onclick="toggleMobileMenu(); openParticipantLookupModal()">View Pass</a>
 <a class="block py-1.5 text-brand-gold font-semibold flex items-center gap-2" href="admin.html"><i class="w-4 h-4" data-lucide="shield"></i>Admin Portal</a>
 </div> 
 </header>
