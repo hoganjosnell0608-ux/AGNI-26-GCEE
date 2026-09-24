@@ -59,8 +59,14 @@ function compressBase64Image(dataUrl, maxDim = 800, quality = 0.65) {
       return resolve(dataUrl);
     }
     const img = new Image();
-    img.crossOrigin = 'anonymous';
+    
+    // Add fallback timeout to prevent hanging forever
+    const timeoutId = setTimeout(() => {
+      resolve(dataUrl);
+    }, 2000);
+    
     img.onload = () => {
+      clearTimeout(timeoutId);
       let width = img.width;
       let height = img.height;
       if (width > maxDim || height > maxDim) {
@@ -142,7 +148,9 @@ window.AgniFirebase = {
     try {
       if (this.rtdb || (typeof firebase !== 'undefined' && firebase.database)) {
         const db = this.rtdb || firebase.database();
-        await db.ref('registrations/' + docId).set(payload);
+        const setPromise = db.ref('registrations/' + docId).set(payload);
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('RTDB Timeout')), 3000));
+        await Promise.race([setPromise, timeoutPromise]);
         rtdbSuccess = true;
         console.log(`%c[Firebase]%c Pass ${docId} stored in Firebase Realtime Database!`, 'color:#10b981;font-weight:bold;', 'color:inherit;');
       }
@@ -322,7 +330,9 @@ window.AgniFirebase = {
     try {
       if (this.rtdb || (typeof firebase !== 'undefined' && firebase.database)) {
         const db = this.rtdb || firebase.database();
-        await db.ref('registrations/' + docId).update(updatePayload);
+        const updatePromise = db.ref('registrations/' + docId).update(updatePayload);
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('RTDB Timeout')), 3000));
+        await Promise.race([updatePromise, timeoutPromise]);
         updated = true;
       }
     } catch (e) {}
