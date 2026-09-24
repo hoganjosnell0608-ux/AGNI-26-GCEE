@@ -1357,13 +1357,14 @@ const nonTechEvents = EVENTS_DATA.filter(e => e.type === 'non-technical');
       fee: 400, 
       icon: 'layers', 
       desc: '3D Solid Modeling & chassis assembly challenge using SolidWorks/CATIA. (Standalone event — Not eligible for Combo Pass).', 
-      team: 'Solo Participant (Separate Entry)',
+      team: 'Max 1-4 Members',
       firstPrize: 3000,
       secondPrize: 2000,
       pool: 5000,
       isCertificateOnly: false,
+      pdflink :'./pdf/CAD_HACKTHON_RULE_BOOK.pdf',
       rules: [
-        'Team size: Solo participant.',
+        'Team size: Maximum 1 to 4 members per team.',
         'Permitted Software: SolidWorks, CATIA V5, or Autodesk Fusion 360.',
         'Time Duration: Strictly 45 minutes sprint to construct complete 3D mechanical component.',
         'Judging Criteria: Dimensional accuracy, tolerance compliance, and submission timestamp.',
@@ -1600,7 +1601,6 @@ const nonTechEvents = EVENTS_DATA.filter(e => e.type === 'non-technical');
           <p class="text-xs text-zinc-400 mt-3 leading-relaxed">${ev.desc}</p>
           ${prizeBadgeHtml}
           <button class="text-xs text-brand-orange hover:underline font-semibold mt-3 flex items-center gap-1" onclick="openRulesModal('${ev.id}')">
-            <button class="text-xs text-brand-orange hover:underline font-semibold mt-3 flex items-center gap-1" onclick="openRulesModal('${ev.id}')">
             <span>View Rules &amp; Guidelines</span>
             <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
           </button>
@@ -1757,12 +1757,25 @@ function calculateTotals() {
     }
 
     const list = document.getElementById('rulesModalList');
-    list.innerHTML = ev.rules.map(r => `
+    let rulesHtml = ev.rules.map(r => `
       <li class="flex items-start gap-2">
         <span class="text-brand-orange font-bold mt-0.5">•</span>
         <span>${r}</span>
       </li>
     `).join('');
+
+    if (ev.pdflink) {
+      rulesHtml += `
+        <li class="mt-4 pt-2 border-t border-zinc-800">
+          <a href="${ev.pdflink}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-orange/10 hover:bg-brand-orange/20 border border-brand-orange/30 text-brand-orange text-xs font-bold transition-all">
+            <i data-lucide="file-text" class="w-4 h-4"></i>
+            <span>CAD Hackathon Guidelines</span>
+          </a>
+        </li>
+      `;
+    }
+    
+    list.innerHTML = rulesHtml;
 
     const btn = document.getElementById('rulesModalSelectBtn');
     if (selectedEventIds.has(id)) {
