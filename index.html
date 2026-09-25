@@ -3668,12 +3668,12 @@
       if (m) m.classList.remove('hidden');
       if (window.lucide) lucide.createIcons();
     };
-  </script><!-- ASK Bee CONCIERGE CHATBOT WIDGET -->
-  <div class="fixed bottom-20 right-4 sm:right-6 z-40 flex flex-col items-end" id="BeeChatWidget">
+  </script><!-- ASK Ragav CONCIERGE CHATBOT WIDGET -->
+  <div class="fixed bottom-20 right-4 sm:right-6 z-40 flex flex-col items-end" id="RagavChatWidget">
     <!-- CHAT WINDOW (Hidden initially) -->
     <div
       class="hidden mb-3 w-[92vw] sm:w-96 max-w-[420px] bg-[#111317] border-2 border-brand-orange/50 rounded-2xl shadow-2xl overflow-hidden flex-col flame-glow-sm transition-all duration-300"
-      id="BeeChatWindow" style="max-height: 520px; height: 500px;">
+      id="RagavChatWindow" style="max-height: 520px; height: 500px;">
       <!-- Chat Header -->
       <div class="p-3.5 bg-[#16181d] border-b border-zinc-800 flex items-center justify-between">
         <div class="flex items-center gap-2.5">
@@ -3686,7 +3686,7 @@
           </div>
           <div>
             <div class="flex items-center gap-1.5">
-              <h4 class="text-xs font-bold text-white font-display tracking-wide">Bee</h4>
+              <h4 class="text-xs font-bold text-white font-display tracking-wide">Ragav</h4>
               <span
                 class="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold uppercase bg-brand-orange/20 text-brand-orange border border-brand-orange/40"></span>
             </div>
@@ -3696,11 +3696,11 @@
         </div>
         <div class="flex items-center gap-1">
           <button class="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
-            onclick="clearBeeChat()" title="Clear Conversation">
+            onclick="clearRagavChat()" title="Clear Conversation">
             <i class="w-3.5 h-3.5" data-lucide="trash-2"></i>
           </button>
           <button class="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
-            onclick="toggleBeeChat()" title="Close Chat">
+            onclick="toggleRagavChat()" title="Close Chat">
             <i class="w-4 h-4" data-lucide="x"></i>
           </button>
         </div>
@@ -3710,29 +3710,29 @@
         class="px-3 py-2 bg-zinc-950/80 border-b border-zinc-800/80 flex items-center gap-1.5 overflow-x-auto text-[11px] font-mono shrink-0">
         <button
           class="px-2.5 py-1 rounded-full bg-brand-orange/15 hover:bg-brand-orange/25 text-brand-orange border border-brand-orange/30 whitespace-nowrap transition-colors"
-          onclick="handleBeeQuickPrompt('Tell me about the ₹350 Combo Deal')">⚡ ₹350 Combo Deal</button>
+          onclick="handleRagavQuickPrompt('Tell me about the ₹350 Combo Deal')">⚡ ₹350 Combo Deal</button>
         <button
           class="px-2.5 py-1 rounded-full bg-brand-orange/15 hover:bg-brand-orange/25 text-brand-orange border border-brand-orange/30 whitespace-nowrap transition-colors"
-          onclick="handleBeeQuickPrompt('not submitted but amount deducted')">🚫 Registration Issue</button>
+          onclick="handleRagavQuickPrompt('not submitted but amount deducted')">🚫 Registration Issue</button>
         <button
           class="px-2.5 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-700 whitespace-nowrap transition-colors"
-          onclick="handleBeeQuickPrompt('What are the event registration fees?')">💰 Event Fees</button>
+          onclick="handleRagavQuickPrompt('What are the event registration fees?')">💰 Event Fees</button>
         <button
           class="px-2.5 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-700 whitespace-nowrap transition-colors"
-          onclick="handleBeeQuickPrompt('Is complimentary lunch provided?')">🍱 Free Lunch?</button>
+          onclick="handleRagavQuickPrompt('Is complimentary lunch provided?')">🍱 Free Lunch?</button>
         <button
           class="px-2.5 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-700 whitespace-nowrap transition-colors"
-          onclick="handleBeeQuickPrompt('When is the online registration deadline?')">⏱ Deadline</button>
+          onclick="handleRagavQuickPrompt('When is the online registration deadline?')">⏱ Deadline</button>
         <button
           class="px-2.5 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-700 whitespace-nowrap transition-colors"
-          onclick="handleBeeQuickPrompt('How do I reach GCE Erode?')">📍 How to Reach</button>
+          onclick="handleRagavQuickPrompt('How do I reach GCE Erode?')">📍 How to Reach</button>
         <button
           class="px-2.5 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-700 whitespace-nowrap transition-colors"
-          onclick="handleBeeQuickPrompt('Who are the committee coordinators to contact?')">📞 Coordinators</button>
+          onclick="handleRagavQuickPrompt('Who are the committee coordinators to contact?')">📞 Coordinators</button>
 
       </div>
       <!-- Chat Message Stream -->
-      <div class="p-3.5 space-y-3 overflow-y-auto flex-1 min-h-0 text-xs bg-zinc-950/40" id="BeeMessagesContainer">
+      <div class="p-3.5 space-y-3 overflow-y-auto flex-1 min-h-0 text-xs bg-zinc-950/40" id="RagavMessagesContainer">
         <!-- Initial Bot Greeting -->
         <div class="flex items-start gap-2.5">
           <div
@@ -3741,7 +3741,7 @@
           </div>
           <div
             class="bg-zinc-900 border border-zinc-800 p-2.5 rounded-2xl rounded-tl-none text-zinc-200 text-xs leading-relaxed max-w-[85%]">
-            <p class="font-bold text-brand-orange mb-1">Vanakkam! I'm Bee 👋</p>
+            <p class="font-bold text-brand-orange mb-1">Vanakkam! I'm Ragav 👋</p>
             <p>Your AI assistant for <strong>AGNI 26</strong> National Level Technical Symposium at <strong>GCE
                 Erode</strong>. Ask me anything about event registrations, combo passes, timings, or venue details!</p>
           </div>
@@ -3749,10 +3749,10 @@
       </div>
       <!-- Chat Input Form -->
       <form class="p-2.5 bg-[#14161b] border-t border-zinc-800 flex items-center gap-2 shrink-0"
-        onsubmit="handleBeeChatSubmit(event)">
+        onsubmit="handleRagavChatSubmit(event)">
         <input autocomplete="off"
           class="flex-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-700 text-white text-xs placeholder-zinc-500 focus:border-brand-orange focus:outline-none"
-          id="BeeChatInput" placeholder="Ask Bee anything..." type="text" />
+          id="BeeChatInput" placeholder="Ask Ragav anything..." type="text" />
         <button
           class="p-2 rounded-xl bg-brand-orange hover:bg-brand-orangeDark text-white transition-all shadow-md active:scale-95 shrink-0"
           title="Send Message" type="submit">
@@ -3763,7 +3763,7 @@
     <!-- LAUNCHER BUTTON -->
     <button
       class="group relative flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-gradient-to-r from-brand-orange to-brand-orangeDark text-white shadow-2xl shadow-brand-orange/40 hover:shadow-brand-orange/60 active:scale-95 transition-all flame-glow cursor-pointer border border-white/20"
-      id="BeeLauncherBtn" onclick="toggleBeeChat()">
+      id="RagavLauncherBtn" onclick="toggleRagavChat()">
       <div class="relative w-6 h-6 flex items-center justify-center">
         <i class="w-5 h-5 text-white group-hover:rotate-12 transition-transform" data-lucide="bot"></i>
         <span
@@ -3772,20 +3772,20 @@
           class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-brand-orange"></span>
       </div>
       <div class="flex items-center gap-1 text-xs font-black tracking-wide font-display">
-        <span>Ask Bee</span>
+        <span>Ask Ragav</span>
         <span class="w-5 h-5 text-white group-hover:rotate-12 transition-transform" data-lucide="message-square"></i>
       </div>
     </button>
   </div>
-  <script id="Bee-chatbot-script">
+  <script id="Ragav-chatbot-script">
     function toggleBeeChat() {
-      const windowEl = document.getElementById('BeeChatWindow');
-      const launcher = document.getElementById('BeeLauncherBtn');
+      const windowEl = document.getElementById('RagavChatWindow');
+      const launcher = document.getElementById('RagavLauncherBtn');
       if (!windowEl) return;
       if (windowEl.classList.contains('hidden')) {
         windowEl.classList.remove('hidden');
         windowEl.classList.add('flex');
-        const input = document.getElementById('BeeChatInput');
+        const input = document.getElementById('RagavChatInput');
         if (input) setTimeout(() => input.focus(), 100);
       } else {
         windowEl.classList.add('hidden');
@@ -3794,8 +3794,8 @@
       if (window.lucide) lucide.createIcons();
     }
 
-    function clearBeeChat() {
-      const container = document.getElementById('BeeMessagesContainer');
+    function clearRagavChat() {
+      const container = document.getElementById('RagavMessagesContainer');
       if (!container) return;
       container.innerHTML = `
       <div class="flex items-start gap-2.5">
@@ -3838,16 +3838,16 @@
       if (window.lucide) lucide.createIcons();
     }
 
-    function getBeeBotReply(rawQuery) {
+    function getRagavBotReply(rawQuery) {
       if (!rawQuery || typeof rawQuery !== 'string' || rawQuery.trim().length === 0) {
-        return "Vanakkam! I am <strong>Bee</strong>, your official AGNI 26 AI assistant. Ask me anything about events, rules, fees, deadlines, lunch, bus routes, or coordinators!";
+        return "Vanakkam! I am <strong>Ragav</strong>, your official AGNI 26 AI assistant. Ask me anything about events, rules, fees, deadlines, lunch, bus routes, or coordinators!";
       }
 
       const q = rawQuery.toLowerCase().trim();
 
       // 1. GREETINGS & CASUAL
       if (/^(hi|hello|hey|vanakkam|namaste|hola|good morning|good afternoon|good evening|who are you|what is this|about you|help)$/.test(q) || q.includes('who are you') || q.includes('what can you do')) {
-        return "Vanakkam! 👋 I am <strong>Bee</strong>, the AI concierge for <strong>AGNI 26 — National Level Technical Symposium</strong> organized by the Department of Automobile Engineering at GCE Erode.<br><br>" +
+        return "Vanakkam! 👋 I am <strong>Ragav</strong>, the AI concierge for <strong>AGNI 26 — National Level Technical Symposium</strong> organized by the Department of Automobile Engineering at GCE Erode.<br><br>" +
           "I can answer any question about:<br>" +
           "• 🏆 <strong>All 06 Events & ₹10,000+ Cash Prizes</strong><br>" +
           "• ⚡ <strong>₹350 Combo Pass Deal (2 Tech (excl. CAD) + 2 Non-Tech)</strong><br>" +
@@ -4111,24 +4111,24 @@
 
 
 
-    function handleBeeQuickPrompt(text) {
-      appendBeeMessage(text, true);
+    function handleRagavQuickPrompt(text) {
+      appendRagavMessage(text, true);
       setTimeout(() => {
-        const reply = getBeeBotReply(text);
-        appendBeeMessage(reply, false);
+        const reply = getRagavBotReply(text);
+        appendRagavMessage(reply, false);
       }, 350);
     }
 
-    function handleBeeChatSubmit(e) {
+    function handleRagavChatSubmit(e) {
       e.preventDefault();
-      const input = document.getElementById('BeeChatInput');
+      const input = document.getElementById('RagavChatInput');
       const query = input ? input.value.trim() : '';
       if (!query) return;
-      appendBeeMessage(query, true);
+      appendRagavMessage(query, true);
       input.value = '';
       setTimeout(() => {
-        const reply = getBeeBotReply(query);
-        appendBeeMessage(reply, false);
+        const reply = getRagavBotReply(query);
+        appendRagavMessage(reply, false);
       }, 400);
     }
   </script>
