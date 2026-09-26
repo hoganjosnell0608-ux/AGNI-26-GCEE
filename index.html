@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>AGNI 26 | National Level Technical Symposium | GCE Erode</title>
-  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <link rel="icon" type="image/png" href="./logo/AGNI26.png">
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <!-- Google Fonts -->
@@ -226,10 +226,6 @@
         <!-- Register Button: Compact padding on mobile -->
 
         <!-- View Pass Button -->
-        <button class="relative shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-500 hover:bg-zinc-800 text-xs font-bold transition-all" onclick="openStudentPassLookup()">
-          <i class="w-4 h-4" data-lucide="scan"></i>
-          <span class="hidden sm:inline">View Pass</span>
-        </button>
         <button
           class="relative shrink-0 flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2 rounded-lg bg-gradient-to-r from-brand-orange to-brand-orangeDark text-white text-xs font-bold shadow-lg shadow-brand-orange/20"
           onclick="handleOpenCheckout()">
@@ -911,6 +907,42 @@
               <span>+91 63740 50598</span>
             </a>
           </div>
+          <div
+            class="p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800 flex flex-col justify-between hover:border-brand-orange/40 transition-all">
+            <div>
+              <div
+                class="w-12 h-12 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-300 flex items-center justify-center mb-4">
+                <i class="w-6 h-6" data-lucide="user"></i>
+              </div>
+              <div class="text-[11px] uppercase tracking-wider text-zinc-400 font-mono font-bold">Student Joint Secretary
+              </div>
+              <h4 class="text-lg font-bold text-white mt-1">V. MANICKA MEENAKSHI</h4>
+              <p class="text-xs text-zinc-400">Pre Final Year, Auto Dept</p>
+            </div>
+            <a class="mt-6 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-zinc-800/80 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold transition-colors"
+              href="tel:+916385518980">
+              <i class="w-3.5 h-3.5 text-brand-orange" data-lucide="phone"></i>
+              <span>+91 6385518980</span>
+            </a>
+          </div>
+          <div
+            class="p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800 flex flex-col justify-between hover:border-brand-orange/40 transition-all">
+            <div>
+              <div
+                class="w-12 h-12 rounded-xl bg-zinc-800 border border-zinc-700 text-zinc-300 flex items-center justify-center mb-4">
+                <i class="w-6 h-6" data-lucide="award"></i>
+              </div>
+              <div class="text-[11px] uppercase tracking-wider text-brand-orange font-mono font-bold">Student Joint Secretary
+              </div>
+              <h4 class="text-lg font-bold text-white mt-1">R. SIVARANJANI</h4>
+              <p class="text-xs text-zinc-400">Final Year, Auto Dept</p>
+            </div>
+            <a class="mt-6 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-zinc-800/80 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold transition-colors"
+              href="tel:+918667619168">
+              <i class="w-3.5 h-3.5 text-brand-orange" data-lucide="phone"></i>
+              <span>+91 8667619168</span>
+            </a>
+          </div>
         </div>
     </section>
     <!-- VENUE & CONTACT -->
@@ -934,11 +966,15 @@
                 <i class="w-5 h-5 text-brand-orange shrink-0 mt-1" data-lucide="bus"></i>
                 <div>
                   <h4 class="text-sm font-bold text-white">Public Transit Accessibility</h4>
-                  <p class="text-xs text-zinc-400 mt-1">Direct town buses are available from Erode Central Bus Stand –
-                    Platforms 3 & 4 towards Bhavani / Chithode, operating approximately every 5 minutes.
-                    Bus Routes & Drop-off Points
-                    Bus No. 3 — Vasavi College Stop
-                    Bus No. B-16 — IRTT College Stop</p>
+                  <p class="text-xs text-zinc-400 mt-1">Public Transit Accessibility
+
+                    Direct town buses are available from Erode Central Bus Stand – Platforms 3 & 4 towards Bhavani / Chithode ,
+
+                    7.50Am - Mofussil Bus(IRTT) Erode Bustand(near by MiniBus platoform) ,
+
+                    8.00Am - Town Bus(Bus no 3) Erode Bustand , 
+
+                    8.20Am - Town Bus(Bus  No 5B) Erode Bustand.</p>
                 </div>
               </div>
               <div class="p-5 rounded-xl bg-zinc-900/60 border border-zinc-800 flex items-start gap-4">
@@ -1567,8 +1603,8 @@
           <div class="flex items-center gap-2"><i class="w-4 h-4 text-emerald-400"
               data-lucide="shield-check"></i><span>Judges' decision will be final &amp; binding.</span></div>
           <div class="text-[11px] text-brand-gold font-mono"><i class="w-3 h-3 text-brand-orange inline mr-1"
-              data-lucide="phone"></i>For queries regarding this event, contact: <strong class="text-white">HOGAN
-              JOSNELL</strong> — Mobile: <strong class="text-brand-orange">8072514953</strong></div>
+              data-lucide="phone"></i>For queries regarding this event, contact: <strong class="text-white" id="rulesModalContactName">
+              </strong> — Mobile: <strong class="text-brand-orange" id="rulesModalContactPhone"></strong></div>
         </div>
         <div class="flex items-center gap-2 w-full sm:w-auto">
           <button
@@ -1818,7 +1854,7 @@
                   class="w-3.5 h-3.5 text-brand-orange" data-lucide="info"></i><span>Team Regulations:</span></div>
               <p class="text-[11px] leading-relaxed"><strong class="text-white">Paper Presentation</strong> and <strong
                   class="text-white">Project Expo</strong>: Team 1 to 4 Members (₹200 Base + ₹200/head
-                additional).<br /><strong class="text-brand-gold">All other 5 events:</strong> Strictly Solo (1 Member
+                additional).<br /><strong class="text-brand-gold">All other 4 events:</strong> Strictly Solo (1 Member
                 per pass).</p>
             </div>
             <div class="flex flex-wrap items-center gap-2" id="teammateButtonsGroup"><button
@@ -2136,7 +2172,9 @@
           'Core Topics: Electric Vehicles, Battery Thermal Management, Alternative Fuels, ADAS, Autonomous Mobility, and Sustainable Powertrains.',
           'Time Limit: 7 minutes presentation + 3 minutes Q&A with jury.',
           'Format: Submit 1-page abstract prior to presentation. Strict PPT/PDF format.'
-        ]
+        ],
+        contactName: 'SRINIVASH J',
+        contactPhone: '7806838889'
       },
       {
         id: 'ev-expo',
@@ -2144,7 +2182,7 @@
         type: 'technical',
         fee: 200,
         icon: 'cpu',
-        desc: 'Showcase physical prototype vehicles, customized go-karts, IoT robotics.',
+        desc: 'Showcase Innovative ideas , Creative Projects, and Technological Advancements.',
         team: 'Max 1-4 Members',
         firstPrize: 1000,
         secondPrize: 500,
@@ -2153,8 +2191,13 @@
         rules: [
           'Team size: Maximum 1-4 members per project team.',
           'Eligibility: Working hardware models, functional prototypes, EV carts, IoT robotics.',
-          'Demonstration: 10 minutes live demonstration and interactive inspection by jury.'
-        ]
+          'Demonstration: 10 minutes live demonstration and interactive inspection by jury.',
+          'Laptops, PPT must, Prototype must.',
+          'Own Extension Box must if external powersource needed.',
+          '5mins allocated for project presentation.'
+        ],
+        contactName: 'HARIPRASATH S',
+        contactPhone: '9629024815'
       },
       {
         id: 'ev-cad',
@@ -2176,7 +2219,9 @@
           'Time Duration: Strictly 45 minutes sprint to construct complete 3D mechanical component.',
           'Judging Criteria: Dimensional accuracy, tolerance compliance, and submission timestamp.',
           'Note: CAD Hackathon requires dedicated lab workstations and cannot be bundled into the ₹350 Combo Pass.'
-        ]
+        ],
+        contactName: 'GOKUL ANAND S',
+        contactPhone: '6385518560'
       },
 
       {
@@ -2194,8 +2239,10 @@
         rules: [
           'Team size: Solo participant.',
           'Themes: Technical knowledge, logical reasoning, precision and problem-solving.',
-          'Rounds: 🔴 Red Light, 🟢 Green Light – Technical written challenge, 🍪 Dalgona – Precision & puzzle challenge, 🌉 Glass Bridge – Logic & decision-making challenge and ⚡ Final Squid – Rapid-fire technical battle.'
-        ]
+          'Rounds:  Dalgona - techinical written challenge ,Squid boss - rapid fire technical battle ,🔴 Redlight 🟢 Greenlight - puzzle challenge , Glass bridge - logic and decision making challenge.'
+        ],
+        contactName: 'LEKA B',
+        contactPhone: '8870747552'
       },
       {
         id: 'ev-hunt',
@@ -2212,7 +2259,9 @@
         rules: [
           'Team size: Solo participant.',
           'Decode cryptic engineering clues scattered across GCE Erode campus bays.'
-        ]
+        ],
+        contactName: 'HOGAN JOSNELL A',
+        contactPhone: '8072514953'
       },
       {
         id: 'ev-photography',
@@ -2231,7 +2280,9 @@
           'Theme: Open Theme — participants may submit photographs on any subject.',
           'Submission Deadline: All photographs must be submitted before 4 October 2026.',
           'Authenticity: Only original and genuine photographs are allowed. Fake, AI-generated, manipulated, or misleading photographs are not permitted.'
-        ]
+        ],
+        contactName: 'ADHITHYA J',
+        contactPhone: '8248764441'
       }
     ];
 
@@ -2429,6 +2480,23 @@
                 </span>
               </button>
             </div>
+          ` : ev.id === 'ev-paper' ? `
+            <div class="mt-2.5">
+              <button 
+                type="button" 
+                onclick="window.open('./pdf/PPT_Theme.pdf', '_blank')" 
+                class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-brand-orange/20 to-brand-gold/15 hover:from-brand-orange/30 hover:to-brand-gold/25 border border-brand-orange/50 text-white font-bold text-xs flex items-center justify-between transition-all active:scale-95 shadow-md cursor-pointer"
+              >
+                <span class="flex items-center gap-1.5 text-brand-gold font-display text-[11px] uppercase tracking-wide pointer-events-none">
+                  <i data-lucide="file-text" class="w-3.5 h-3.5 text-brand-gold"></i>
+                  <span>PPT Statements Exploring</span>
+                </span>
+                <span class="text-[10px] font-mono text-zinc-300 flex items-center gap-1 pointer-events-none">
+                  <span>Explore</span>
+                  <i data-lucide="arrow-up-right" class="w-3 h-3 text-brand-orange"></i>
+                </span>
+              </button>
+            </div>
           ` : ''}
 
         <div class="pt-4 mt-4 border-t border-zinc-800/80 flex items-center justify-between">
@@ -2562,6 +2630,9 @@
         prizeLabel.innerText = 'Prize Distribution';
         prizeBreakdown.innerText = `Winner: ₹${ev.firstPrize} | Runner-up: ₹${ev.secondPrize}`;
       }
+
+      document.getElementById('rulesModalContactName').innerText = ev.contactName || '';
+      document.getElementById('rulesModalContactPhone').innerText = ev.contactPhone || '';
 
       const list = document.getElementById('rulesModalList');
       let rulesHtml = ev.rules.map(r => `
@@ -4033,7 +4104,7 @@
           "• <strong>Team Limit:</strong> Strictly Solo (1 Member)<br>" +
           "• <strong>Cash Prizes:</strong> 1st: ₹500 | 2nd: ₹250 (Pool: ₹750)<br>" +
           "• <strong>Themes:</strong> Technical knowledge, logical reasoning, precision and problem-solving.<br>" +
-          "• <strong>Submission:</strong> 🔴 Red Light, 🟢 Green Light – Technical written challenge, 🍪 Dalgona – Precision & puzzle challenge, 🌉 Glass Bridge – Logic & decision-making challenge and ⚡ Final Squid – Rapid-fire technical battle";
+          "• <strong>Submission:</strong> Dalgona - techinical written challenge ,Squid boss - rapid fire technical battle ,🔴 Redlight 🟢 Greenlight - puzzle challenge , Glass bridge - logic and decision making challenge.";
       }
 
       // 14. SPECIFIC EVENT RULES (TREASURE HUNT)
@@ -4094,6 +4165,8 @@
           "• <strong>Student President:</strong> N. Sabareesh — <a href='tel:+919943294014' class='text-brand-orange font-bold underline'>+91 99432 94014</a><br>" +
           "• <strong>Student Vice President:</strong> D. Siddharth — <a href='tel:+918610682174' class='text-brand-orange font-bold underline'>+91 8610682174</a><br>" +
           "• <strong>Student Secretary:</strong> A. P. Kishore Kannan — <a href='tel:+916374050598' class='text-brand-orange font-bold underline'>+91 63740 50598</a><br>" +
+          "• <strong>Student Secretary:</strong> V . Manicka Meenakshi — <a href='tel:+916385518980' class='text-brand-orange font-bold underline'>+91 6385518980</a><br>" +
+          "• <strong>Student Secretary:</strong> R .Sivaranjani — <a href='tel:+918667619168' class='text-brand-orange font-bold underline'>+91 8667619168</a><br>" +
           "• <strong>Symposium Query Lead:</strong> A. Hogan Josnell — <a href='tel:+918072514953' class='text-brand-orange font-bold underline'>8072514953</a>";
       }
 
@@ -4117,7 +4190,7 @@
       // 25. DEVELOPER CREDIT
       if (q.includes('developer') || q.includes('who made') || q.includes('who built') || q.includes('created by') || q.includes('designed by') || q.includes('credit')) {
         return "💻 <strong>Platform Credit:</strong><br>" +
-          "AGNI 26 official symposium portal and interactive telemetry suite was proudly <strong>Developed by HOGAN JOSNELL A</strong> (Department of Automobile Engineering, GCE Erode).";
+          "AGNI 26 official symposium portal and interactive telemetry suite was proudly <strong>Developed by HOGAN JOSNELL A & <br> HARIPRASATH S</strong> (Department of Automobile Engineering, GCE Erode).";
       }
 
       // 26. REGISTRATION PROCEDURE (STEP-BY-STEP) 
