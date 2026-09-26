@@ -3178,7 +3178,7 @@
     EVENTS_DATA.forEach(ev => {
       if (TEAM_EVENTS_CONFIG[ev.id]) {
         ev.isTeamEvent = true;
-        ev.perHeadFee = 150;
+        ev.perHeadFee = 200;
       }
     });
 
@@ -3241,7 +3241,7 @@
         if (ev && ev.isTeamEvent) {
           const feeEl = card.querySelector('.font-mono.text-white');
           if (feeEl) {
-            feeEl.innerHTML = `₹${ev.fee}+₹150 <span class="text-xs text-brand-orange font-normal font-sans">/ Per Head</span>`;
+            feeEl.innerHTML = `₹${ev.fee}+₹200 <span class="text-xs text-brand-orange font-normal font-sans">/ Per Head</span>`;
           }
         }
       });
@@ -3282,7 +3282,7 @@
         <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800 space-y-2">
           <div class="text-[11px] font-mono font-bold text-brand-orange uppercase flex items-center justify-between">
             <span>Teammate #${i}</span>
-            <span class="text-[10px] text-zinc-500">₹150 Per Delegate</span>
+            <span class="text-[10px] text-zinc-500">₹200 Per Delegate</span>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <input type="text" class="px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-white text-xs focus:border-brand-orange focus:outline-none teammate-name-val" placeholder="Teammate ${i} Full Name *" required />
@@ -3419,7 +3419,7 @@
       // Compute calculations
       const totals = calculateTotals();
       const baseFee = totals.amount || 0;
-      const teammatesFee = selectedTeammatesCount * 150;
+      const teammatesFee = selectedTeammatesCount * 200;
       const grandTotal = baseFee + teammatesFee;
 
       document.getElementById('calcEventBasePrice').innerText = '₹' + baseFee;
@@ -3513,7 +3513,7 @@
       }
 
       const totals = calculateTotals();
-      const grandTotal = (totals.amount || 0) + (selectedTeammatesCount * 150);
+      const grandTotal = (totals.amount || 0) + (selectedTeammatesCount * 200);
       const regId = 'AGNI-' + Math.floor(100000 + Math.random() * 900000);
 
       const submitBtn = document.getElementById('submitRegBtn');
@@ -3868,7 +3868,7 @@
           "• <strong>How it works:</strong> Pick <strong>exactly 2 Technical Events (excl. CAD) + 2 Non-Technical Events</strong> to automatically unlock the bundled <strong>₹350</strong> symposium pass (original standalone value is ₹700!).<br>" +
           "• <strong>Custom Combo Builder:</strong> Click the gold <strong>'Claim Combo'</strong> button in the banner or the <strong>'Combo Pass (₹350)'</strong> tab filter to open the interactive selection drawer.<br>" +
           "• <strong>Inclusions:</strong> All 4 chosen events, delegate kit, identity badge, complimentary hot buffet lunch, and verified certificates.<br>" +
-          "• <strong>Teammates:</strong> If choosing team events (Paper Presentation, Project Expo, Short Film), additional teammates are added at ₹150 / head.";
+          "• <strong>Teammates:</strong> If choosing team events (Paper Presentation, Project Expo, Short Film), additional teammates are added at ₹200 / head.";
       }
 
       // 3. REGISTRATION FEES & ON-SPOT COMPARISON
@@ -4058,7 +4058,7 @@
       // 26. REGISTRATION PROCEDURE (STEP-BY-STEP) 
       if (q.includes('register') || q.includes('registration') || q.includes('how to register') || q.includes('step') || q.includes('procedure') || q.includes('process') || q.includes('how to apply') || q.includes('how to join')) {
         return "📝 <strong>Step-by-Step Registration Procedure:</strong><br>" +
-          "• <strong>Step 1 — Pick Events or Combo:</strong> Select events individually (+Add to Pass) or click <em>'Claim Combo'</em> to bundle 2 Technical + 2 Non-Technical events at flat <strong>₹350</strong>.<br>" + "• <strong>Step 2 — Delegate Details (Step 1):</strong> Click Pass Cart. Fill in Full Name, College Name, Department (or type under 'Others'), Year of Study, WhatsApp Mobile, and Email.<br>" + "• <strong>Step 3 — Accompanying Teammates:</strong> For Paper, Expo, or Short Film, choose Solo (+₹0), 1 (+₹150), 2 (+₹300), or 3 (+₹450) Teammates. All other events are strictly solo.<br>" + "• <strong>Step 4 — Scan UPI QR Code (Step 2):</strong> Scan the auto-filled dynamic QR for payee <strong>HOGAN JOSNELL A</strong> (<span class='font-mono text-brand-orange font-bold'>josnellhogan2006@okaxis</span>) on GPay, PhonePe, or Paytm.<br>" + "• <strong>Step 5 — 12-Digit UTR & Proof:</strong> Enter your 12-digit numeric Transaction ID and upload your payment receipt screenshot.<br>" + "• <strong>Step 6 — Instant Gate Pass:</strong> Click submit to generate your verified single-page entry pass (<span class='font-mono text-brand-gold font-bold'>AGNI-XXXXXX</span>) for check-in on <strong>06 October 2026</strong>!";
+          "• <strong>Step 1 — Pick Events or Combo:</strong> Select events individually (+Add to Pass) or click <em>'Claim Combo'</em> to bundle 2 Technical + 2 Non-Technical events at flat <strong>₹350</strong>.<br>" + "• <strong>Step 2 — Delegate Details (Step 1):</strong> Click Pass Cart. Fill in Full Name, College Name, Department (or type under 'Others'), Year of Study, WhatsApp Mobile, and Email.<br>" + "• <strong>Step 3 — Accompanying Teammates:</strong> For Paper, Expo, or Short Film, choose Solo (+₹0), 1 (+₹200), 2 (+₹400), or 3 (+₹600) Teammates. All other events are strictly solo.<br>" + "• <strong>Step 4 — Scan UPI QR Code (Step 2):</strong> Scan the auto-filled dynamic QR for payee <strong>HOGAN JOSNELL A</strong> (<span class='font-mono text-brand-orange font-bold'>josnellhogan2006@okaxis</span>) on GPay, PhonePe, or Paytm.<br>" + "• <strong>Step 5 — 12-Digit UTR & Proof:</strong> Enter your 12-digit numeric Transaction ID and upload your payment receipt screenshot.<br>" + "• <strong>Step 6 — Instant Gate Pass:</strong> Click submit to generate your verified single-page entry pass (<span class='font-mono text-brand-gold font-bold'>AGNI-XXXXXX</span>) for check-in on <strong>06 October 2026</strong>!";
       }
 
       // 27. WHAT TO DO AFTER ARRIVING AT COLLEGE / CAMPUS ENTRY GUIDANCE
