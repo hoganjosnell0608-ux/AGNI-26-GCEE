@@ -3535,9 +3535,12 @@
       if (selectedTeammatesCount > 0) {
         const nameInputs = document.querySelectorAll('.teammate-name-val');
         const phoneInputs = document.querySelectorAll('.teammate-phone-val');
+        const emailInputs = document.querySelectorAll('.teammate-email-val');
         for (let i = 0; i < nameInputs.length; i++) {
           const tName = (nameInputs[i].value || '').trim();
           const tPhone = (phoneInputs[i].value || '').trim();
+          const tEmail = (emailInputs[i].value || '').trim();
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           if (!tName) {
             showStep1Error(`Please enter the full name for Teammate #${i + 1}.`);
             nameInputs[i].focus();
@@ -3546,6 +3549,11 @@
           if (!tPhone || tPhone.length !== 10) {
             showStep1Error(`Please enter a valid 10-digit mobile for Teammate #${i + 1}.`);
             phoneInputs[i].focus();
+            return;
+          }
+         if (!emailRegex.test(tEmail)) {
+            showStep1Error(`Please enter a valid Email Address for Teammate #${i + 1}.`);
+            emailInputs[i].focus();
             return;
           }
         }
@@ -3640,10 +3648,12 @@
       const teammatesList = [];
       const nameInputs = document.querySelectorAll('.teammate-name-val');
       const phoneInputs = document.querySelectorAll('.teammate-phone-val');
+      const emailInputs = document.querySelectorAll('.teammate-email-val');
       for (let i = 0; i < nameInputs.length; i++) {
         teammatesList.push({
           name: nameInputs[i].value.trim(),
-          phone: phoneInputs[i].value.trim()
+          phone: phoneInputs[i].value.trim(),
+          email: emailInputs[i].value.trim()
         });
       }
 
