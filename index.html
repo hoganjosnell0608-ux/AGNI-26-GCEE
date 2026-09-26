@@ -3752,7 +3752,7 @@
         onsubmit="handleRagavChatSubmit(event)">
         <input autocomplete="off"
           class="flex-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-700 text-white text-xs placeholder-zinc-500 focus:border-brand-orange focus:outline-none"
-          id="BeeChatInput" placeholder="Ask Ragav anything..." type="text" />
+          id="RagavChatInput" placeholder="Ask Ragav anything..." type="text" />
         <button
           class="p-2 rounded-xl bg-brand-orange hover:bg-brand-orangeDark text-white transition-all shadow-md active:scale-95 shrink-0"
           title="Send Message" type="submit">
@@ -3778,7 +3778,7 @@
     </button>
   </div>
   <script id="Ragav-chatbot-script">
-    function toggleBeeChat() {
+    function toggleRagavChat() {
       const windowEl = document.getElementById('RagavChatWindow');
       const launcher = document.getElementById('RagavLauncherBtn');
       if (!windowEl) return;
@@ -3811,8 +3811,8 @@
       if (window.lucide) lucide.createIcons();
     }
 
-    function appendBeeMessage(text, isUser = false) {
-      const container = document.getElementById('BeeMessagesContainer');
+    function appendRagavMessage(text, isUser = false) {
+      const container = document.getElementById('RagavMessagesContainer');
       if (!container) return;
       const msgDiv = document.createElement('div');
       if (isUser) {
