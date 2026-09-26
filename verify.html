@@ -123,6 +123,16 @@
             <!-- Badges injected here -->
           </div>
         </div>
+
+        <div id="teammatesContainer" class="hidden mt-5 bg-zinc-950/50 rounded-xl p-4 border border-brand-orange/30">
+          <p class="text-[10px] text-brand-orange font-mono font-bold uppercase tracking-wider mb-3 flex items-center gap-2">
+            <i data-lucide="users" class="w-3.5 h-3.5"></i> Accompanying Teammates
+          </p>
+          <div id="passTeammates" class="space-y-3">
+            <!-- Teammates injected here -->
+          </div>
+        </div>
+
       </div>
       
       <!-- Footer notch area -->
@@ -212,6 +222,24 @@
           eventsContainer.innerHTML = eventsList.map(ev => 
             `<span class="px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-200 text-xs font-semibold border border-zinc-700">${ev}</span>`
           ).join('');
+        }
+
+        // Render Teammates
+        const teammatesContainer = document.getElementById('teammatesContainer');
+        const passTeammates = document.getElementById('passTeammates');
+        
+        if (participant.teammates && Array.isArray(participant.teammates) && participant.teammates.length > 0) {
+          teammatesContainer.classList.remove('hidden');
+          passTeammates.innerHTML = participant.teammates.map((t, idx) => `
+            <div class="flex flex-col gap-1 pb-2 border-b border-zinc-800/80 last:border-0 last:pb-0">
+              <p class="text-xs text-white font-bold">${idx + 1}. ${t.name}</p>
+              <div class="flex items-center gap-3 text-[10px] text-zinc-400 font-mono">
+                <span><i data-lucide="phone" class="w-3 h-3 inline"></i> ${t.phone}</span>
+                ${t.email ? `<span><i data-lucide="mail" class="w-3 h-3 inline"></i> ${t.email}</span>` : ''}
+              </div>
+            </div>
+          `).join('');
+          if (window.lucide) lucide.createIcons();
         }
 
         // Show pass

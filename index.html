@@ -1732,6 +1732,26 @@
               </div>
             </div>
           </div>
+          <!-- Paper Presentation Statement Selector -->
+          <div id="paperPresentationPsSelectionContainer"
+            class="hidden mt-3 p-3.5 rounded-xl bg-gradient-to-r from-brand-orange/15 to-zinc-950 border border-brand-orange/50 space-y-2 text-left">
+            <div class="flex items-center justify-between">
+              <label for="paperPresentationPsSelect"
+                class="text-xs font-mono font-bold text-brand-orange uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                <span>Paper Presentation Statement <span class="text-white">*</span></span>
+              </label>
+            </div>
+            <select id="paperPresentationPsSelect"
+              class="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-brand-orange/40 text-white text-xs focus:border-brand-orange focus:outline-none">
+              <option value="" disabled selected>Select the PPT Statement *</option>
+              <option value="AI and Autonomous Vehicle">AI and Autonomous Vehicle</option>
+              <option value="Embedded Systems & Electronics">Embedded Systems & Electronics</option>
+              <option value="Sustainable Energy Technology">Sustainable Energy Technology</option>
+              <option value="Battery Technology">Battery Technology</option>
+              <option value="Cybersecurity in automotive and Communication technology in EV">Cybersecurity in automotive and Communication technology in EV</option>
+            </select>
+          </div>
           <!-- Project Expo Problem Statement Selector -->
           <div id="projectExpoPsSelectionContainer"
             class="hidden mt-3 p-3.5 rounded-xl bg-gradient-to-r from-brand-orange/15 to-zinc-950 border border-brand-orange/50 space-y-2 text-left">
@@ -1778,7 +1798,12 @@
                 Detection in Auto Components</option>
               <option value="PS 18: Secure Automotive Software Update Verification Prototype">PS 18: Secure Automotive
                 Software Update Verification Prototype</option>
+              <option value="Others">Others / Open choice</option>
             </select>
+            <div id="projectExpoOtherPsContainer" class="hidden mt-3">
+              <label for="projectExpoOtherPs" class="block font-semibold text-zinc-300 mb-1 text-xs">Specify your Problem Statement <span class="text-brand-orange">*</span></label>
+              <input type="text" id="projectExpoOtherPs" class="w-full px-3 py-2 rounded-lg bg-zinc-950 border border-brand-orange/40 text-white text-xs focus:border-brand-orange focus:outline-none" placeholder="Describe your problem statement" />
+            </div>
           </div>
           <!-- Teammate Count Picker & Roster -->
           <div class="p-4 rounded-xl bg-zinc-950 border border-zinc-800 space-y-3" id="teammatesPickerContainer">
@@ -2104,6 +2129,8 @@
         secondPrize: 500,
         pool: 1500,
         isCertificateOnly: false,
+        pdflink: './pdf/PPT_Theme.pdf',
+        pdfTitle: 'PPT Theme Guidelines',
         rules: [
           'Team size: Maximum 1 to 4 members per team.',
           'Core Topics: Electric Vehicles, Battery Thermal Management, Alternative Fuels, ADAS, Autonomous Mobility, and Sustainable Powertrains.',
@@ -2142,6 +2169,7 @@
         pool: 5000,
         isCertificateOnly: false,
         pdflink: './pdf/CAD_HACKTHON_RULE_BOOK.pdf',
+        pdfTitle: 'CAD Hackathon Guidelines',
         rules: [
           'Team size: Maximum 1 to 4 members per team.',
           'Permitted Software: SolidWorks, CATIA V5, or Autodesk Fusion 360.',
@@ -2548,7 +2576,7 @@
         <li class="mt-4 pt-2 border-t border-zinc-800">
           <a href="${ev.pdflink}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-orange/10 hover:bg-brand-orange/20 border border-brand-orange/30 text-brand-orange text-xs font-bold transition-all">
             <i data-lucide="file-text" class="w-4 h-4"></i>
-            <span>CAD Hackathon Guidelines</span>
+            <span>${ev.pdfTitle || 'Download Guidelines'}</span>
           </a>
         </li>
       `;
@@ -2631,7 +2659,40 @@
       spinner.classList.remove('hidden');
 
       const regId = 'AGNI-' + Math.floor(100000 + Math.random() * 900000);
-      const selectedEventsList = selected.map(s => s.title);
+      const selectedEventsList = selected.map(s => {
+        let title = s.title;
+        if (s.id === 'ev-expo') {
+          const psBox = document.getElementById('projectExpoPsSelect');
+          const psVal = psBox?.value;
+          if (psVal) {
+             const finalPs = psVal === 'Others' ? document.getElementById('projectExpoOtherPs')?.value : psVal;
+             title += ` (${finalPs})`;
+          }
+        }
+        if (s.id === 'ev-paper') {
+          const ppsBox = document.getElementById('paperPresentationPsSelect');
+          const ppsVal = ppsBox?.value;
+          if (ppsVal) {
+             title += ` (${ppsVal})`;
+          }
+        }
+        return title;
+      });
+
+      const teammates = [];
+      const teammateNameInputs = document.querySelectorAll('.teammate-name-val');
+      const teammatePhoneInputs = document.querySelectorAll('.teammate-phone-val');
+      const teammateEmailInputs = document.querySelectorAll('.teammate-email-val');
+      
+      for (let i = 0; i < selectedTeammatesCount; i++) {
+        if (teammateNameInputs[i]) {
+          teammates.push({
+            name: teammateNameInputs[i].value.trim(),
+            phone: teammatePhoneInputs[i].value.trim(),
+            email: teammateEmailInputs[i] ? teammateEmailInputs[i].value.trim() : ''
+          });
+        }
+      }
 
       const proceedWithData = (base64Data = '') => {
         const participantRecord = {
@@ -2648,6 +2709,7 @@
           events: selectedEventsList,
           amount: amount,
           utr: utr,
+          teammates: teammates,
           screenshotBase64: base64Data,
           status: 'Pending Verification'
         };
@@ -2672,6 +2734,7 @@
           amount: amount,
           utr: utr,
           transactionId: utr,
+          teammates: teammates,
           screenshotBase64: base64Data || ""
         };
 
@@ -3287,6 +3350,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <input type="text" class="px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-white text-xs focus:border-brand-orange focus:outline-none teammate-name-val" placeholder="Teammate ${i} Full Name *" required />
             <input type="tel" maxlength="10" class="px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-white text-xs focus:border-brand-orange focus:outline-none font-mono teammate-phone-val" placeholder="Teammate ${i} Mobile Number *" required />
+            <input type="email" class="px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-white text-xs focus:border-brand-orange focus:outline-none teammate-email-val sm:col-span-2" placeholder="Teammate ${i} Email Address *" required />
           </div>
         </div>
       `;
@@ -3927,7 +3991,7 @@
         "  - CAD Hackathon (Solo, 45m sprint)<br>" +
         "  - Squid Tech (Solo)<br>" +
         "  - Treasure Hunt (Solo)<br>" +
-        "  - Photography (Solo)<br>" +;
+        "  - Photography (Solo)<br>";
       }
 
       // 7. SPECIFIC EVENT RULES (PAPER PRESENTATION)
@@ -5042,6 +5106,8 @@
       }
       const psBox = document.getElementById('projectExpoPsSelectionContainer');
       const psSelect = document.getElementById('projectExpoPsSelect');
+      const otherBox = document.getElementById('projectExpoOtherPsContainer');
+      const otherInput = document.getElementById('projectExpoOtherPs');
       if (psBox) {
         if (selectedEventIds.has('ev-expo')) {
           psBox.classList.remove('hidden');
@@ -5052,18 +5118,73 @@
             psSelect.required = false;
             psSelect.value = '';
           }
+          if (otherBox) otherBox.classList.add('hidden');
+          if (otherInput) otherInput.value = '';
+        }
+      }
+
+      const paperPsBox = document.getElementById('paperPresentationPsSelectionContainer');
+      const paperPsSelect = document.getElementById('paperPresentationPsSelect');
+      if (paperPsBox) {
+        if (selectedEventIds.has('ev-paper')) {
+          paperPsBox.classList.remove('hidden');
+          if (paperPsSelect) paperPsSelect.required = true;
+        } else {
+          paperPsBox.classList.add('hidden');
+          if (paperPsSelect) {
+            paperPsSelect.required = false;
+            paperPsSelect.value = '';
+          }
         }
       }
     };
+
+    // Listen for changes on the PS selector to show/hide the "Others" input
+    const psSelectEl = document.getElementById('projectExpoPsSelect');
+    if (psSelectEl) {
+      psSelectEl.addEventListener('change', function() {
+        const otherBox = document.getElementById('projectExpoOtherPsContainer');
+        const otherInput = document.getElementById('projectExpoOtherPs');
+        if (this.value === 'Others') {
+          if (otherBox) otherBox.classList.remove('hidden');
+          if (otherInput) otherInput.required = true;
+        } else {
+          if (otherBox) otherBox.classList.add('hidden');
+          if (otherInput) {
+             otherInput.required = false;
+             otherInput.value = '';
+          }
+        }
+      });
+    }
 
     // Automatically enforce selection before moving to payment
     const prevGoToStep2 = window.goToStep2;
     window.goToStep2 = function () {
       if (selectedEventIds.has('ev-expo')) {
-        const psVal = (document.getElementById('projectExpoPsSelect')?.value || '').trim();
+        const psSelect = document.getElementById('projectExpoPsSelect');
+        const psVal = (psSelect?.value || '').trim();
         if (!psVal) {
           showStep1Error('Please select which Problem Statement (PS 01–18) your project addresses.');
-          document.getElementById('projectExpoPsSelect')?.focus();
+          psSelect?.focus();
+          return;
+        }
+        if (psVal === 'Others') {
+          const otherInput = document.getElementById('projectExpoOtherPs');
+          const otherVal = (otherInput?.value || '').trim();
+          if (!otherVal) {
+            showStep1Error('Please specify your custom Problem Statement.');
+            otherInput?.focus();
+            return;
+          }
+        }
+      }
+      if (selectedEventIds.has('ev-paper')) {
+        const paperPsSelectEl = document.getElementById('paperPresentationPsSelect');
+        const paperPsVal = (paperPsSelectEl?.value || '').trim();
+        if (!paperPsVal) {
+          showStep1Error('Please select your Paper Presentation Statement.');
+          paperPsSelectEl?.focus();
           return;
         }
       }

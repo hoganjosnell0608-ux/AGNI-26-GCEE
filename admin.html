@@ -1447,7 +1447,7 @@ Date: 06 Oct 2026
             <!-- Events & Team -->
             <td class="py-3 px-4 max-w-xs">
               <div class="text-zinc-200 line-clamp-1">${escapeHtml(eventsFormatted)}</div>
-              ${p.teamCount && p.teamCount > 1 ? `<span class="text-[10px] text-brand-gold font-mono">Team of ${p.teamCount}</span>` : `<span class="text-[10px] text-zinc-500">Solo</span>`}
+              ${(p.teamCount && p.teamCount > 1) || (p.teammates && p.teammates.length > 0) ? `<span class="text-[10px] text-brand-gold font-mono">Team of ${(p.teamCount || (p.teammates ? p.teammates.length + 1 : 1))}</span>` : `<span class="text-[10px] text-zinc-500">Solo</span>`}
             </td>
 
             <!-- Fee & Payment -->
@@ -1662,7 +1662,7 @@ Date: 06 Oct 2026
       document.getElementById('resDelegatePhone').innerText = found.phone || '-';
       document.getElementById('resDelegateEmail').innerText = found.email || '-';
       document.getElementById('resDelegateEvents').innerText = Array.isArray(found.events) ? found.events.join(', ') : (found.events || 'Symposium Events');
-      document.getElementById('resDelegateTeam').innerText = found.teamCount && found.teamCount > 1 ? `Team of ${found.teamCount}` : 'Solo Delegate';
+      document.getElementById('resDelegateTeam').innerText = (found.teamCount && found.teamCount > 1) || (found.teammates && found.teammates.length > 0) ? `Team of ${(found.teamCount || (found.teammates ? found.teammates.length + 1 : 1))}` : 'Solo Delegate';
       document.getElementById('resDelegateFee').innerText = '₹' + (found.totalAmount || found.amount || 200) + ' (Verified)';
       document.getElementById('resDelegateUtr').innerText = 'UTR: ' + (found.utr || 'Cash On Spot');
 
@@ -2137,7 +2137,7 @@ Date: 06 Oct 2026 | GCE Erode`;
       list.forEach(p => {
         const eventsStr = Array.isArray(p.events) ? p.events.join('; ') : (p.events || '');
         const gate = p.gatePermittedAt ? 'Admitted (' + p.gatePermittedAt + ')' : 'Pending';
-        csv += `"${p.regId || ''}","${p.name || ''}","${p.college || ''}","${p.dept || ''}","${p.phone || ''}","${p.email || ''}","${eventsStr}","${p.teamCount || 1}","${p.totalAmount || p.amount || ''}","${p.utr || ''}","${gate}","${p.timestamp || ''}"\n`;
+        csv += `"${p.regId || ''}","${p.name || ''}","${p.college || ''}","${p.dept || ''}","${p.phone || ''}","${p.email || ''}","${eventsStr}","${(p.teamCount || (p.teammates ? p.teammates.length + 1 : 1))}","${p.totalAmount || p.amount || ''}","${p.utr || ''}","${gate}","${p.timestamp || ''}"\n`;
       });
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
