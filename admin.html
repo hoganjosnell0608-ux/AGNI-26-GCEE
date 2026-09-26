@@ -1004,15 +1004,27 @@ Date: 06 Oct 2026
         </div>
 
         <div>
-          <label class="block text-zinc-400 mb-1">Select Events (Hold Ctrl/Cmd for multiple) *</label>
-          <select id="manualEvents" multiple onchange="calculateManualAmount()" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl p-2 text-white outline-none focus:border-brand-orange h-24">
-            <option value="Paper Presentation" selected>Paper Presentation (Technical)</option>
-            <option value="Project Expo">Project Expo (Technical)</option>
-            <option value="CAD Hackathon">CAD Hackathon (Technical)</option>
-            <option value="Auto Quiz">Auto Quiz (Non-Technical)</option>
-            <option value="Treasure Hunt">Treasure Hunt (Non-Technical)</option>
-            <option value="Squid Tech">Squid Tech (Non-Technical)</option>
-          </select>
+          <label class="block text-zinc-400 mb-2">Select Events *</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="manualEventsContainer">
+            <label class="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer">
+              <input type="checkbox" value="Paper Presentation" class="manual-event-checkbox w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-brand-orange focus:ring-brand-orange" onchange="calculateManualAmount()" checked> Paper Presentation (Tech)
+            </label>
+            <label class="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer">
+              <input type="checkbox" value="Project Expo" class="manual-event-checkbox w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-brand-orange focus:ring-brand-orange" onchange="calculateManualAmount()"> Project Expo (Tech)
+            </label>
+            <label class="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer">
+              <input type="checkbox" value="CAD Hackathon" class="manual-event-checkbox w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-brand-orange focus:ring-brand-orange" onchange="calculateManualAmount()"> CAD Hackathon (Tech)
+            </label>
+            <label class="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer">
+              <input type="checkbox" value="Auto Quiz" class="manual-event-checkbox w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-brand-orange focus:ring-brand-orange" onchange="calculateManualAmount()"> Auto Quiz (Non-Tech)
+            </label>
+            <label class="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer">
+              <input type="checkbox" value="Treasure Hunt" class="manual-event-checkbox w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-brand-orange focus:ring-brand-orange" onchange="calculateManualAmount()"> Treasure Hunt (Non-Tech)
+            </label>
+            <label class="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer">
+              <input type="checkbox" value="Squid Tech" class="manual-event-checkbox w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-brand-orange focus:ring-brand-orange" onchange="calculateManualAmount()"> Squid Tech (Non-Tech)
+            </label>
+          </div>
         </div>
 
         <div>
@@ -2069,9 +2081,7 @@ Date: 06 Oct 2026 | GCE Erode`;
     }
 
     function calculateManualAmount() {
-      const eventSelect = document.getElementById('manualEvents');
-      if (!eventSelect) return;
-      const selectedEvents = Array.from(eventSelect.selectedOptions).map(o => o.value);
+      const selectedEvents = Array.from(document.querySelectorAll('.manual-event-checkbox:checked')).map(cb => cb.value);
       const teamCount = parseInt(document.getElementById('manualTeamCount').value || '0', 10);
       
       let baseFee = 0;
@@ -2080,7 +2090,7 @@ Date: 06 Oct 2026 | GCE Erode`;
 
       selectedEvents.forEach(ev => {
         if (ev === 'CAD Hackathon') {
-          baseFee += 400;
+          baseFee += 250;
         } else if (ev === 'Paper Presentation' || ev === 'Project Expo') {
           techCount++;
         } else if (ev === 'Auto Quiz' || ev === 'Treasure Hunt' || ev === 'Squid Tech') {
@@ -2089,11 +2099,11 @@ Date: 06 Oct 2026 | GCE Erode`;
       });
 
       const regularFees = {
-        'Paper Presentation': 200,
-        'Project Expo': 200,
-        'Auto Quiz': 150,
-        'Treasure Hunt': 150,
-        'Squid Tech': 200
+        'Paper Presentation': 250,
+        'Project Expo': 250,
+        'Auto Quiz': 250,
+        'Treasure Hunt': 250,
+        'Squid Tech': 250
       };
 
       if (techCount >= 2 && nonTechCount >= 2) {
@@ -2106,7 +2116,7 @@ Date: 06 Oct 2026 | GCE Erode`;
         });
       }
       
-      const teammatesFee = teamCount * 200;
+      const teammatesFee = teamCount * 250;
       const totalAmount = baseFee + teammatesFee;
       
       const amountInput = document.getElementById('manualAmount');
@@ -2125,8 +2135,7 @@ Date: 06 Oct 2026 | GCE Erode`;
       const utr = document.getElementById('manualUtr').value.trim() || 'Cash On Spot';
       const autoAdmit = document.getElementById('manualAutoAdmit').checked;
 
-      const eventSelect = document.getElementById('manualEvents');
-      const selectedEvents = Array.from(eventSelect.selectedOptions).map(o => o.value);
+      const selectedEvents = Array.from(document.querySelectorAll('.manual-event-checkbox:checked')).map(cb => cb.value);
       if (selectedEvents.length === 0) selectedEvents.push('Technical Event');
 
       const teammates = [];
