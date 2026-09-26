@@ -991,9 +991,15 @@ Date: 06 Oct 2026
             <label class="block text-zinc-400 mb-1">College Name *</label>
             <input type="text" id="manualCollege" required placeholder="College name" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-brand-orange" />
           </div>
-          <div>
-            <label class="block text-zinc-400 mb-1">Department & Year</label>
-            <input type="text" id="manualDept" placeholder="Automobile / 3rd Year" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-brand-orange" />
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-zinc-400 mb-1">Department</label>
+              <input type="text" id="manualDept" placeholder="Automobile" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-brand-orange" />
+            </div>
+            <div>
+              <label class="block text-zinc-400 mb-1">Year of Study</label>
+              <input type="text" id="manualYear" placeholder="3rd Year" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-white outline-none focus:border-brand-orange" />
+            </div>
           </div>
         </div>
 
@@ -2114,6 +2120,7 @@ Date: 06 Oct 2026 | GCE Erode`;
       const email = document.getElementById('manualEmail').value.trim();
       const college = document.getElementById('manualCollege').value.trim();
       const dept = document.getElementById('manualDept').value.trim() || 'Automobile';
+      const year = document.getElementById('manualYear').value.trim() || 'Delegate';
       const amount = document.getElementById('manualAmount').value.trim() || '250';
       const utr = document.getElementById('manualUtr').value.trim() || 'Cash On Spot';
       const autoAdmit = document.getElementById('manualAutoAdmit').checked;
@@ -2147,7 +2154,8 @@ Date: 06 Oct 2026 | GCE Erode`;
         email: email,
         college: college,
         dept: dept,
-        year: 'Delegate',
+        year: year,
+        registrationType: 'Offline',
         events: selectedEvents,
         totalAmount: amount,
         utr: utr,
@@ -2186,7 +2194,9 @@ Date: 06 Oct 2026 | GCE Erode`;
           amount: amount,
           utr: utr,
           transactionId: utr,
-          teammates: record.teammates
+          teammates: record.teammates,
+          year: year,
+          registrationType: 'Offline'
         })
       }).catch(err => console.error('Sheet Sync Error', err));
 
