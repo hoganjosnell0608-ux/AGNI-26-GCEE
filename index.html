@@ -2352,12 +2352,12 @@
     let isDispatchInProgress = false;
 
     function sendToGoogleAppsScriptReliably(payload) {
-      if (!payload || !payload.code) return;
+      if (!payload || !payload.code) return Promise.resolve();
 
       // 1. Guard against duplicate submissions of the same pass code or rapid double clicks
       if (payload.code === lastDispatchedPassCode || isDispatchInProgress) {
         console.warn('Duplicate dispatch prevented for pass code:', payload.code);
-        return;
+        return Promise.resolve();
       }
 
       lastDispatchedPassCode = payload.code;
@@ -2381,7 +2381,7 @@
         const urlEncodedBody = formParams.toString();
 
         // Background sync request
-        fetch(SCRIPT_URL, {
+        return fetch(SCRIPT_URL, {
           method: 'POST',
           mode: 'no-cors',
           headers: {
@@ -2765,7 +2765,7 @@
         }
       }
 
-      const proceedWithData = (base64Data = '') => {
+      const proceedWithData = async (base64Data = '') => {
         const participantRecord = {
           regId: regId,
           confirmationCode: regId,
@@ -2814,9 +2814,9 @@
 
         // 3. Ultra-reliable non-blocking background dispatch
         if (window.AgniFirebase) {
-          window.AgniFirebase.saveRegistration(participantRecord);
+          await window.AgniFirebase.saveRegistration(participantRecord);
         }
-        sendToGoogleAppsScriptReliably(payload);
+        await sendToGoogleAppsScriptReliably(payload);
 
         document.getElementById('successRegId').innerText = regId;
         if (typeof generateQR === 'function') generateQR(regId);
@@ -2834,8 +2834,7 @@
           if (spinner) spinner.classList.add('hidden');
 
           window.location.href = 'verify.html?id=' + encodeURIComponent(regId);
-          return;
-        }, 10000);
+        }, 1500);
 
       };
 
@@ -3660,7 +3659,7 @@
       if (spinner) spinner.classList.remove('hidden');
 
       const reader = new FileReader();
-      reader.onload = function (e) {
+      reader.onload = async function (e) {
         const base64Data = e.target.result || '';
         const record = {
           regId: regId,
@@ -3724,9 +3723,9 @@
         };
 
         if (window.AgniFirebase) {
-          window.AgniFirebase.saveRegistration(record);
+          await window.AgniFirebase.saveRegistration(record);
         }
-        sendToGoogleAppsScriptReliably(payload);
+        await sendToGoogleAppsScriptReliably(payload);
 
         if (submitBtn) submitBtn.disabled = false;
         if (submitBtnText) submitBtnText.innerText = 'Submit Registration & Generate Pass';
@@ -3760,7 +3759,10 @@
           drawRealisticQrToCanvas('passQrCanvas', regId);
         }
 
-        window.location.href = 'verify.html?id=' + encodeURIComponent(regId);
+        showToast('Registration Complete!', 'Generating your pass... Please wait.');
+        setTimeout(() => {
+          window.location.href = 'verify.html?id=' + encodeURIComponent(regId);
+        }, 1500);
         return;
       };
       reader.onerror = function () {
