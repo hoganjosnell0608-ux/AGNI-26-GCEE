@@ -4079,7 +4079,7 @@
         return "🏆 <strong>₹10,000+ Total Cash Prize Pool Distribution:</strong><br>" +
           "• <strong>Paper Presentation:</strong> Winner: ₹1,000 | Runner-up: ₹500 (Pool: ₹1,500)<br>" +
           "• <strong>Project Expo:</strong> Winner: ₹1,000 | Runner-up: ₹500 (Pool: ₹1,500)<br>" +
-          "• <strong>CAD Hackathon:</strong> Winner: ₹3,000 | Runner-up: ₹2,000 (Pool: ₹5,000)<br>" +
+          "• <strong>CAD Hackathon:</strong> Winner: ₹5,000 | Runner-up: ₹3,000 (Pool: ₹8,000)<br>" +
           "• <strong>Squid Tech :</strong> Winner: ₹500 | Runner-up: ₹250 (Pool: ₹750)<br>" +
           "• <strong>Motorsport Treasure Hunt:</strong> Winner: ₹500 | Runner-up: ₹250 (Pool: ₹750)<br>" +
           "• <strong>Photography:</strong> Winner: ₹500 | Runner-up: ₹250 (Pool: ₹750)<br>" +
@@ -4090,12 +4090,12 @@
       if (q.includes('team') || q.includes('member') || q.includes('head') || q.includes('solo') || q.includes('group') || q.includes('how many') || q.includes('participant limit') || q.includes('pair')) {
         return "👥 <strong>Team & Member Limits Per Pass:</strong><br>" +
           "• <strong>Multi-Member Team Tracks (1 to 4 Members Total — Leader + up to 3 Teammates):</strong><br>" +
-        "  - <em>Paper Presentation</em>: ₹200 Base + ₹150/head additional<br>" +
-        "  - <em>Project Expo</em>: ₹200 Base + ₹150/head additional<br>" +
+        "  - <em>Paper Presentation</em>: ₹200 Base + ₹200/head additional<br>" +
+        "  - <em>Project Expo</em>: ₹200 Base + ₹200/head additional<br>" +
         "  - <em>Squid</em>: ₹200 Base + ₹200/head additional<br>" +
-        "  <em>In checkout Step 1, select Solo (+₹0), 1 Teammate (+₹150), 2 Teammates (+₹300), or 3 Teammates (+₹450).</em><br><br>" +
+        "  <em>In checkout Step 1, select Solo (+₹0), 1 Teammate (+₹200), 2 Teammates (+₹400), or 3 Teammates (+₹600).</em><br><br>" +
         "• <strong>Strictly Solo Tracks (Strictly 1 Member per pass — No teammates allowed):</strong><br>" +
-        "  - CAD Hackathon (Solo, 45m sprint)<br>" +
+        "  - CAD Hackathon (2-4 members, 3hrs sprint)<br>" +
         "  - Squid Tech (Solo)<br>" +
         "  - Treasure Hunt (Solo)<br>" +
         "  - Photography (Solo)<br>";
@@ -4105,11 +4105,15 @@
       if (q.includes('paper') || q.includes('presentation') || q.includes('abstract') || q.includes('ppt')) {
         return "📄 <strong>Paper Presentation Guidelines:</strong><br>" +
           "• <strong>Category:</strong> Technical | <strong>Fee:</strong> ₹200 base + ₹200/head additional<br>" +
-          "• <strong>Team Limit:</strong> 1 to 4 Members Total (Leader + up to 3 teammates)<br>" +
+          "• <strong>Team Limit:</strong> 1 to 3 Members Total (Leader + up to 3 teammates)<br>" +
           "• <strong>Cash Prizes:</strong> 1st: ₹1,000 | 2nd: ₹500 (Pool: ₹1,500)<br>" +
           "• <strong>Core Topics:</strong> Electric Vehicles (EV), Battery Thermal Management, Alternative Fuels, ADAS, Autonomous Mobility, and Sustainable Powertrains.<br>" +
+          "• <strong>PPT Theme:</strong> check in Brochure for more information.<br>" +
+          "• <strong>PPT Theme Guidelines:</strong> <a href='./pdf/PPT_Agni.pdf' target='_blank' rel='noopener noreferrer' style='color: #2563eb; text-decoration: underline;'>Click Here to Download PPT THEME</a><br>" +
           "• <strong>Timing:</strong> 7 minutes presentation + 3 minutes Q&A with jury.<br>" +
           "• <strong>Format:</strong> Submit a 1-page abstract prior to the session. Strict PPT / PDF format.<br>" +
+          "• <strong>PPT Submission:</strong> Must Submit the PPT before 05-Oct-2026 by 10.00Am.<br>" +
+          "• <strong>Submission Link:</strong> <a href='https://forms.gle/jA8Hb73f5NywmxVUA' target='_blank'rel='noopener noreferrer' style='color: #2563eb; text-decoration: underline;'>Click Here to Submit your PPT</a><br>" +
           "• <strong>Event Queries:</strong> SRINIVASH J (7806838889)";
       }
 
@@ -4120,6 +4124,7 @@
           "• <strong>Team Limit:</strong> 1 to 4 Members Total<br>" +
           "• <strong>Cash Prizes:</strong> 1st: ₹1,000 | 2nd: ₹500 (Pool: ₹1,500)<br>" +
           "• <strong>Eligibility:</strong> Physical prototype vehicles, working hardware models, custom go-karts, IoT robotics, EV conversion setups.<br>" +
+          "• <strong>Note:</strong>Laptops, PPT must, Prototype must and Extension Box must if external powersource needed.<br>" +
           "• <strong>Demonstration:</strong> 10 minutes live demonstration and interactive inspection with the evaluation panel.<br>" +
           "• <strong>Event Queries:</strong> HARIPRASATH S (9629024815)";
       }
@@ -4128,11 +4133,13 @@
       if (q.includes('cad') || q.includes('hackathon') || q.includes('solidworks') || q.includes('catia') || q.includes('fusion') || q.includes('3d model')) {
         return "📐 <strong>CAD Hackathon Guidelines:</strong><br>" +
           "• <strong>Category:</strong> Technical | <strong>Fee:</strong> ₹400 flat<br>" +
-          "• <strong>Team Limit:</strong> Max 1-4 members<br>" +
-          "• <strong>Cash Prizes:</strong> 1st: ₹3,000 | 2nd: ₹2,000 (Pool: ₹5,000)<br>" +
-          "• <strong>Permitted Software:</strong> SolidWorks, CATIA V5, or Autodesk Fusion 360.<br>" +
-          "• <strong>Time Duration:</strong> Strictly 45 minutes sprint to model 3D mechanical component from orthographic drawings.<br>" +
-          "• <strong>Criteria:</strong> Dimensional accuracy, GD&T tolerance compliance, and submission speed.<br>" +
+          "• <strong>Team Limit:</strong> Max 2-4 members<br>" +
+          "• <strong>Cash Prizes:</strong> 1st: ₹5,000 | 2nd: ₹3,000 (Pool: ₹8,000)<br>" +
+          "• <strong>Permitted Software:</strong> Solidworks,CATIA V5/V6, Siemens NX, Creo and relevant software.<br>" +
+          "• <strong>Time Duration:</strong> Strictly 3 hrs sprint to model 3D mechanical component from orthographic drawings.<br>" +
+          "• <strong>Criteria:</strong> Innovation, CAD Quality, Engineering approach, Manufacturing feasibility.<br>" +
+          "• <strong>Note:</strong>Must read the CAD Hackathon Guidelines PDF document.<br>" +
+          "• <strong>CAD Hackathon Guidelines:</strong> <a href='./pdf/CAD_HACKTHON_RULE_BOOK.pdf' target='_blank' rel='noopener noreferrer' style='color: #2563eb; text-decoration: underline;'>CAD HACKATHON RULES</a><br>" +
           "• <strong>Event Queries:</strong> GOKUL ANAND S (6385518560)";
       }
 
@@ -4149,11 +4156,13 @@
 
       // 14. SPECIFIC EVENT RULES (TREASURE HUNT)
       if (q.includes('treasure') || q.includes('hunt') || q.includes('riddle') || q.includes('clue') || q.includes('campus hunt')) {
-        return "🧭 <strong>Motorsport Treasure Hunt Guidelines:</strong><br>" +
+        return "🧭 <strong>Treasure Hunt Guidelines:</strong><br>" +
           "• <strong>Category:</strong> Non-Technical | <strong>Fee:</strong> ₹200 flat<br>" +
           "• <strong>Team Limit:</strong> Strictly Solo (1 Member per pass)<br>" +
           "• <strong>Cash Prizes:</strong> 1st: ₹500 | 2nd: ₹250 (Pool: ₹750)<br>" +
           "• <strong>Mission:</strong> Campus-wide tactical riddle chase deciphering cryptic engineering clues scattered across GCE Erode campus and workshop bays.<br>" +
+          "• <strong>Rule 1:</strong> Scan the QR code, answer the True/False question, and follow the clue provided to reach the next checkpoint.<br>" +
+          "• <strong>Rule 2:</strong> A correct answer leads directly to the next clue, while an incorrect answer sends you through a penalty checkpoint before continuing the hunt.<br>" +
           "• <strong>Event Queries:</strong> HOGAN JOSNELL A (8072514953)";
       }
 
@@ -4172,6 +4181,7 @@
           "• <strong>Venue:</strong> Government College of Engineering (Formerly IRTT), Suriyampalayam Post, Chithode, Erode - 638316, Tamil Nadu.<br>" +
           "• <strong>Highways:</strong> Located directly on the Salem-Kochi Highway (NH 544). GPS Coordinates: <strong>11.4086° N, 77.6744° E</strong>.<br>" +
           "• <strong>From Erode Central Bus Stand:</strong> Direct town buses depart from <strong>Platform 3 & 4</strong> heading towards Bhavani / Chithode every 5 minutes (Bus No. 3 — Vasavi College Stop, Bus No. B-16 — IRTT College Stop).<br>" +
+          "• <strong>Bus Timing From Erode Bus Stand:</strong> 7.50Am - Mofussil Bus(IRTT) Erode Bustand(near by MiniBus platoform) , 8.00Am - Town Bus(Bus no 3) Erode Bustand , 8.20Am - Town Bus(Bus No 5B) Erode Bustand.<br>" +
           "• <strong>From Erode Junction (ED) Railway Station:</strong> 12 km away. Autos, app cabs, and town buses operate 24x7.<br>" +
           "• <strong>Live Map:</strong> An interactive Google Map is embedded in the Venue section with a direct 'Get Directions' GPS button.";
       }
@@ -4189,7 +4199,7 @@
       // 20. PASS RETRIEVAL & DELEGATE SELF-SERVICE PORTAL
       if (q.includes('pass') || q.includes('ticket') || q.includes('status') || q.includes('lookup') || q.includes('download') || q.includes('retrieve') || q.includes('my pass') || q.includes('lost pass')) {
         return "🎟️ <strong>Participant Pass & Status Portal:</strong><br>" +
-          "• Click <strong>'My Pass / Status'</strong> in the top navigation bar.<br>" +
+          "• Click <strong>'View Pass'</strong> in the top navigation bar.<br>" +
           "• Enter your registered <strong>Email Address</strong>, <strong>WhatsApp Mobile Number</strong>, or <strong>Pass ID</strong> (e.g. <span class='font-mono text-brand-gold'>AGNI-728104</span>).<br>" +
           "• You can check review status, re-download the standalone single-page pass HTML, or print your official Gate Pass directly anytime!";
       }
