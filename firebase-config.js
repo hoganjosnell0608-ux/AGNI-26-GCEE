@@ -6,14 +6,22 @@
 const firebaseConfig = {
   apiKey: "AIzaSyBAvyD7xxPGXqvNgYk4htUnJdZyc9j3tDQ",
   authDomain: "agni2k26.firebaseapp.com",
-  databaseURL: "https://agni2k26-default-rtdb.firebaseio.com/",
+  databaseURL: "https://agni2k26-default-rtdb.firebaseio.com",
   projectId: "agni2k26",
   storageBucket: "agni2k26.firebasestorage.app",
   messagingSenderId: "229157442759",
   appId: "1:229157442759:web:be618c007219639b1a5ae2"
 };
 
-
+// const firebaseConfig = {
+//   apiKey: "AIzaSyCbJxwqjYbusZc32UA2jIF-FAoCnmnYKOw",
+//   authDomain: "agni-2k26.firebaseapp.com",
+//   databaseURL: "https://agni2k26-default-rtdb.firebaseio.com",
+//   projectId: "agni-2k26",
+//   storageBucket: "agni-2k26.firebasestorage.app",
+//   messagingSenderId: "266146214091",
+//   appId: "1:266146214091:web:fe297c30be868a40092b4e"
+// };
 // Initialize Firebase App & Database Engines
 let agniFirebaseApp = null;
 let agniRtdb = null;
@@ -31,7 +39,7 @@ try {
     if (typeof firebase.database === 'function') {
       try {
         agniRtdb = firebase.database();
-        console.log('%c[AGNI Firebase]%c Realtime Database connected: agni-2k26-default-rtdb', 'color:#ff5e14;font-weight:bold;', 'color:#10b981;');
+        console.log('%c[AGNI Firebase]%c Realtime Database connected: agni2k26-default-rtdb', 'color:#ff5e14;font-weight:bold;', 'color:#10b981;');
       } catch (rtdbErr) {
         console.warn('[AGNI Firebase] RTDB init note:', rtdbErr);
       }
@@ -392,30 +400,17 @@ window.AgniFirebase = {
   // Fetch events configuration
   async fetchEvents() {
     try {
-      const res = await fetch(
-        "https://agni2k26-default-rtdb.firebaseio.com/events_config.json"
-      );
-
-      if (!res.ok) {
-        console.error(
-          "[Firebase] Events fetch failed:",
-          res.status,
-          res.statusText
-        );
-        return null;
+      const res = await fetch(`https://agni2k26-default-rtdb.firebaseio.com//events_config.json`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data) && data.length > 0) {
+          return data;
+        }
       }
-
-      const data = await res.json();
-
-      if (Array.isArray(data) && data.length > 0) {
-        return data;
-      }
-
-      return null;
     } catch (e) {
-      console.error("[Firebase] Events fetch error:", e);
-      return null;
+      console.warn('[Firebase] events fetch note:', e);
     }
+    return null;
   },
 
   // Save events configuration
