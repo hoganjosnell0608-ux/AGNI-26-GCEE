@@ -3,25 +3,17 @@
 // Dual Database Support: Realtime Database (100% Live) + Cloud Firestore
 // =========================================================================
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyBAvyD7xxPGXqvNgYk4htUnJdZyc9j3tDQ",
-//   authDomain: "agni2k26.firebaseapp.com",
-//   databaseURL: "https://agni-2k26-default-rtdb.firebaseio.com/",
-//   projectId: "agni2k26",
-//   storageBucket: "agni2k26.firebasestorage.app",
-//   messagingSenderId: "229157442759",
-//   appId: "1:229157442759:web:be618c007219639b1a5ae2"
-// };
-
 const firebaseConfig = {
-  apiKey: "AIzaSyCbJxwqjYbusZc32UA2jIF-FAoCnmnYKOw",
-  authDomain: "agni-2k26.firebaseapp.com",
-  databaseURL: "https://agni-2k26-default-rtdb.firebaseio.com",
-  projectId: "agni-2k26",
-  storageBucket: "agni-2k26.firebasestorage.app",
-  messagingSenderId: "266146214091",
-  appId: "1:266146214091:web:fe297c30be868a40092b4e"
+  apiKey: "AIzaSyBAvyD7xxPGXqvNgYk4htUnJdZyc9j3tDQ",
+  authDomain: "agni2k26.firebaseapp.com",
+  databaseURL: "https://agni-2k26-default-rtdb.firebaseio.com/",
+  projectId: "agni2k26",
+  storageBucket: "agni2k26.firebasestorage.app",
+  messagingSenderId: "229157442759",
+  appId: "1:229157442759:web:be618c007219639b1a5ae2"
 };
+
+
 // Initialize Firebase App & Database Engines
 let agniFirebaseApp = null;
 let agniRtdb = null;
