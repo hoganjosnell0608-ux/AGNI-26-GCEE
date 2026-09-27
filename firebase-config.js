@@ -3,16 +3,25 @@
 // Dual Database Support: Realtime Database (100% Live) + Cloud Firestore
 // =========================================================================
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBAvyD7xxPGXqvNgYk4htUnJdZyc9j3tDQ",
-  authDomain: "agni2k26.firebaseapp.com",
-  databaseURL: "https://agni2k26-default-rtdb.firebaseio.com",
-  projectId: "agni2k26",
-  storageBucket: "agni2k26.firebasestorage.app",
-  messagingSenderId: "229157442759",
-  appId: "1:229157442759:web:be618c007219639b1a5ae2"
-};
+// const firebaseConfig = {
+//   apiKey: "AIzaSyBAvyD7xxPGXqvNgYk4htUnJdZyc9j3tDQ",
+//   authDomain: "agni2k26.firebaseapp.com",
+//   databaseURL: "https://agni-2k26-default-rtdb.firebaseio.com/",
+//   projectId: "agni2k26",
+//   storageBucket: "agni2k26.firebasestorage.app",
+//   messagingSenderId: "229157442759",
+//   appId: "1:229157442759:web:be618c007219639b1a5ae2"
+// };
 
+const firebaseConfig = {
+  apiKey: "AIzaSyCbJxwqjYbusZc32UA2jIF-FAoCnmnYKOw",
+  authDomain: "agni-2k26.firebaseapp.com",
+  databaseURL: "https://agni-2k26-default-rtdb.firebaseio.com",
+  projectId: "agni-2k26",
+  storageBucket: "agni-2k26.firebasestorage.app",
+  messagingSenderId: "266146214091",
+  appId: "1:266146214091:web:fe297c30be868a40092b4e"
+};
 // Initialize Firebase App & Database Engines
 let agniFirebaseApp = null;
 let agniRtdb = null;
@@ -30,7 +39,7 @@ try {
     if (typeof firebase.database === 'function') {
       try {
         agniRtdb = firebase.database();
-        console.log('%c[AGNI Firebase]%c Realtime Database connected: agni2k26-default-rtdb', 'color:#ff5e14;font-weight:bold;', 'color:#10b981;');
+        console.log('%c[AGNI Firebase]%c Realtime Database connected: agni-2k26-default-rtdb', 'color:#ff5e14;font-weight:bold;', 'color:#10b981;');
       } catch (rtdbErr) {
         console.warn('[AGNI Firebase] RTDB init note:', rtdbErr);
       }
@@ -59,12 +68,12 @@ function compressBase64Image(dataUrl, maxDim = 800, quality = 0.65) {
       return resolve(dataUrl);
     }
     const img = new Image();
-    
+
     // Add fallback timeout to prevent hanging forever
     const timeoutId = setTimeout(() => {
       resolve(dataUrl);
     }, 2000);
-    
+
     img.onload = () => {
       clearTimeout(timeoutId);
       let width = img.width;
@@ -115,7 +124,7 @@ window.AgniFirebase = {
     if (cleanScreenshot && cleanScreenshot.length > 80000) {
       try {
         cleanScreenshot = await compressBase64Image(cleanScreenshot);
-      } catch (e) {}
+      } catch (e) { }
     }
 
     const payload = {
@@ -161,7 +170,7 @@ window.AgniFirebase = {
     // REST fallback if SDK write encountered any issue
     if (!rtdbSuccess) {
       try {
-        const res = await fetch(`https://agni2k26-default-rtdb.firebaseio.com/registrations/${docId}.json`, {
+        const res = await fetch(`https://agni-2k26-default-rtdb.firebaseio.com//registrations/${docId}.json`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -197,16 +206,16 @@ window.AgniFirebase = {
 
     // 1. Direct query in Firebase Realtime Database (ultra fast)
     try {
-      const res = await fetch(`https://agni2k26-default-rtdb.firebaseio.com/registrations/${docKey}.json`);
+      const res = await fetch(`https://agni-2k26-default-rtdb.firebaseio.com//registrations/${docKey}.json`);
       if (res.ok) {
         const data = await res.json();
         if (data && data.regId) return data;
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // 2. Search entire list in Realtime Database by email or phone
     try {
-      const res = await fetch(`https://agni2k26-default-rtdb.firebaseio.com/registrations.json`);
+      const res = await fetch(`https://agni-2k26-default-rtdb.firebaseio.com//registrations.json`);
       if (res.ok) {
         const allData = await res.json();
         if (allData && typeof allData === 'object') {
@@ -224,7 +233,7 @@ window.AgniFirebase = {
           }
         }
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // 3. Fallback to Firestore if accessible
     try {
@@ -233,7 +242,7 @@ window.AgniFirebase = {
         const docSnap = await fs.collection('registrations').doc(docKey).get();
         if (docSnap.exists) return docSnap.data();
       }
-    } catch (e) {}
+    } catch (e) { }
 
     return null;
   },
@@ -242,7 +251,7 @@ window.AgniFirebase = {
   async fetchAllRegistrations() {
     // 1. Fetch from Realtime Database
     try {
-      const res = await fetch(`https://agni2k26-default-rtdb.firebaseio.com/registrations.json`);
+      const res = await fetch(`https://agni-2k26-default-rtdb.firebaseio.com//registrations.json`);
       if (res.ok) {
         const allData = await res.json();
         if (allData && typeof allData === 'object') {
@@ -264,7 +273,7 @@ window.AgniFirebase = {
         snap.forEach(d => list.push(d.data()));
         return list;
       }
-    } catch (e) {}
+    } catch (e) { }
 
     return [];
   },
@@ -308,7 +317,7 @@ window.AgniFirebase = {
       try {
         const list = await this.fetchAllRegistrations();
         if (callback && active) callback(list);
-      } catch (e) {}
+      } catch (e) { }
       if (active) setTimeout(poll, intervalMs);
     };
     poll();
@@ -335,18 +344,18 @@ window.AgniFirebase = {
         await Promise.race([updatePromise, timeoutPromise]);
         updated = true;
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // Fallback REST PATCH
     if (!updated) {
       try {
-        const res = await fetch(`https://agni2k26-default-rtdb.firebaseio.com/registrations/${docId}.json`, {
+        const res = await fetch(`https://agni-2k26-default-rtdb.firebaseio.com//registrations/${docId}.json`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updatePayload)
         });
         if (res.ok) updated = true;
-      } catch (e) {}
+      } catch (e) { }
     }
 
     // 2. Parallel update in Firestore
@@ -355,7 +364,7 @@ window.AgniFirebase = {
         const fs = this.firestore || firebase.firestore();
         await fs.collection('registrations').doc(docId).update(updatePayload);
       }
-    } catch (e) {}
+    } catch (e) { }
 
     return updated;
   },
@@ -371,11 +380,11 @@ window.AgniFirebase = {
         const db = this.rtdb || firebase.database();
         await db.ref('registrations/' + docId).remove();
       } else {
-        await fetch(`https://agni2k26-default-rtdb.firebaseio.com/registrations/${docId}.json`, {
+        await fetch(`https://agni-2k26-default-rtdb.firebaseio.com//registrations/${docId}.json`, {
           method: 'DELETE'
         });
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // 2. Delete in Firestore
     try {
@@ -383,7 +392,7 @@ window.AgniFirebase = {
         const fs = this.firestore || firebase.firestore();
         await fs.collection('registrations').doc(docId).delete();
       }
-    } catch (e) {}
+    } catch (e) { }
 
     return true;
   },
@@ -391,17 +400,30 @@ window.AgniFirebase = {
   // Fetch events configuration
   async fetchEvents() {
     try {
-      const res = await fetch(`https://agni2k26-default-rtdb.firebaseio.com/events_config.json`);
-      if (res.ok) {
-        const data = await res.json();
-        if (data && Array.isArray(data) && data.length > 0) {
-          return data;
-        }
+      const res = await fetch(
+        "https://agni-2k26-default-rtdb.firebaseio.com/events_config.json"
+      );
+
+      if (!res.ok) {
+        console.error(
+          "[Firebase] Events fetch failed:",
+          res.status,
+          res.statusText
+        );
+        return null;
       }
+
+      const data = await res.json();
+
+      if (Array.isArray(data) && data.length > 0) {
+        return data;
+      }
+
+      return null;
     } catch (e) {
-      console.warn('[Firebase] events fetch note:', e);
+      console.error("[Firebase] Events fetch error:", e);
+      return null;
     }
-    return null;
   },
 
   // Save events configuration
@@ -413,7 +435,7 @@ window.AgniFirebase = {
         await db.ref('events_config').set(eventsList);
         return true;
       } else {
-        const res = await fetch(`https://agni2k26-default-rtdb.firebaseio.com/events_config.json`, {
+        const res = await fetch(`https://agni-2k26-default-rtdb.firebaseio.com//events_config.json`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(eventsList)
