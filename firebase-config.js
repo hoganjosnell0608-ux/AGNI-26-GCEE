@@ -6,7 +6,7 @@
 const firebaseConfig = {
   apiKey: "AIzaSyBAvyD7xxPGXqvNgYk4htUnJdZyc9j3tDQ",
   authDomain: "agni2k26.firebaseapp.com",
-  databaseURL: "https://agni-2k26-default-rtdb.firebaseio.com/",
+  databaseURL: "https://agni2k26-default-rtdb.firebaseio.com/",
   projectId: "agni2k26",
   storageBucket: "agni2k26.firebasestorage.app",
   messagingSenderId: "229157442759",
@@ -162,7 +162,7 @@ window.AgniFirebase = {
     // REST fallback if SDK write encountered any issue
     if (!rtdbSuccess) {
       try {
-        const res = await fetch(`https://agni-2k26-default-rtdb.firebaseio.com//registrations/${docId}.json`, {
+        const res = await fetch(`https://agni2k26-default-rtdb.firebaseio.com//registrations/${docId}.json`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -198,7 +198,7 @@ window.AgniFirebase = {
 
     // 1. Direct query in Firebase Realtime Database (ultra fast)
     try {
-      const res = await fetch(`https://agni-2k26-default-rtdb.firebaseio.com//registrations/${docKey}.json`);
+      const res = await fetch(`https://agni2k26-default-rtdb.firebaseio.com//registrations/${docKey}.json`);
       if (res.ok) {
         const data = await res.json();
         if (data && data.regId) return data;
@@ -207,7 +207,7 @@ window.AgniFirebase = {
 
     // 2. Search entire list in Realtime Database by email or phone
     try {
-      const res = await fetch(`https://agni-2k26-default-rtdb.firebaseio.com//registrations.json`);
+      const res = await fetch(`https://agni2k26-default-rtdb.firebaseio.com//registrations.json`);
       if (res.ok) {
         const allData = await res.json();
         if (allData && typeof allData === 'object') {
@@ -243,7 +243,7 @@ window.AgniFirebase = {
   async fetchAllRegistrations() {
     // 1. Fetch from Realtime Database
     try {
-      const res = await fetch(`https://agni-2k26-default-rtdb.firebaseio.com//registrations.json`);
+      const res = await fetch(`https://agni2k26-default-rtdb.firebaseio.com//registrations.json`);
       if (res.ok) {
         const allData = await res.json();
         if (allData && typeof allData === 'object') {
@@ -341,7 +341,7 @@ window.AgniFirebase = {
     // Fallback REST PATCH
     if (!updated) {
       try {
-        const res = await fetch(`https://agni-2k26-default-rtdb.firebaseio.com//registrations/${docId}.json`, {
+        const res = await fetch(`https://agni2k26-default-rtdb.firebaseio.com//registrations/${docId}.json`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updatePayload)
@@ -372,7 +372,7 @@ window.AgniFirebase = {
         const db = this.rtdb || firebase.database();
         await db.ref('registrations/' + docId).remove();
       } else {
-        await fetch(`https://agni-2k26-default-rtdb.firebaseio.com//registrations/${docId}.json`, {
+        await fetch(`https://agni2k26-default-rtdb.firebaseio.com//registrations/${docId}.json`, {
           method: 'DELETE'
         });
       }
@@ -393,7 +393,7 @@ window.AgniFirebase = {
   async fetchEvents() {
     try {
       const res = await fetch(
-        "https://agni-2k26-default-rtdb.firebaseio.com/events_config.json"
+        "https://agni2k26-default-rtdb.firebaseio.com/events_config.json"
       );
 
       if (!res.ok) {
@@ -427,7 +427,7 @@ window.AgniFirebase = {
         await db.ref('events_config').set(eventsList);
         return true;
       } else {
-        const res = await fetch(`https://agni-2k26-default-rtdb.firebaseio.com//events_config.json`, {
+        const res = await fetch(`https://agni2k26-default-rtdb.firebaseio.com//events_config.json`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(eventsList)
