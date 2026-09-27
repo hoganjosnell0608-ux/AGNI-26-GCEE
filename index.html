@@ -2160,19 +2160,24 @@
         fee: 200,
         icon: 'file-text',
         desc: 'Cutting-edge automotive research in EVs, Battery Tech, and Alternative Fuels.',
-        team: 'Max 1–4 Members',
+        team: 'Max 1–3 Members',
         firstPrize: 1000,
         secondPrize: 500,
         pool: 1500,
         isCertificateOnly: false,
-        pdflink: './pdf/PPT_Theme.pdf',
+        pdflink: './pdf/PPT_Agni.pdf',
         pdfTitle: 'PPT Theme Guidelines',
         rules: [
-          'Team size: Maximum 1 to 4 members per team.',
-          'Core Topics: Electric Vehicles, Battery Thermal Management, Alternative Fuels, ADAS, Autonomous Mobility, and Sustainable Powertrains.',
+          'Team size: Maximum 1 to 3 members per team.',
           'Time Limit: 7 minutes presentation + 3 minutes Q&A with jury.',
-          'Format: Submit 1-page abstract prior to presentation. Strict PPT/PDF format.'
+          'Themes: check in Brochure for more information.',
+          'Must read the PPT Theme Guidelines PDF document.',
+          'Submission: Must Submit the PPT before 05-Oct-2026 by 10.00Am.'
         ],
+        submissionLink: {
+            "text": "Click here to submit your PPT",
+            "url": "https://forms.gle/jA8Hb73f5NywmxVUA"
+        },
         contactName: 'SRINIVASH J',
         contactPhone: '7806838889'
       },
@@ -2205,20 +2210,21 @@
         type: 'technical',
         fee: 400,
         icon: 'layers',
-        desc: '3D Solid Modeling & chassis assembly challenge using SolidWorks/CATIA. (Standalone event — Not eligible for Combo Pass).',
-        team: 'Max 1-4 Members',
-        firstPrize: 3000,
-        secondPrize: 2000,
-        pool: 5000,
+        desc: 'Participants will solve a real-world challenge by creating accurate 3D models and assemblies.',
+        team: 'Max 2-4 Members',
+        firstPrize: 5000,
+        secondPrize: 3000,
+        pool: 8000,
         isCertificateOnly: false,
         pdflink: './pdf/CAD_HACKTHON_RULE_BOOK.pdf',
         pdfTitle: 'CAD Hackathon Guidelines',
         rules: [
-          'Team size: Maximum 1 to 4 members per team.',
-          'Permitted Software: SolidWorks, CATIA V5, or Autodesk Fusion 360.',
-          'Time Duration: Strictly 45 minutes sprint to construct complete 3D mechanical component.',
-          'Judging Criteria: Dimensional accuracy, tolerance compliance, and submission timestamp.',
-          'Note: CAD Hackathon requires dedicated lab workstations and cannot be bundled into the ₹350 Combo Pass.'
+          'Team size: Maximum 2 to 4 members per team.',
+          'Permitted Software: solidworks,CATIA V5/V6, Siemens NX, Creo and relevant software.',
+          'Time Duration: Strictly 3hours sprint to construct complete 3D mechanical component.',
+          'Judging Criteria:  Innovation, CAD Quality, Engineering approach, Manufacturing feasibility.',
+          'Note: CAD Hackathon requires dedicated lab workstations and cannot be bundled into the ₹350 Combo Pass.',
+          'Must read the CAD Hackathon Guidelines PDF document.'
         ],
         contactName: 'GOKUL ANAND S',
         contactPhone: '6385518560'
@@ -2258,7 +2264,8 @@
         isCertificateOnly: false,
         rules: [
           'Team size: Solo participant.',
-          'Decode cryptic engineering clues scattered across GCE Erode campus bays.'
+          'Rule 1: Scan the QR code, answer the True/False question, and follow the clue provided to reach the next checkpoint.',
+          'Rule 2: A correct answer leads directly to the next clue, while an incorrect answer sends you through a penalty checkpoint before continuing the hunt.'
         ],
         contactName: 'HOGAN JOSNELL A',
         contactPhone: '8072514953'
@@ -2635,26 +2642,43 @@
       document.getElementById('rulesModalContactPhone').innerText = ev.contactPhone || '';
 
       const list = document.getElementById('rulesModalList');
+
       let rulesHtml = ev.rules.map(r => `
-      <li class="flex items-start gap-2">
-        <span class="text-brand-orange font-bold mt-0.5">•</span>
-        <span>${r}</span>
-      </li>
-    `).join('');
+        <li class="flex items-start gap-2">
+          <span class="text-brand-orange font-bold mt-0.5">•</span>
+          <span>${r}</span>
+        </li>
+      `).join('');
 
       if (ev.pdflink) {
         rulesHtml += `
-        <li class="mt-4 pt-2 border-t border-zinc-800">
-          <a href="${ev.pdflink}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-orange/10 hover:bg-brand-orange/20 border border-brand-orange/30 text-brand-orange text-xs font-bold transition-all">
-            <i data-lucide="file-text" class="w-4 h-4"></i>
-            <span>${ev.pdfTitle || 'Download Guidelines'}</span>
-          </a>
-        </li>
-      `;
+          <li class="mt-4 pt-2 border-t border-zinc-800">
+            <a href="${ev.pdflink}" target="_blank" rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-orange/10 hover:bg-brand-orange/20 border border-brand-orange/30 text-brand-orange text-xs font-bold transition-all">
+              <i data-lucide="file-text" class="w-4 h-4"></i>
+              <span>${ev.pdfTitle || 'Download Guidelines'}</span>
+            </a>
+          </li>
+        `;
+      }
+
+      // Submission Link
+      if (ev.submissionLink) {
+        rulesHtml += `
+          <li class="mt-4">
+            <a href="${ev.submissionLink.url}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-orange/10 hover:bg-brand-orange/20 border border-brand-orange/30 text-brand-orange text-xs font-bold transition-all">
+              <i data-lucide="external-link" class="w-4 h-4"></i>
+              <span>${ev.submissionLink.text || 'Submit Here'}</span>
+            </a>
+          </li>
+        `;
       }
 
       list.innerHTML = rulesHtml;
-
+      lucide.createIcons();
       const btn = document.getElementById('rulesModalSelectBtn');
       if (selectedEventIds.has(id)) {
         btn.innerText = '✓ In Pass (Click to Remove)';
