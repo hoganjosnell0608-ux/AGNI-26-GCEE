@@ -1172,11 +1172,11 @@ Date: 06 Oct 2026
     // EVENT CATALOG
     let SYMPOSIUM_EVENTS = [
       { id: 'ev-paper', name: 'Paper Presentation', type: 'Technical', fee: '₹200 (Online) / ₹250 (Spot)', venue: 'Seminar Hall 1', time: '10:00 AM – 12:30 PM', prize: '₹2,500', team: '1–4 Members' },
-      { id: 'ev-expo', name: 'Project Expo', type: 'Technical', fee: '₹200 (Online) / ₹250 (Spot)', venue: 'Automobile Bay 2', time: '10:00 AM – 12:30 PM', prize: '₹3,000', team: '1–4 Members' },
-      { id: 'ev-cad', name: 'CAD Hackathon', type: 'Technical', fee: '₹200 (Online) / ₹250 (Spot)', venue: 'CAD / CAM Laboratory', time: '10:00 AM – 12:30 PM', prize: '₹1,500', team: 'Solo' },
-      { id: 'ev-quiz', name: 'Auto Quiz', type: 'Non-Technical', fee: '₹150 (Online) / ₹200 (Spot)', venue: 'Main Auditorium', time: '01:30 PM – 02:30 PM', prize: '₹1,200', team: 'Solo' },
-      { id: 'ev-treasure', name: 'Treasure Hunt', type: 'Non-Technical', fee: '₹150 (Online) / ₹200 (Spot)', venue: 'Campus Wide Grounds', time: '01:30 PM – 02:30 PM', prize: '₹1,200', team: 'Solo' },
-      { id: 'ev-squid', name: 'Squid Tech', type: 'Non-Technical', fee: '₹150 (Online) / ₹200 (Spot)', venue: 'Automobile Workshop Bay', time: '01:30 PM – 02:30 PM', prize: '₹1,200', team: 'Solo' }
+      { id: 'ev-expo', name: 'Project Expo', type: 'Technical', fee: '₹200 (Online) / ₹250 (Spot)', venue: 'Automobile Department', time: '10:00 AM – 12:30 PM', prize: '₹3,000', team: '1–4 Members' },
+      { id: 'ev-cad', name: 'CAD Hackathon', type: 'Technical', fee: '₹350 (Online) / ₹250 (Spot)', venue: 'CAD / CAM Laboratory', time: '10:00 AM – 12:30 PM', prize: '₹1,500', team: 'Solo' },
+      { id: 'ev-quiz', name: 'Auto Quiz', type: 'Non-Technical', fee: '₹200 (Online) / ₹250 (Spot)', venue: 'Main Auditorium', time: '01:30 PM – 02:30 PM', prize: '₹1,200', team: 'Solo' },
+      { id: 'ev-treasure', name: 'Treasure Hunt', type: 'Non-Technical', fee: '₹200 (Online) / ₹250 (Spot)', venue: 'Campus Wide Grounds', time: '01:30 PM – 02:30 PM', prize: '₹1,200', team: 'Solo' },
+      { id: 'ev-squid', name: 'Squid Tech', type: 'Non-Technical', fee: '₹200 (Online) / ₹250 (Spot)', venue: 'Automobile Workshop Bay', time: '01:30 PM – 02:30 PM', prize: '₹1,200', team: 'Solo' }
     ];
 
     // ==================== AUTH / GATEKEEPER ====================
@@ -2087,7 +2087,7 @@ Date: 06 Oct 2026 | GCE Erode`;
 
       selectedEvents.forEach(ev => {
         if (ev === 'CAD Hackathon') {
-          baseFee += 250;
+          baseFee += 400;
         } else if (ev === 'Paper Presentation' || ev === 'Project Expo') {
           techCount++;
         } else if (ev === 'Auto Quiz' || ev === 'Treasure Hunt' || ev === 'Squid Tech') {
@@ -2103,8 +2103,8 @@ Date: 06 Oct 2026 | GCE Erode`;
         'Squid Tech': 250
       };
 
-      if (techCount >= 2 && nonTechCount >= 2) {
-        baseFee += 350; // Combo pack
+      if (techCount === 1 && nonTechCount === 1) {
+        baseFee += 400; // Combo pack
       } else {
         selectedEvents.forEach(ev => {
           if (ev !== 'CAD Hackathon' && regularFees[ev]) {
@@ -2323,98 +2323,7 @@ Date: 06 Oct 2026 | GCE Erode`;
 
     function seedDemoRegistrations() {
       const demoData = [
-        {
-          regId: 'AGNI-842190',
-          name: 'Arun Kumar V',
-          phone: '9842156780',
-          email: 'arunkumar.auto@annauniv.edu',
-          college: 'Anna University, Chennai',
-          dept: 'Automobile Engineering',
-          year: 'Final Year',
-          events: ['Paper Presentation', 'CAD Hackathon'],
-          totalAmount: '350',
-          utr: '427189012345',
-          timestamp: '22/09/2026, 14:22:10',
-          gatePermittedAt: '08:42:15 AM (06/10/2026)',
-          status: 'Approved'
-        },
-        {
-          regId: 'AGNI-619204',
-          name: 'Deepika S',
-          phone: '9443218765',
-          email: 'deepika.mech@psgtech.ac.in',
-          college: 'PSG College of Technology, Coimbatore',
-          dept: 'Mechanical Engineering',
-          year: 'Pre-Final Year',
-          events: ['Project Expo'],
-          teamCount: 3,
-          totalAmount: '500',
-          utr: '519283746102',
-          timestamp: '22/09/2026, 16:05:40',
-          gatePermittedAt: '08:55:30 AM (06/10/2026)',
-          status: 'Approved'
-        },
-        {
-          regId: 'AGNI-390142',
-          name: 'Praveen Raj M',
-          phone: '8610492817',
-          email: 'praveen.gcee@gmail.com',
-          college: 'Government College of Engineering, Erode',
-          dept: 'Automobile Engineering',
-          year: 'Final Year',
-          events: ['Auto Quiz', 'Treasure Hunt'],
-          totalAmount: '300',
-          utr: '601928374152',
-          timestamp: '23/09/2026, 09:12:00',
-          gatePermittedAt: null,
-          status: 'Pending'
-        },
-        {
-          regId: 'AGNI-771239',
-          name: 'Kavitha R',
-          phone: '9789123456',
-          email: 'kavitha.cit@cit.edu.in',
-          college: 'Coimbatore Institute of Technology',
-          dept: 'Automobile Engineering',
-          year: 'Final Year',
-          events: ['Paper Presentation', 'Project Expo', 'Squid Tech'],
-          totalAmount: '550',
-          utr: '719283019283',
-          timestamp: '23/09/2026, 10:00:22',
-          gatePermittedAt: null,
-          status: 'Pending'
-        },
-        {
-          regId: 'AGNI-154920',
-          name: 'Manojkumar S',
-          phone: '9943209876',
-          email: 'manoj.kumar@kct.ac.in',
-          college: 'Kumaraguru College of Technology',
-          dept: 'Mechatronics Engineering',
-          year: '3rd Year',
-          events: ['CAD Hackathon', 'Auto Quiz'],
-          totalAmount: '350',
-          utr: 'Cash on Spot',
-          isSpot: true,
-          timestamp: '23/09/2026, 10:15:30',
-          gatePermittedAt: '09:05:12 AM (06/10/2026)',
-          status: 'Approved'
-        },
-        {
-          regId: 'AGNI-982310',
-          name: 'Siddharth D',
-          phone: '8610682174',
-          email: 'siddharth.gcee@gmail.com',
-          college: 'Government College of Engineering, Erode',
-          dept: 'Automobile Engineering',
-          year: 'Pre Final Year',
-          events: ['Squid Tech', 'Treasure Hunt'],
-          totalAmount: '300',
-          utr: '819203948172',
-          timestamp: '23/09/2026, 10:25:00',
-          gatePermittedAt: null,
-          status: 'Pending'
-        }
+
       ];
 
       saveAllParticipants(demoData);

@@ -632,8 +632,8 @@
             </div>
             <h2 class="text-3xl sm:text-4xl font-extrabold text-white font-display">CHOOSE YOUR ARENA</h2>
             <p class="text-sm text-zinc-400 mt-2 max-w-xl">
-              Select multiple events at your pace. Choose <strong>2 Technical + 2 Non-Technical</strong> to
-              automatically unlock the discounted <strong>₹350 Combo Pass</strong>!
+              Select multiple events at your pace. Choose <strong>1 Technical + 1 Non-Technical</strong> to
+              automatically unlock the discounted <strong>₹300 Combo Pass</strong>!
             </p>
           </div>
           <div
@@ -646,7 +646,7 @@
               onclick="filterEvents('non-technical')">Non-Tech (₹200)</button><button
               class="px-3.5 py-1.5 rounded-lg text-brand-gold bg-zinc-950 border border-brand-gold/40 hover:bg-brand-gold hover:text-black font-bold transition-all flex items-center gap-1"
               id="filter-combo" onclick="openComboPickerModal()"><i class="w-3.5 h-3.5"
-                data-lucide="zap"></i><span>Combo Pass (₹350)</span></button></div>
+                data-lucide="zap"></i><span>Combo Pass (₹300)</span></button></div>
         </div>
         <!-- COMBO PASS BANNER -->
         <div
@@ -661,18 +661,18 @@
                 <span
                   class="text-xs uppercase font-mono tracking-wider px-2 py-0.5 rounded bg-brand-orange/20 text-brand-orange font-bold">Best
                   Value Package</span>
-                <span class="text-xs text-zinc-400 line-through">₹700</span>
+                <span class="text-xs text-zinc-400 line-through">₹400</span>
               </div>
               <h3 class="text-lg font-bold text-white mt-0.5">All-Access Combo Pass Deal</h3>
-              <p class="text-xs text-zinc-300">Choose 2 Technical + 2 Non-Technical Events. Team: 1 - 4 Members (₹200
+              <p class="text-xs text-zinc-300">Choose 1 Technical + 1 Non-Technical Events. Team: 1 - 4 Members (₹200
                 Base + ₹200/head additional) for Paper Presentation &amp; Project Expo . All other events: Solo (1
                 Member per pass).</p>
             </div>
           </div>
           <div class="flex items-center gap-4">
             <div class="text-right">
-              <div class="text-2xl font-black font-mono text-brand-gold">₹350</div>
-              <div class="text-[10px] text-zinc-400 uppercase">Save ₹350 Instantly</div>
+              <div class="text-2xl font-black font-mono text-brand-gold">₹300</div>
+              <div class="text-[10px] text-zinc-400 uppercase">Save ₹100 Instantly</div>
             </div>
             <button
               class="px-5 py-2.5 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-bold text-xs shadow-lg transition-all"
@@ -968,12 +968,12 @@
                   <h4 class="text-sm font-bold text-white">Public Transit Accessibility</h4>
                   <p class="text-xs text-zinc-400 mt-1">Public Transit Accessibility
 
-                    Direct town buses are available from Erode Central Bus Stand – Platforms 3 & 4 towards Bhavani / Chithode ,
+                    Direct town buses are available from Erode Bus Stand,
 
                     7.50Am - Mofussil Bus(IRTT) Erode Bustand(near by MiniBus platoform) ,
 
                     8.00Am - Town Bus(Bus no 3) Erode Bustand , 
-
+.
                     8.20Am - Town Bus(Bus  No 5B) Erode Bustand.</p>
                 </div>
               </div>
@@ -1253,44 +1253,44 @@
             <span
               class="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded bg-brand-gold/15 text-brand-gold border border-brand-gold/40">Custom
               Combo Builder</span>
-            <span class="text-xs text-zinc-400 line-through">₹700</span>
-            <span class="text-sm font-black font-mono text-brand-gold">₹350 Flat</span>
+            <span class="text-xs text-zinc-400 line-through">₹400</span>
+            <span class="text-sm font-black font-mono text-brand-gold">₹300 Flat</span>
           </div>
-          <h3 class="text-xl sm:text-2xl font-black text-white font-display mt-0.5">Choose 2 Technical + 2 Non-Technical
+          <h3 class="text-xl sm:text-2xl font-black text-white font-display mt-0.5">Choose 1 Technical + 1 Non-Technical
           </h3>
         </div>
       </div>
       <p class="text-xs text-zinc-300 mb-5 leading-relaxed">
-        Hand-pick exactly <strong>2 Technical events</strong> and <strong>2 Non-Technical events</strong>. Your
-        selection is bundled into the subsidized ₹350 All-Access symposium pass.
+        Hand-pick exactly <strong>1 Technical event</strong> and <strong>1 Non-Technical event</strong>. Your
+        selection is bundled into the subsidized ₹300 All-Access symposium pass.
       </p>
       <!-- Live Checklist Indicator -->
       <div class="grid grid-cols-2 gap-3 mb-6 p-3.5 rounded-xl bg-zinc-950 border border-zinc-800 text-xs font-mono">
         <div class="flex items-center justify-between p-2.5 rounded-lg bg-zinc-900 border border-brand-orange/30">
           <span class="text-zinc-300 font-bold uppercase text-[11px]">Technical Events:</span>
-          <span class="font-black text-brand-orange text-sm" id="comboTechCountDisplay">0 / 2 Picked</span>
+          <span class="font-black text-brand-orange text-sm" id="comboTechCountDisplay">0 / 1 Picked</span>
         </div>
         <div class="flex items-center justify-between p-2.5 rounded-lg bg-zinc-900 border border-brand-gold/30">
           <span class="text-zinc-300 font-bold uppercase text-[11px]">Non-Technical:</span>
-          <span class="font-black text-brand-gold text-sm" id="comboNonTechCountDisplay">0 / 2 Picked</span>
+          <span class="font-black text-brand-gold text-sm" id="comboNonTechCountDisplay">0 / 1 Picked</span>
         </div>
       </div>
-      <!-- Technical Events Grid (Pick 2) -->
+      <!-- Technical Events Grid (Pick 1) -->
       <div class="mb-6">
         <h4
           class="text-xs font-mono uppercase tracking-wider text-brand-orange font-bold mb-2.5 flex items-center justify-between">
-          <span>1. Technical Tracks (Pick exactly 2)</span>
+          <span>1. Technical Tracks (Pick exactly 1)</span>
           <span class="text-[10px] text-zinc-400 font-normal">Individual or team eligible</span>
         </h4>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="comboTechOptionsGrid">
           <!-- Injected via script -->
         </div>
       </div>
-      <!-- Non-Technical Events Grid (Pick 2) -->
+      <!-- Non-Technical Events Grid (Pick 1) -->
       <div class="mb-6">
         <h4
           class="text-xs font-mono uppercase tracking-wider text-brand-gold font-bold mb-2.5 flex items-center justify-between">
-          <span>2. Non-Technical Arenas (Pick exactly 2)</span>
+          <span>2. Non-Technical Arenas (Pick exactly 1)</span>
           <span class="text-[10px] text-zinc-400 font-normal">Individual or team eligible</span>
         </h4>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="comboNonTechOptionsGrid">
@@ -1299,7 +1299,7 @@
       </div>
       <!-- Feedback & Proceed Button -->
       <div class="border-t border-zinc-800 pt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div class="text-xs text-zinc-400 font-mono" id="comboStatusNotice">Please pick 2 Technical and 2 Non-Technical
+        <div class="text-xs text-zinc-400 font-mono" id="comboStatusNotice">Please pick 1 Technical and 1 Non-Technical
           events to proceed.</div>
         <div class="flex items-center gap-2 w-full sm:w-auto">
           <button
@@ -1308,7 +1308,7 @@
           <button
             class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-zinc-800 text-zinc-500 font-bold text-xs uppercase tracking-wider cursor-not-allowed transition-all"
             disabled="" id="comboProceedBtn" onclick="confirmComboAndCheckout()" type="button">
-            Proceed with Combo Pass (₹350) →
+            Proceed with Combo Pass (₹300) →
           </button>
         </div>
       </div>
@@ -1332,9 +1332,9 @@
 
         const ev = EVENTS_DATA.find(e => e.id === id);
         if (ev) {
-          if (ev.type === 'technical' && comboPickedTech.size < 2) {
+          if (ev.type === 'technical' && comboPickedTech.size < 1) {
             comboPickedTech.add(id);
-          } else if (ev.type === 'non-technical' && comboPickedNonTech.size < 2) {
+          } else if (ev.type === 'non-technical' && comboPickedNonTech.size < 1) {
             comboPickedNonTech.add(id);
           }
         }
@@ -1400,22 +1400,22 @@
       }).join('');
 
       // Update Counter Badges
-      document.getElementById('comboTechCountDisplay').innerText = `${comboPickedTech.size} / 2 Picked`;
-      document.getElementById('comboNonTechCountDisplay').innerText = `${comboPickedNonTech.size} / 2 Picked`;
+      document.getElementById('comboTechCountDisplay').innerText = `${comboPickedTech.size} / 1 Picked`;
+      document.getElementById('comboNonTechCountDisplay').innerText = `${comboPickedNonTech.size} / 1 Picked`;
 
       const proceedBtn = document.getElementById('comboProceedBtn');
       const statusNotice = document.getElementById('comboStatusNotice');
-      const isComplete = (comboPickedTech.size === 2 && comboPickedNonTech.size === 2);
+      const isComplete = (comboPickedTech.size === 1 && comboPickedNonTech.size === 1);
 
       if (isComplete) {
         proceedBtn.disabled = false;
         proceedBtn.className = 'w-full sm:w-auto px-6 py-2.5 rounded-xl bg-brand-gold hover:bg-yellow-400 text-black font-black text-xs uppercase tracking-wider shadow-lg shadow-brand-gold/25 cursor-pointer transition-all active:scale-95 flex items-center gap-1.5';
-        statusNotice.innerHTML = '<span class="text-emerald-400 font-bold flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> 2 Tech + 2 Non-Tech chosen! Ready to register at ₹350.</span>';
+        statusNotice.innerHTML = '<span class="text-emerald-400 font-bold flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> 1 Tech + 1 Non-Tech chosen! Ready to register at ₹300.</span>';
       } else {
         proceedBtn.disabled = true;
         proceedBtn.className = 'w-full sm:w-auto px-6 py-2.5 rounded-xl bg-zinc-800 text-zinc-500 font-bold text-xs uppercase tracking-wider cursor-not-allowed transition-all';
-        const remTech = 2 - comboPickedTech.size;
-        const remNonTech = 2 - comboPickedNonTech.size;
+        const remTech = 1 - comboPickedTech.size;
+        const remNonTech = 1 - comboPickedNonTech.size;
         let msg = [];
         if (remTech > 0) msg.push(`${remTech} more Technical`);
         if (remNonTech > 0) msg.push(`${remNonTech} more Non-Technical`);
@@ -1430,8 +1430,8 @@
         if (comboPickedTech.has(id)) {
           comboPickedTech.delete(id);
         } else {
-          if (comboPickedTech.size >= 2) {
-            showToast('Limit Reached', 'You can pick exactly 2 Technical events for the Combo Pass.');
+          if (comboPickedTech.size === 1) {
+            showToast('Limit Reached', 'You can pick exactly 1 Technical event for the Combo Pass.');
             return;
           }
           comboPickedTech.add(id);
@@ -1440,8 +1440,8 @@
         if (comboPickedNonTech.has(id)) {
           comboPickedNonTech.delete(id);
         } else {
-          if (comboPickedNonTech.size >= 2) {
-            showToast('Limit Reached', 'You can pick exactly 2 Non-Technical events for the Combo Pass.');
+          if (comboPickedNonTech.size === 1) {
+            showToast('Limit Reached', 'You can pick exactly 1 Non-Technical event for the Combo Pass.');
             return;
           }
           comboPickedNonTech.add(id);
@@ -1451,8 +1451,8 @@
     }
 
     function confirmComboAndCheckout() {
-      if (comboPickedTech.size !== 2 || comboPickedNonTech.size !== 2) {
-        alert('Please select exactly 2 Technical and 2 Non-Technical events.');
+      if (comboPickedTech.size !== 1 || comboPickedNonTech.size !== 1) {
+        alert('Please select exactly 1 Technical and 1 Non-Technical events.');
         return;
       }
       selectedEventIds.clear();
@@ -1461,7 +1461,7 @@
       updateSelectionState();
       closeComboPickerModal();
       handleOpenCheckout();
-      showToast('Combo Pass Activated!', '4 events bundled at flat ₹350 rate.');
+      showToast('Combo Pass Activated!', '2 events bundled at flat ₹300 rate.');
     }
   </script>
   <div
@@ -2208,7 +2208,7 @@
         id: 'ev-cad',
         title: 'CAD Hackathon',
         type: 'technical',
-        fee: 400,
+        fee: 350,
         icon: 'layers',
         desc: 'Participants will solve a real-world challenge by creating accurate 3D models and assemblies.',
         team: 'Max 2-4 Members',
@@ -2223,7 +2223,7 @@
           'Permitted Software: solidworks,CATIA V5/V6, Siemens NX, Creo and relevant software.',
           'Time Duration: Strictly 3hours sprint to construct complete 3D mechanical component.',
           'Judging Criteria:  Innovation, CAD Quality, Engineering approach, Manufacturing feasibility.',
-          'Note: CAD Hackathon requires dedicated lab workstations and cannot be bundled into the ₹350 Combo Pass.',
+          'Note: CAD Hackathon requires dedicated lab workstations and cannot be bundled into the ₹ 300 Combo Pass.',
           'Must read the CAD Hackathon Guidelines PDF document.'
         ],
         contactName: 'GOKUL ANAND S',
@@ -2557,7 +2557,7 @@
 
       // 1. Check if CAD Hackathon is selected
       const hasCad = selectedEventIds.has('ev-cad');
-      const cadFee = hasCad ? 400 : 0;
+      const cadFee = hasCad ? 350 : 0;
 
       // 2. Count technical events EXCLUDING CAD Hackathon for the combo pass
       const comboTechEvents = selected.filter(ev => ev.type === 'technical' && ev.id !== 'ev-cad');
@@ -2566,20 +2566,20 @@
       const techCount = comboTechEvents.length;
       const nonTechCount = nonTechEvents.length;
 
-      // 3. Combo only unlocks if they pick at least 2 OTHER technical events + 2 non-tech events
-      const isCombo = (techCount >= 2 && nonTechCount >= 2);
+      // 3. Combo only unlocks if they pick at least 1 OTHER technical events + 1 non-tech events
+      const isCombo = (techCount === 1 && nonTechCount === 1);
       let amount = 0;
 
       if (isCombo) {
-        // Base combo rate covers 2 eligible Tech + 2 Non-Tech
-        amount = 350;
+        // Base combo rate covers 1 eligible Tech + 1 Non-Tech
+        amount = 300;
 
-        // Add extra events beyond the 2 + 2 combo bundle
-        const extraTech = Math.max(0, techCount - 2);
-        const extraNonTech = Math.max(0, nonTechCount - 2);
+        // Add extra events beyond the 1 + 1 combo bundle
+        const extraTech = Math.max(0, techCount - 1);
+        const extraNonTech = Math.max(0, nonTechCount - 1);
         amount += (extraTech * 200) + (extraNonTech * 200);
 
-        // CAD Hackathon is charged separately at its standard fee (₹400)
+        // CAD Hackathon is charged separately at its standard fee (₹300)
         if (hasCad) {
           amount += cadFee;
         }
@@ -2601,10 +2601,10 @@
 
       const subtext = document.getElementById('stickyPassTierSubtext');
       if (isCombo) {
-        subtext.innerText = '🔥 Combo Pass Applied (₹350 Deal)';
+        subtext.innerText = '🔥 Combo Pass Applied (₹300 Deal)';
         subtext.className = 'text-[11px] text-brand-gold font-bold';
       } else if (count > 0) {
-        subtext.innerText = 'Select 2 Tech + 2 Non-Tech for ₹350 Combo!';
+        subtext.innerText = 'Select 1 Tech + 1 Non-Tech for ₹300 Combo!';
         subtext.className = 'text-[11px] text-zinc-400';
       } else {
         subtext.innerText = 'Select events above to build pass';
@@ -2713,7 +2713,7 @@
       }
 
       document.getElementById('modalSelectedCount').innerText = selected.length;
-      document.getElementById('modalTierBadge').innerText = isCombo ? 'Combo Deal (₹350)' : 'Standard Entry';
+      document.getElementById('modalTierBadge').innerText = isCombo ? 'Combo Deal (₹300)' : 'Standard Entry';
       document.getElementById('modalTotalAmount').innerText = `₹${amount}`;
 
       const listElem = document.getElementById('modalSelectedEventsList');
@@ -3369,10 +3369,10 @@
 
       if (subtext) {
         if (isCombo) {
-          subtext.innerText = '🔥 Combo Pass Applied (₹350 Deal)';
+          subtext.innerText = '🔥 Combo Pass Applied (₹300 Deal)';
           subtext.className = 'text-[11px] text-brand-gold font-bold';
         } else if (count > 0) {
-          subtext.innerText = 'Select 2 Tech + 2 Non-Tech for ₹350 Combo!';
+          subtext.innerText = 'Select 1 Tech + 1 Non-Tech for ₹300 Combo!';
           subtext.className = 'text-[11px] text-zinc-400';
         } else {
           subtext.innerText = 'Select events above to build pass';
@@ -3399,7 +3399,7 @@
         if (ev && ev.isTeamEvent) {
           const feeEl = card.querySelector('.font-mono.text-white');
           if (feeEl) {
-            feeEl.innerHTML = `₹${ev.fee}+₹200 <span class="text-xs text-brand-orange font-normal font-sans">/ Per Head</span>`;
+            feeEl.innerHTML = `₹${ev.fee}<span class="text-xs text-brand-orange font-normal font-sans"></span>`;
           }
         }
       });
@@ -3823,7 +3823,7 @@
       const listEl = document.getElementById('modalSelectedEventsList');
 
       if (countEl) countEl.innerText = totals.selected.length;
-      if (tierEl) tierEl.innerText = totals.isCombo ? 'Combo Deal (₹350)' : 'Standard Entry';
+      if (tierEl) tierEl.innerText = totals.isCombo ? 'Combo Deal (₹300)' : 'Standard Entry';
       if (baseEl) baseEl.innerText = '₹' + totals.amount;
       if (listEl) {
         listEl.innerHTML = totals.selected.map(e => `
@@ -3881,7 +3881,7 @@
         class="px-3 py-2 bg-zinc-950/80 border-b border-zinc-800/80 flex items-center gap-1.5 overflow-x-auto text-[11px] font-mono shrink-0">
         <button
           class="px-2.5 py-1 rounded-full bg-brand-orange/15 hover:bg-brand-orange/25 text-brand-orange border border-brand-orange/30 whitespace-nowrap transition-colors"
-          onclick="handleRagavQuickPrompt('Tell me about the ₹350 Combo Deal')">⚡ ₹350 Combo Deal</button>
+          onclick="handleRagavQuickPrompt('Tell me about the ₹300 Combo Deal')">⚡ ₹300 Combo Deal</button>
         <button
           class="px-2.5 py-1 rounded-full bg-brand-orange/15 hover:bg-brand-orange/25 text-brand-orange border border-brand-orange/30 whitespace-nowrap transition-colors"
           onclick="handleRagavQuickPrompt('not submitted but amount deducted')">🚫 Registration Issue</button>
@@ -4021,7 +4021,7 @@
         return "Vanakkam! 👋 I am <strong>Ragav</strong>, the AI concierge for <strong>AGNI 26 — National Level Technical Symposium</strong> organized by the Department of Automobile Engineering at GCE Erode.<br><br>" +
           "I can answer any question about:<br>" +
           "• 🏆 <strong>All 06 Events & ₹10,000+ Cash Prizes</strong><br>" +
-          "• ⚡ <strong>₹350 Combo Pass Deal (2 Tech (excl. CAD) + 2 Non-Tech)</strong><br>" +
+          "• ⚡ <strong>₹300 Combo Pass Deal (1 Tech (excl. CAD) + 1 Non-Tech)</strong><br>" +
           "• 👥 <strong>Team Limits:</strong> 1–4 members (Paper, Project Expo) & Solo tracks<br>" +
           "• 📝 <strong>Registration Procedure:</strong> Step-by-Step Registration Procedure<br>" +
           "• ⚠️ <strong>Registration issue:</strong> Payment Troubleshooting & Recovery Guide<br>" +
@@ -4033,24 +4033,24 @@
           "• 🎟 <strong>Pass Retrieval & UPI Verification</strong>";
       }
 
-      // 2. COMBO PASS & PACKAGE DEALS (2 TECH + 2 NON-TECH)
-      if (q.includes('combo') || q.includes('350') || q.includes('package') || q.includes('all access') || q.includes('all-access') || q.includes('bundle') || q.includes('best value') || q.includes('discount')) {
-        return "⚡ <strong>All-Access Combo Pass Deal (Flat ₹350 — Save ₹350 Instantly!):</strong><br>" +
-          "• <strong>How it works:</strong> Pick <strong>exactly 2 Technical Events (excl. CAD) + 2 Non-Technical Events</strong> to automatically unlock the bundled <strong>₹350</strong> symposium pass (original standalone value is ₹700!).<br>" +
-          "• <strong>Custom Combo Builder:</strong> Click the gold <strong>'Claim Combo'</strong> button in the banner or the <strong>'Combo Pass (₹350)'</strong> tab filter to open the interactive selection drawer.<br>" +
-          "• <strong>Inclusions:</strong> All 4 chosen events, delegate kit, identity badge, complimentary hot buffet lunch, and verified certificates.<br>" +
-          "• <strong>Teammates:</strong> If choosing team events (Paper Presentation, Project Expo, Short Film), additional teammates are added at ₹200 / head.";
+      // 2. COMBO PASS & PACKAGE DEALS (1 TECH + 1 NON-TECH)
+      if (q.includes('combo') || q.includes('300') || q.includes('package') || q.includes('all access') || q.includes('all-access') || q.includes('bundle') || q.includes('best value') || q.includes('discount')) {
+        return "⚡ <strong>All-Access Combo Pass Deal (Flat ₹300 — Save ₹100 Instantly!):</strong><br>" +
+          "• <strong>How it works:</strong> Pick <strong>exactly 1 Technical Event (excl. CAD) + 1 Non-Technical Event</strong> to automatically unlock the bundled <strong>₹300</strong> symposium pass (original standalone value is ₹400!).<br>" +
+          "• <strong>Custom Combo Builder:</strong> Click the gold <strong>'Claim Combo'</strong> button in the banner or the <strong>'Combo Pass (₹300)'</strong> tab filter to open the interactive selection drawer.<br>" +
+          "• <strong>Inclusions:</strong> Both 2 chosen events, delegate kit, identity badge, complimentary hot buffet lunch, and verified certificates.<br>" +
+          "• <strong>Teammates:</strong> If choosing team events (Paper Presentation, Project Expo), additional teammates are added at ₹200 / head.";
       }
 
       // 3. REGISTRATION FEES & ON-SPOT COMPARISON
       if (q.includes('fee') || q.includes('cost') || q.includes('price') || q.includes('rate') || q.includes('charge') || q.includes('spot')) {
         return "💰 <strong>AGNI 26 Registration Fees & Comparison:</strong><br>" +
-          "• <strong>1. Online Registration (Prior to 04/10/2026 — Save ₹50 / head):</strong><br>" +
+          "• <strong>1. Online Registration (Prior to 06/10/2026 — Save ₹50 / head):</strong><br>" +
           "  - Technical Events: <strong>₹200</strong> Base<br>" +
-          "  - CAD Hacathon: <strong>₹400</strong> Base<br>" +
+          "  - CAD Hacathon: <strong>₹350</strong> Base<br>" +
           "  - Non-Technical Events: <strong>₹200</strong> Base<br>" +
           "  - Additional Team Members: <strong>₹200 / head</strong><br>" +
-          "  - Combo Pass (2 Tech + 2 Non-Tech): <strong>₹350 flat</strong><br>" +
+          "  - Combo Pass (1 Tech + 1 Non-Tech): <strong>₹300 flat</strong><br>" +
           "• <strong>2. On-Spot Registration (06/10/2026 at Campus Desk):</strong><br>" +
           "  - Technical Events: <strong>₹250</strong> Base<br>" +
           "  - Non-Technical Events: <strong>₹250</strong> Base<br>" +
@@ -4132,7 +4132,7 @@
       // 9. SPECIFIC EVENT RULES (CAD HACKATHON)
       if (q.includes('cad') || q.includes('hackathon') || q.includes('solidworks') || q.includes('catia') || q.includes('fusion') || q.includes('3d model')) {
         return "📐 <strong>CAD Hackathon Guidelines:</strong><br>" +
-          "• <strong>Category:</strong> Technical | <strong>Fee:</strong> ₹400 flat<br>" +
+          "• <strong>Category:</strong> Technical | <strong>Fee:</strong> ₹350 flat<br>" +
           "• <strong>Team Limit:</strong> Max 2-4 members<br>" +
           "• <strong>Cash Prizes:</strong> 1st: ₹5,000 | 2nd: ₹3,000 (Pool: ₹8,000)<br>" +
           "• <strong>Permitted Software:</strong> Solidworks,CATIA V5/V6, Siemens NX, Creo and relevant software.<br>" +
@@ -4180,7 +4180,7 @@
         return "📍 <strong>How to Reach GCE Erode Campus:</strong><br>" +
           "• <strong>Venue:</strong> Government College of Engineering (Formerly IRTT), Suriyampalayam Post, Chithode, Erode - 638316, Tamil Nadu.<br>" +
           "• <strong>Highways:</strong> Located directly on the Salem-Kochi Highway (NH 544). GPS Coordinates: <strong>11.4086° N, 77.6744° E</strong>.<br>" +
-          "• <strong>From Erode Central Bus Stand:</strong> Direct town buses depart from <strong>Platform 3 & 4</strong> heading towards Bhavani / Chithode every 5 minutes (Bus No. 3 — Vasavi College Stop, Bus No. B-16 — IRTT College Stop).<br>" +
+          "• <strong>From Erode Central Bus Stand:</strong> Direct town buses depart from <strong>Erode Bus Stand</strong> heading towards Bhavani / Chithode (Bus No. 3 — Vasavi College Stop, Bus No. B-16 — IRTT College Stop).<br>" +
           "• <strong>Bus Timing From Erode Bus Stand:</strong> 7.50Am - Mofussil Bus(IRTT) Erode Bustand(near by MiniBus platoform) , 8.00Am - Town Bus(Bus no 3) Erode Bustand , 8.20Am - Town Bus(Bus No 5B) Erode Bustand.<br>" +
           "• <strong>From Erode Junction (ED) Railway Station:</strong> 12 km away. Autos, app cabs, and town buses operate 24x7.<br>" +
           "• <strong>Live Map:</strong> An interactive Google Map is embedded in the Venue section with a direct 'Get Directions' GPS button.";
@@ -4247,7 +4247,7 @@
       // 26. REGISTRATION PROCEDURE (STEP-BY-STEP) 
       if (q.includes('register') || q.includes('registration') || q.includes('how to register') || q.includes('step') || q.includes('procedure') || q.includes('process') || q.includes('how to apply') || q.includes('how to join')) {
         return "📝 <strong>Step-by-Step Registration Procedure:</strong><br>" +
-          "• <strong>Step 1 — Pick Events or Combo:</strong> Select events individually (+Add to Pass) or click <em>'Claim Combo'</em> to bundle 2 Technical + 2 Non-Technical events at flat <strong>₹350</strong>.<br>" + "• <strong>Step 2 — Delegate Details (Step 1):</strong> Click Pass Cart. Fill in Full Name, College Name, Department (or type under 'Others'), Year of Study, WhatsApp Mobile, and Email.<br>" + "• <strong>Step 3 — Accompanying Teammates:</strong> For Paper, Expo, or Short Film, choose Solo (+₹0), 1 (+₹200), 2 (+₹400), or 3 (+₹600) Teammates. All other events are strictly solo.<br>" + "• <strong>Step 4 — Scan UPI QR Code (Step 2):</strong> Scan the auto-filled dynamic QR for payee <strong>HOGAN JOSNELL A</strong> (<span class='font-mono text-brand-orange font-bold'>josnellhogan2006@okaxis</span>) on GPay, PhonePe, or Paytm.<br>" + "• <strong>Step 5 — 12-Digit UTR & Proof:</strong> Enter your 12-digit numeric Transaction ID and upload your payment receipt screenshot.<br>" + "• <strong>Step 6 — Instant Gate Pass:</strong> Click submit to generate your verified single-page entry pass (<span class='font-mono text-brand-gold font-bold'>AGNI-XXXXXX</span>) for check-in on <strong>06 October 2026</strong>!";
+          "• <strong>Step 1 — Pick Events or Combo:</strong> Select events individually (+Add to Pass) or click <em>'Claim Combo'</em> to bundle 1 Technical + 1 Non-Technical events at flat <strong>₹300</strong>.<br>" + "• <strong>Step 2 — Delegate Details (Step 1):</strong> Click Pass Cart. Fill in Full Name, College Name, Department (or type under 'Others'), Year of Study, WhatsApp Mobile, and Email.<br>" + "• <strong>Step 3 — Accompanying Teammates:</strong> For Paper, Expo, or Short Film, choose Solo (+₹0), 1 (+₹200), 2 (+₹400), or 3 (+₹600) Teammates. All other events are strictly solo.<br>" + "• <strong>Step 4 — Scan UPI QR Code (Step 2):</strong> Scan the auto-filled dynamic QR for payee <strong>HOGAN JOSNELL A</strong> (<span class='font-mono text-brand-orange font-bold'>josnellhogan2006@okaxis</span>) on GPay, PhonePe, or Paytm.<br>" + "• <strong>Step 5 — 12-Digit UTR & Proof:</strong> Enter your 12-digit numeric Transaction ID and upload your payment receipt screenshot.<br>" + "• <strong>Step 6 — Instant Gate Pass:</strong> Click submit to generate your verified single-page entry pass (<span class='font-mono text-brand-gold font-bold'>AGNI-XXXXXX</span>) for check-in on <strong>06 October 2026</strong>!";
       }
 
       // 27. WHAT TO DO AFTER ARRIVING AT COLLEGE / CAMPUS ENTRY GUIDANCE
@@ -4281,7 +4281,7 @@
       // DEFAULT / FALLBACK HELPER RESPONSE
       return "Vanakkam! I'm here to help with everything regarding <strong>AGNI 26</strong>. You can ask me about:<br>" +
         "• 🏆 <strong>06 Flagship Events & Cash Prizes</strong> (Paper, Expo, CAD, etc.)<br>" +
-        "• ⚡ <strong>₹350 Combo Deal</strong> (Pick 2 Tech (excl. CAD) + 2 Non-Tech)<br>" +
+        "• ⚡ <strong>₹300 Combo Deal</strong> (Pick 2 Tech (excl. CAD) + 2 Non-Tech)<br>" +
         "• 💰 <strong>Fees & 04/10/2026 Online Discount Deadline</strong><br>" +
         "• 📝 <strong>Registration Procedure:</strong> Step-by-Step Registration Procedure<br>" +
         "• ⚠️ <strong>Registration issue:</strong> Payment Troubleshooting & Recovery Guide<br>" +
