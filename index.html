@@ -503,7 +503,7 @@
                       class="text-[10px] text-zinc-500 font-normal font-sans">(Base)</span></span></div>
                 <div class="flex items-center justify-between p-2.5 rounded-lg bg-zinc-950 border border-zinc-800"><span
                     class="text-zinc-300 font-sans font-medium">Additional Team Member</span><span
-                    class="font-black text-emerald-400 text-sm">₹200 <span
+                    class="font-black text-emerald-400 text-sm">₹200 (CAD HACKATHON 350) <span
                       class="text-[10px] text-zinc-500 font-normal font-sans">/ head</span></span></div>
               </div>
               <div class="mt-3 pt-2.5 border-t border-zinc-800/80 flex flex-col gap-1.5">
@@ -537,7 +537,7 @@
                       class="text-[10px] text-zinc-500 font-normal font-sans">(Base)</span></span></div>
                 <div class="flex items-center justify-between p-2.5 rounded-lg bg-zinc-900 border border-zinc-800/90">
                   <span class="text-zinc-400 font-sans font-medium">Additional Team Member</span><span
-                    class="font-bold text-rose-400 text-sm">₹250 <span
+                    class="font-bold text-rose-400 text-sm">₹250 (CAD HACKATHON 350) <span
                       class="text-[10px] text-zinc-500 font-normal font-sans">/ head</span></span></div>
               </div>
               <div class="mt-3 pt-2.5 border-t border-zinc-800/80 text-[11px] text-zinc-500 text-center font-mono">
@@ -1857,7 +1857,7 @@
               <div class="flex items-center gap-2"><i class="w-4 h-4 text-brand-orange" data-lucide="users"></i><span
                   class="text-xs font-mono font-bold text-white uppercase tracking-wider">Accompanying Teammates
                   Selector</span></div><span class="text-[11px] font-mono text-brand-gold">Base Fee + ₹200 /
-                Accompanying Head</span>
+                Accompanying Head(CAD HACKATHON 350)</span>
             </div>
             <div class="p-3 rounded-lg bg-zinc-900 border border-brand-orange/30 text-xs text-zinc-300 space-y-1">
               <div class="flex items-center gap-1.5 font-bold text-brand-orange font-mono text-[11px] uppercase"><i
@@ -2288,7 +2288,7 @@
         type: 'non-technical',
         fee: 200,
         icon: 'camera',
-        desc: 'Open Theme — participants may submit photographs on any subject.',
+        desc: '"Look closer. Notice what others miss."',
         team: 'Solo Participant',
         firstPrize: 250,
         secondPrize: 250,
@@ -2296,9 +2296,12 @@
         isCertificateOnly: false,
         rules: [
           'Team size: Solo participant.',
-          'Theme: Open Theme — participants may submit photographs on any subject.',
-          'Submission Deadline: All photographs must be submitted before 4 October 2026.',
-          'Authenticity: Only original and genuine photographs are allowed. Fake, AI-generated, manipulated, or misleading photographs are not permitted.'
+          '1. Submit 2 photos of the same subject/place — one normal view and one unseen/close-up view.',
+          '2. Both photos must be taken inside the college campus during the event.',
+          '3. Only mobile phones are allowed.',
+          '4. Previously taken, downloaded, copied, or AI-generated photos are not allowed.',
+          '5. No editing or photo manipulation is allowed.',
+          '6. Submit both photos within the given time; judges’ decision will be final.'
         ],
         contactName: 'ADHITHYA J',
         contactPhone: '8248764441'
@@ -3598,7 +3601,8 @@
       // Compute calculations
       const totals = calculateTotals();
       const baseFee = totals.amount || 0;
-      const teammatesFee = selectedTeammatesCount * 200;
+      const isCadSelected = selectedEventIds.has('ev-cad')
+      const teammatesFee = selectedTeammatesCount * (isCadSelected?350:200);
       const grandTotal = baseFee + teammatesFee;
 
       document.getElementById('calcEventBasePrice').innerText = '₹' + baseFee;

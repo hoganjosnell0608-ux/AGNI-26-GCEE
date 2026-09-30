@@ -440,7 +440,7 @@
               <option value="ev-paper">Paper Presentation</option>
               <option value="ev-expo">Project Expo</option>
               <option value="ev-cad">CAD Hackathon</option>
-              <option value="ev-quiz">Auto Quiz</option>
+              <option value="ev-photography">Photography</option>
               <option value="ev-treasure">Treasure Hunt</option>
               <option value="ev-squid">Squid Tech</option>
             </select>
@@ -736,7 +736,7 @@ Date: 06 Oct 2026
               <option value="Paper Presentation">Paper Presentation</option>
               <option value="Project Expo">Project Expo</option>
               <option value="CAD Hackathon">CAD Hackathon</option>
-              <option value="Auto Quiz">Auto Quiz</option>
+              <option value="Photography">Photography</option>
               <option value="Treasure Hunt">Treasure Hunt</option>
               <option value="Squid Tech">Squid Tech</option>
             </select>
@@ -1013,7 +1013,7 @@ Date: 06 Oct 2026
               <input type="checkbox" value="CAD Hackathon" class="manual-event-checkbox w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-brand-orange focus:ring-brand-orange" onchange="calculateManualAmount()"> CAD Hackathon (Tech)
             </label>
             <label class="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer">
-              <input type="checkbox" value="Auto Quiz" class="manual-event-checkbox w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-brand-orange focus:ring-brand-orange" onchange="calculateManualAmount()"> Auto Quiz (Non-Tech)
+              <input type="checkbox" value="Photography" class="manual-event-checkbox w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-brand-orange focus:ring-brand-orange" onchange="calculateManualAmount()"> Photography (Non-Tech)
             </label>
             <label class="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer">
               <input type="checkbox" value="Treasure Hunt" class="manual-event-checkbox w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-brand-orange focus:ring-brand-orange" onchange="calculateManualAmount()"> Treasure Hunt (Non-Tech)
@@ -1174,7 +1174,7 @@ Date: 06 Oct 2026
       { id: 'ev-paper', name: 'Paper Presentation', type: 'Technical', fee: '₹200 (Online) / ₹250 (Spot)', venue: 'Seminar Hall 1', time: '10:00 AM – 12:30 PM', prize: '₹2,500', team: '1–4 Members' },
       { id: 'ev-expo', name: 'Project Expo', type: 'Technical', fee: '₹200 (Online) / ₹250 (Spot)', venue: 'Automobile Department', time: '10:00 AM – 12:30 PM', prize: '₹3,000', team: '1–4 Members' },
       { id: 'ev-cad', name: 'CAD Hackathon', type: 'Technical', fee: '₹350 (Online) / ₹250 (Spot)', venue: 'CAD / CAM Laboratory', time: '10:00 AM – 12:30 PM', prize: '₹1,500', team: 'Solo' },
-      { id: 'ev-quiz', name: 'Auto Quiz', type: 'Non-Technical', fee: '₹200 (Online) / ₹250 (Spot)', venue: 'Main Auditorium', time: '01:30 PM – 02:30 PM', prize: '₹1,200', team: 'Solo' },
+      { id: 'ev-photography', name: 'Photography', type: 'Non-Technical', fee: '₹200 (Online) / ₹250 (Spot)', venue: 'Main Auditorium', time: '01:30 PM – 02:30 PM', prize: '₹1,200', team: 'Solo' },
       { id: 'ev-treasure', name: 'Treasure Hunt', type: 'Non-Technical', fee: '₹200 (Online) / ₹250 (Spot)', venue: 'Campus Wide Grounds', time: '01:30 PM – 02:30 PM', prize: '₹1,200', team: 'Solo' },
       { id: 'ev-squid', name: 'Squid Tech', type: 'Non-Technical', fee: '₹200 (Online) / ₹250 (Spot)', venue: 'Automobile Workshop Bay', time: '01:30 PM – 02:30 PM', prize: '₹1,200', team: 'Solo' }
     ];
@@ -1302,7 +1302,7 @@ Date: 06 Oct 2026
         'ev-paper': 0,
         'ev-expo': 0,
         'ev-cad': 0,
-        'ev-quiz': 0,
+        'ev-photography': 0,
         'ev-treasure': 0,
         'ev-squid': 0
       };
@@ -1327,7 +1327,7 @@ Date: 06 Oct 2026
           if (str.includes('paper')) eventCounts['ev-paper']++;
           if (str.includes('expo') || str.includes('project')) eventCounts['ev-expo']++;
           if (str.includes('cad')) eventCounts['ev-cad']++;
-          if (str.includes('quiz')) eventCounts['ev-quiz']++;
+          if (str.includes('photo')) eventCounts['ev-photography']++;
           if (str.includes('treasure')) eventCounts['ev-treasure']++;
           if (str.includes('squid')) eventCounts['ev-squid']++;
         });
@@ -1407,7 +1407,7 @@ Date: 06 Oct 2026
           if (evFilter === 'ev-paper' && !evStr.includes('paper')) return false;
           if (evFilter === 'ev-expo' && !evStr.includes('expo') && !evStr.includes('project')) return false;
           if (evFilter === 'ev-cad' && !evStr.includes('cad')) return false;
-          if (evFilter === 'ev-quiz' && !evStr.includes('quiz')) return false;
+          if (evFilter === 'ev-photography' && !evStr.includes('photo')) return false;
           if (evFilter === 'ev-treasure' && !evStr.includes('treasure')) return false;
           if (evFilter === 'ev-squid' && !evStr.includes('squid')) return false;
         }
@@ -1822,7 +1822,7 @@ Date: 06 Oct 2026 | GCE Erode`;
         if (first.toLowerCase().includes('paper')) eventSelect.value = 'Paper Presentation';
         else if (first.toLowerCase().includes('expo')) eventSelect.value = 'Project Expo';
         else if (first.toLowerCase().includes('cad')) eventSelect.value = 'CAD Hackathon';
-        else if (first.toLowerCase().includes('quiz')) eventSelect.value = 'Auto Quiz';
+        else if (first.toLowerCase().includes('photography')) eventSelect.value = 'Photography';
         else if (first.toLowerCase().includes('treasure')) eventSelect.value = 'Treasure Hunt';
         else if (first.toLowerCase().includes('squid')) eventSelect.value = 'Squid Tech';
       }
@@ -2090,7 +2090,7 @@ Date: 06 Oct 2026 | GCE Erode`;
           baseFee += 400;
         } else if (ev === 'Paper Presentation' || ev === 'Project Expo') {
           techCount++;
-        } else if (ev === 'Auto Quiz' || ev === 'Treasure Hunt' || ev === 'Squid Tech') {
+        } else if (ev === 'Photography' || ev === 'Treasure Hunt' || ev === 'Squid Tech') {
           nonTechCount++;
         }
       });
@@ -2098,7 +2098,7 @@ Date: 06 Oct 2026 | GCE Erode`;
       const regularFees = {
         'Paper Presentation': 250,
         'Project Expo': 250,
-        'Auto Quiz': 250,
+        'Photography': 250,
         'Treasure Hunt': 250,
         'Squid Tech': 250
       };
@@ -2112,8 +2112,8 @@ Date: 06 Oct 2026 | GCE Erode`;
           }
         });
       }
-      
-      const teammatesFee = teamCount * 250;
+      const isCadSelected = selectedEvents.includes('CAD Hackathon');
+      const teammatesFee = teamCount * (isCadSelected ? 400 : 250);
       const totalAmount = baseFee + teammatesFee;
       
       const amountInput = document.getElementById('manualAmount');
