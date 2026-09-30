@@ -1899,7 +1899,7 @@
               <span class="font-mono text-zinc-200 font-bold" id="calcEventBasePrice">₹0</span>
             </div>
             <div class="flex items-center justify-between text-xs text-zinc-400 pb-2 border-b border-zinc-800/80">
-              <span>Accompanying Teammates (<span id="calcTeammatesCount">0</span> × ₹200):</span>
+              <span>Accompanying Teammates (<span id="calcTeammatesCount">0</span> × <span id="calcPerHeadFee">200</span>):</span>
               <span class="font-mono text-zinc-200 font-bold" id="calcTeammatesFee">+ ₹0</span>
             </div>
             <div class="flex items-center justify-between font-bold text-sm pt-1">
@@ -3639,13 +3639,18 @@
       // Compute calculations
       const totals = calculateTotals();
       const baseFee = totals.amount || 0;
-      const isCadSelected = selectedEventIds.has('ev-cad')
+      const isCadSelected = selectedEventIds.has('ev-cad');
+      const perHeadFee2 = isCadSelected ? 350 : 200;
+
       const teammatesFee = selectedTeammatesCount * (isCadSelected?350:200);
       const grandTotal = baseFee + teammatesFee;
 
       document.getElementById('calcEventBasePrice').innerText = '₹' + baseFee;
       document.getElementById('calcTeammatesCount').innerText = selectedTeammatesCount;
       document.getElementById('calcTeammatesFee').innerText = '+ ₹' + teammatesFee;
+      document.getElementById('calcPerHeadFee').innerText ='₹' + perHeadFee2;
+
+      
       document.getElementById('calcTotalPayable').innerText = '₹' + grandTotal;
       document.getElementById('qrAmountBadge').innerText = 'Auto-filled: ₹' + grandTotal;
       document.getElementById('qrScanInstructionText').innerText = 'Scan to pay ₹' + grandTotal + ' to HOGAN JOSNELL A';
