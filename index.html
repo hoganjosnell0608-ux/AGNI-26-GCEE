@@ -2294,6 +2294,8 @@
         secondPrize: 250,
         pool: 500,
         isCertificateOnly: false,
+        pdflink:"./pdf/Photography.pdf",
+        pdfTitle:"Photography Rules",
         rules: [
           'Team size: Solo participant.',
           'Theme: See the Unseen — Find an ordinary subject and show a hidden or interesting detail through two connected photographs.',
@@ -2625,7 +2627,7 @@
         subtext.innerText = 'Select events above to build pass';
         subtext.className = 'text-[11px] text-zinc-400';
       }
-
+      setTeammatesCount(selectedTeammatesCount);
       renderEvents();
     }
 
@@ -3431,17 +3433,31 @@
 
     function setTeammatesCount(count) {
       selectedTeammatesCount = count;
+
+      const isCadSelected = selectedEventIds.has('ev-cad');
+      const perHeadFee = isCadSelected ? 350 : 200;
+
       document.querySelectorAll('.teammate-count-btn').forEach(btn => {
         const bCount = parseInt(btn.getAttribute('data-count'), 10);
+
         if (bCount === count) {
           btn.className = 'teammate-count-btn px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all bg-brand-orange text-white shadow-md';
         } else {
           btn.className = 'teammate-count-btn px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white';
         }
+
+        const fee = bCount * perHeadFee;
+
+        if (bCount === 0) {
+          btn.innerText = 'Solo (Leader Only) [+₹0]';
+        } else {
+          btn.innerText = `${bCount} Teammate${bCount > 1 ? 's' : ''} [+₹${fee}]`;
+        }
       });
 
       const container = document.getElementById('teammateInputsBox');
       if (!container) return;
+
       if (count === 0) {
         container.classList.add('hidden');
         container.innerHTML = '';
@@ -3449,22 +3465,44 @@
       }
 
       container.classList.remove('hidden');
+
       let html = '';
+
       for (let i = 1; i <= count; i++) {
         html += `
-        <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800 space-y-2">
-          <div class="text-[11px] font-mono font-bold text-brand-orange uppercase flex items-center justify-between">
-            <span>Teammate #${i}</span>
-            <span class="text-[10px] text-zinc-500">₹200 Per Delegate</span>
+          <div class="p-3 rounded-lg bg-zinc-900 border border-zinc-800 space-y-2">
+            <div class="text-[11px] font-mono font-bold text-brand-orange uppercase flex items-center justify-between">
+              <span>Teammate #${i}</span>
+              <span class="text-[10px] text-zinc-500">₹${perHeadFee} Per Delegate</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <input
+                type="text"
+                class="px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-white text-xs focus:border-brand-orange focus:outline-none teammate-name-val"
+                placeholder="Teammate ${i} Full Name *"
+                required
+              />
+
+              <input
+                type="tel"
+                maxlength="10"
+                class="px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-white text-xs focus:border-brand-orange focus:outline-none font-mono teammate-phone-val"
+                placeholder="Teammate ${i} Mobile Number *"
+                required
+              />
+
+              <input
+                type="email"
+                class="px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-white text-xs focus:border-brand-orange focus:outline-none teammate-email-val sm:col-span-2"
+                placeholder="Teammate ${i} Email Address *"
+                required
+              />
+            </div>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <input type="text" class="px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-white text-xs focus:border-brand-orange focus:outline-none teammate-name-val" placeholder="Teammate ${i} Full Name *" required />
-            <input type="tel" maxlength="10" class="px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-white text-xs focus:border-brand-orange focus:outline-none font-mono teammate-phone-val" placeholder="Teammate ${i} Mobile Number *" required />
-            <input type="email" class="px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-white text-xs focus:border-brand-orange focus:outline-none teammate-email-val sm:col-span-2" placeholder="Teammate ${i} Email Address *" required />
-          </div>
-        </div>
-      `;
+        `;
       }
+
       container.innerHTML = html;
       if (window.lucide) lucide.createIcons();
     }
