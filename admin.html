@@ -1031,6 +1031,9 @@ Date: 06 Oct 2026
             <option value="1">1 Teammate</option>
             <option value="2">2 Teammates</option>
             <option value="3">3 Teammates</option>
+            <option value="4">4 Teammates</option>
+            <option value="5">5 Teammates</option>
+            
           </select>
           <div id="manualTeammatesContainer" class="space-y-2 hidden"></div>
         </div>
@@ -2169,7 +2172,7 @@ Date: 06 Oct 2026 | GCE Erode`;
         teammates: teammates,
         timestamp: new Date().toLocaleString(),
         gatePermittedAt: autoAdmit ? (new Date().toLocaleTimeString() + ' (' + new Date().toLocaleDateString() + ')') : null,
-        status: autoAdmit ? 'Approved' : 'Pending'
+        status: !autoAdmit ? 'Pending' : 'Approved'
       };
 
       const list = loadParticipants();

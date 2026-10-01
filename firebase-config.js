@@ -14,14 +14,15 @@ const firebaseConfig = {
 };
 
 // const firebaseConfig = {
-//   apiKey: "AIzaSyCbJxwqjYbusZc32UA2jIF-FAoCnmnYKOw",
-//   authDomain: "agni-2k26.firebaseapp.com",
-//   databaseURL: "https://agni2k26-default-rtdb.firebaseio.com",
-//   projectId: "agni-2k26",
-//   storageBucket: "agni-2k26.firebasestorage.app",
-//   messagingSenderId: "266146214091",
-//   appId: "1:266146214091:web:fe297c30be868a40092b4e"
+//   apiKey: "AIzaSyAuCTRA9bNdF23giuTX1ue1s6T1t7d7xjQ",
+//   databaseURL: "https://agni-2k26-3764d-default-rtdb.firebaseio.com/",
+//   authDomain: "agni-2k26-3764d.firebaseapp.com",
+//   projectId: "agni-2k26-3764d",
+//   storageBucket: "agni-2k26-3764d.firebasestorage.app",
+//   messagingSenderId: "608400517311",
+//   appId: "1:608400517311:web:6c7eed4c08fb2a0b453e0a"
 // };
+
 // Initialize Firebase App & Database Engines
 let agniFirebaseApp = null;
 let agniRtdb = null;
