@@ -13,15 +13,6 @@ const firebaseConfig = {
   appId: "1:229157442759:web:be618c007219639b1a5ae2"
 };
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyAuCTRA9bNdF23giuTX1ue1s6T1t7d7xjQ",
-//   databaseURL: "https://agni-2k26-3764d-default-rtdb.firebaseio.com/",
-//   authDomain: "agni-2k26-3764d.firebaseapp.com",
-//   projectId: "agni-2k26-3764d",
-//   storageBucket: "agni-2k26-3764d.firebasestorage.app",
-//   messagingSenderId: "608400517311",
-//   appId: "1:608400517311:web:6c7eed4c08fb2a0b453e0a"
-// };
 
 // Initialize Firebase App & Database Engines
 let agniFirebaseApp = null;
@@ -146,12 +137,14 @@ window.AgniFirebase = {
       teammates: Array.isArray(record.teammates) ? record.teammates : (typeof record.teammates === 'string' ? JSON.parse(record.teammates || '[]') : []),
       screenshotBase64: cleanScreenshot,
       status: record.status || 'Pending Verification',
-      gatePermittedAt: record.gatePermittedAt || null,
+      gatePermittedAt: record.gatePermittedAt || false,
       isSpot: Boolean(record.isSpot),
+      isFree: Boolean(record.isFree),
       timestamp: record.timestamp || new Date().toLocaleString(),
       updatedAt: new Date().toISOString()
     };
-
+    console.log('record :',record.status);
+    console.log('payload :',payload);
     let rtdbSuccess = false;
 
     // 1. Primary: Save directly to Firebase Realtime Database

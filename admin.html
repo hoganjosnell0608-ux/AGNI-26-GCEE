@@ -1048,11 +1048,16 @@ Date: 06 Oct 2026
             <input type="text" id="manualUtr" placeholder="Cash on Spot or 12-digit UTR" value="Cash On Spot" class="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-white font-mono outline-none" />
           </div>
         </div>
+        <div class="flex items-center gap-2 pt-2">
+          <input type="checkbox" id="manualOurAuto" checked class="rounded bg-zinc-950 border-zinc-700 text-brand-orange focus:ring-0" />
+          <label for="manualOurAuto" class="text-zinc-300">Manual Entry (Our Department)</label>
+        </div>
 
         <div class="flex items-center gap-2 pt-2">
           <input type="checkbox" id="manualAutoAdmit" checked class="rounded bg-zinc-950 border-zinc-700 text-brand-orange focus:ring-0" />
           <label for="manualAutoAdmit" class="text-zinc-300">Auto check-in & grant gate entry immediately</label>
         </div>
+        
 
         <div class="pt-3 border-t border-zinc-800 flex justify-end gap-2">
           <button type="button" onclick="closeManualRegModal()" class="px-4 py-2 rounded-xl bg-zinc-800 text-zinc-300 hover:bg-zinc-700">Cancel</button>
@@ -1312,8 +1317,11 @@ Date: 06 Oct 2026
 
       list.forEach(p => {
         // Revenue estimation
-        const amt = parseInt(p.totalAmount || p.amount || 200, 10);
-        if (!isNaN(amt)) revenue += amt;
+        const amt = parseInt(p.totalAmount || p.amount || 0, 10);
+
+        if (!p.isFree   && !isNaN(amt)) {
+          revenue += amt;
+        }
 
         if (p.isSpot || (p.utr && p.utr.toLowerCase().includes('spot'))) {
           spotCount++;
@@ -2134,7 +2142,7 @@ Date: 06 Oct 2026 | GCE Erode`;
       const amount = document.getElementById('manualAmount').value.trim() || '250';
       const utr = document.getElementById('manualUtr').value.trim() || 'Cash On Spot';
       const autoAdmit = document.getElementById('manualAutoAdmit').checked;
-
+      const ourAuto = document.getElementById('manualOurAuto').checked;
       const selectedEvents = Array.from(document.querySelectorAll('.manual-event-checkbox:checked')).map(cb => cb.value);
       if (selectedEvents.length === 0) selectedEvents.push('Technical Event');
 
@@ -2171,16 +2179,18 @@ Date: 06 Oct 2026 | GCE Erode`;
         isSpot: true,
         teammates: teammates,
         timestamp: new Date().toLocaleString(),
-        gatePermittedAt: autoAdmit ? (new Date().toLocaleTimeString() + ' (' + new Date().toLocaleDateString() + ')') : null,
-        status: !autoAdmit ? 'Pending' : 'Approved'
+        isFree: ourAuto ? 'True' : 'False',
+        gatePermittedAt: autoAdmit ? (new Date().toLocaleTimeString() + ' (' + new Date().toLocaleDateString() + ')') : false,
+        status: autoAdmit ? 'Approved' : 'Pending'
       };
-
+      console.log(record.status);
       const list = loadParticipants();
       list.unshift(record);
       saveAllParticipants(list);
       if (window.AgniFirebase) {
         window.AgniFirebase.saveRegistration(record);
       }
+      console.log(record);
 
       // Send to Google Sheets securely in the background
       const SCRIPT_URL_ADMIN = 'https://script.google.com/macros/s/AKfycbwMOfnP9GHlL40jjY3nrhmoeNG7oDiZPgdlXtL2nxq6UYffYQ3PIc3pbTb5UaxY4-LdUA/exec';
@@ -2205,14 +2215,15 @@ Date: 06 Oct 2026 | GCE Erode`;
           transactionId: utr,
           teammates: record.teammates,
           year: year,
-          registrationType: 'Offline'
+          registrationType: 'Offline',
+          isfree : ourAuto,
         })
       }).catch(err => console.error('Sheet Sync Error', err));
 
       closeManualRegModal();
       syncAndRefreshAllData();
       showToast('Spot Registration Saved', `Pass ${regId} issued and stored in Firebase.`);
-
+      
       // Inspect pass immediately
       handleQrScanResult(regId);
     }
@@ -2276,7 +2287,7 @@ Date: 06 Oct 2026 | GCE Erode`;
       let csv = 'Reg ID,Student Name,College,Department,Phone,Email,Events,Team Size,Amount,UTR,Gate Status,Timestamp\n';
       list.forEach(p => {
         const eventsStr = Array.isArray(p.events) ? p.events.join('; ') : (p.events || '');
-        const gate = p.gatePermittedAt ? 'Admitted (' + p.gatePermittedAt + ')' : 'Pending';
+        const gate = p.status === 'Approved' ? 'Approved (' + (p.gatePermittedAt || '') + ')' : 'Pending';
         csv += `"${p.regId || ''}","${p.name || ''}","${p.college || ''}","${p.dept || ''}","${p.phone || ''}","${p.email || ''}","${eventsStr}","${(p.teamCount || (p.teammates ? p.teammates.length + 1 : 1))}","${p.totalAmount || p.amount || ''}","${p.utr || ''}","${gate}","${p.timestamp || ''}"\n`;
       });
 
